@@ -1,2 +1,2 @@
 # LD40
-Let's make an thing
+Let's make a thing
