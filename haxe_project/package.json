@@ -1,0 +1,13 @@
+{
+    "name": "haxe-project",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/Sunjammer/LD40.git",
+    "license": "MIT",
+    "scripts": {
+      "start": "browser-sync start --server 'Export/html5/bin' --files 'Export/html5/bin/*.js'"
+    },
+    "devDependencies": {
+      "browser-sync": "^2.18.13"
+    }
+}
