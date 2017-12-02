@@ -156,7 +156,6 @@ class PostEffect
 
 	public function capture()
 	{
-    trace("Capturing to " + this);
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
 		GL.viewport(0, 0, config.width, config.height);
 		GL.clear(GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
@@ -203,12 +202,6 @@ class PostEffect
 		GL.disableVertexAttribArray(texCoordSlot);
 
 		GL.useProgram(null);
-    
-    if (to != null){
-      trace(this+" drawing into " + to); 
-    }else{
-      trace(this + " drawing to backbuffer");
-    }
 
 		// check gl error
 		if (GL.getError() == GL.INVALID_FRAMEBUFFER_OPERATION)

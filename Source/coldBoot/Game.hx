@@ -1,6 +1,6 @@
 package coldBoot;
 import coldBoot.IGameState;
-#if windows
+#if ogl
 import coldBoot.rendering.PostEffect;
 import coldBoot.rendering.SceneRenderBase;
 #end
@@ -12,7 +12,7 @@ class Game extends Sprite
 {
 	var currentState: IGameState;
 
-  #if windows
+  #if ogl
   var sceneRenderer:SceneRenderBase;
   #end
   
@@ -21,12 +21,11 @@ class Game extends Sprite
 		super();
 		setState(new InitialState());
     
-    #if windows
+    #if ogl
     addChild(sceneRenderer = new SceneRenderBase({width:800, height:600}));
     sceneRenderer.setPostEffects(
       [
-        //new PostEffect("assets/invert.frag"),
-        //new PostEffect("assets/scanline.frag")
+        new PostEffect("assets/scanline.frag")
       ]
     );
     #end
@@ -37,7 +36,7 @@ class Game extends Sprite
 	public function update(dt: Float)
 	{
 		Delta.step(dt);
-    #if windows
+    #if ogl
 		sceneRenderer.update(this, dt);
     #end
 	}
