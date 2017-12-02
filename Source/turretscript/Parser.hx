@@ -85,6 +85,10 @@ class InstructionParser
 			case "jmp": return parseJumpOperator(Comparison.Always);
 			case "jeq": return parseJumpOperator(Comparison.Eq);
 			case "jne": return parseJumpOperator(Comparison.Neq);
+			case "jgt": return parseJumpOperator(Comparison.Gt);
+			case "jge": return parseJumpOperator(Comparison.Gte);
+			case "jlt": return parseJumpOperator(Comparison.Lt);
+			case "jle": return parseJumpOperator(Comparison.Lte);
 			case "add": {
 				var operands = parseOperands(2);
 				var lhs = operands[0];
