@@ -1,10 +1,15 @@
 package coldBoot.states;
 import coldBoot.Game;
+import openfl.Assets;
+import openfl.display.Bitmap;
 import openfl.display.Shape;
+import openfl.display.Sprite;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
+import openfl.text.TextFormat;
 import tween.Delta;
-import tween.easing.Elastic;
 
-class InitialState extends Shape implements IGameState
+class InitialState extends Sprite implements IGameState
 {
 	var initialized:Bool;
 	public function new()
@@ -12,13 +17,24 @@ class InitialState extends Shape implements IGameState
 		super();
 		graphics.beginFill(0xff0000);
 		graphics.drawCircle(100, 100, 100);
+    
+    var bitmapData = Assets.getBitmapData ("assets/c1.jpg");
+    addChild(new Bitmap(bitmapData));
+    
+    var tf = new TextField();
+    var format = new TextFormat(null, 32);
+ 
+    tf.text = "FUCK ALL YALL";
+    tf.autoSize = TextFieldAutoSize.LEFT;
+    tf.setTextFormat(format);
+    addChild(tf);
 	}
 
 	public function enter(g: Game): Void
 	{
 		g.addChild(this);
 		alpha = 0;
-		Delta.tween(this).prop("alpha", 1, 2).ease(Elastic.easeIn).onComplete(doneInitializing);
+		Delta.tween(this).prop("alpha", 1, 2).onComplete(doneInitializing);
 		trace("Entering initial state");
 	}
 	

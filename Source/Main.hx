@@ -1,12 +1,15 @@
 package;
 import coldBoot.Game;
+import coldBoot.rendering.PostEffect;
 import haxe.Timer;
 import hscript.Interp;
 import hscript.Parser;
+import openfl.display.OpenGLView;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+
 
 class Input {
 	public function new() { }
@@ -21,6 +24,7 @@ class Main extends Sprite {
 	}
 	
 	var prevTime: Float;
+  var post:coldBoot.rendering.PostEffect;
 	public function new () {
 		super();
 		
@@ -32,15 +36,7 @@ class Main extends Sprite {
 		addEventListener(MouseEvent.MOUSE_UP, mouseUp);
 		addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
 		addEventListener(KeyboardEvent.KEY_UP, keyUp);
-		
-		var p = new Parser();
-		var prog = p.parseString(
-			"trace('hello world' + foo); funcdood();"
-		);
-		var i = new Interp();
-		i.variables["foo"] = 132;
-		i.variables["funcdood"] = test;
-		i.execute(prog);
+    
 	}
 	
 	function keyUp(e:KeyboardEvent):Void 
@@ -72,6 +68,5 @@ class Main extends Sprite {
 		prevTime = newTime;
 		
 		game.update(dt);
-		game.render();
 	}
 }

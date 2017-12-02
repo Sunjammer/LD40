@@ -13,6 +13,6 @@
 	<haxelib name="hscript" />
 	<haxelib name="glm" />
 	
-	<!--assets path="Assets" rename="assets" /-->
+	<assets path="Assets" rename="assets" />
 	
 </project>
