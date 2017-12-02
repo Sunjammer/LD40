@@ -1,5 +1,6 @@
 package coldBoot.entities;
 import coldBoot.Level;
+import coldBoot.UpdateInfo;
 import coldBoot.Wall;
 import coldBoot.entities.Pulse.Edges;
 import coldBoot.states.GamePlayState;
@@ -184,10 +185,10 @@ class Pulse extends Entity
 		traceRays();
 	}
 
-	override public function update(state:GamePlayState, dt:Float)
+	override public function update(info:UpdateInfo)
 	{
-		super.update(state, dt);
-		timeSinceLaunch += dt;
+		super.update(info);
+		timeSinceLaunch += info.deltaTime;
 		var toBeRemoved = [];
 		for (r in rays)
 		{
@@ -239,9 +240,9 @@ class Pulse extends Entity
 		}
 	}
 
-	override public function render(state:GamePlayState)
+	override public function render(info:RenderInfo)
 	{
-		super.render(state);
+		super.render(info);
 		for (r in rays)
 		{
 			r.render();

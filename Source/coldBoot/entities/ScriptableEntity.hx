@@ -1,7 +1,7 @@
 package coldBoot.entities;
 import coldBoot.Entity;
+import coldBoot.UpdateInfo;
 import coldBoot.Script;
-import coldBoot.states.GamePlayState;
 
 class ScriptableEntity extends Entity
 {
@@ -23,10 +23,10 @@ class ScriptableEntity extends Entity
 		scripts.push(new Script(code));
 	}
 	
-	override public function update(state:GamePlayState, dt:Float) 
+	override public function update(info:UpdateInfo) 
 	{
-		super.update(state, dt);
+		super.update(info);
 		for (s in scripts)
-			s.execute(dt);
+			s.execute(info.deltaTime);
 	}
 }

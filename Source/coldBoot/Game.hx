@@ -4,9 +4,12 @@ import coldBoot.IGameState;
 import coldBoot.rendering.PostEffect;
 import coldBoot.rendering.SceneRenderBase;
 #end
+import coldBoot.UpdateInfo;
 import coldBoot.states.InitialState;
 import openfl.display.Sprite;
 import tween.Delta;
+
+import haxe.ds.Option;
 
 class Game extends Sprite
 {
@@ -25,26 +28,33 @@ class Game extends Sprite
     addChild(sceneRenderer = new SceneRenderBase({width:800, height:600}));
     sceneRenderer.setPostEffects(
       [
-        new PostEffect("assets/scanline.frag")
+        new PostEffect("assets/invert.frag")
       ]
     );
     #end
       
 	}
   
+  public function getCurrentState():IGameState{
+    return currentState;
+  }
+  
 
-	public function update(dt: Float)
+	public function update(dt:Float)
 	{
-		Delta.step(dt);
+    var info = {game:this, deltaTime:dt, time:0.0};
+		Delta.step(info.deltaTime);
     #if ogl
-		sceneRenderer.update(this, dt);
+		sceneRenderer.update(this, info.deltaTime);
     #end
+    if (currentState != null)
+      currentState.update(info);
 	}
 
- #if (!display && windows)
+ #if (!display && ogl)
   override function __renderGL(renderSession):Void {
     sceneRenderer.preRender();
-		currentState.render(this);
+		currentState.render({game:this});
     super.__renderGL(renderSession);
   }
  #end

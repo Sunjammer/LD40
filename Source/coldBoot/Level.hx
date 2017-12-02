@@ -34,9 +34,9 @@ class Level extends Entity
 		}
 	}
 	
-	override public function render(state:GamePlayState) 
+	override public function render(info:RenderInfo) 
 	{
-		super.render(state);
+		super.render(info);
 		Main.debugDraw.graphics.beginFill(0x00ff00);
 		
 		for (w in levelData)

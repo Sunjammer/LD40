@@ -1,5 +1,6 @@
 package coldBoot.entities;
 import coldBoot.Entity;
+import coldBoot.UpdateInfo;
 import coldBoot.states.GamePlayState;
 
 class Sonar extends ScriptableEntity
@@ -11,8 +12,8 @@ class Sonar extends ScriptableEntity
 		super();
 	}
 	
-	override public function update(state:GamePlayState, dt:Float) 
+	override public function update(info:UpdateInfo) 
 	{
-		super.update(state, dt);
+		super.update(info);
 	} 
 }

@@ -1,5 +1,6 @@
 package coldBoot;
-import coldBoot.states.GamePlayState;
+import coldBoot.RenderInfo;
+import coldBoot.UpdateInfo;
 import glm.Vec2;
 
 class Entity
@@ -35,16 +36,16 @@ class Entity
 
 	}
 
-	public function update(state:GamePlayState, dt:Float)
+	public function update(info:UpdateInfo)
 	{
 		for (c in children)
-			c.update(state, dt);
+			c.update(info);
 	}
 
-	public function render(state:GamePlayState)
+	public function render(info:RenderInfo)
 	{
 		for (c in children)
-			c.render(state);
+			c.render(info);
 	}
 
 }
