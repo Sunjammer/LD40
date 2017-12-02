@@ -25,17 +25,17 @@ class GameMap implements IMap {
 	}
 
 	public function toNodeIdx(pos:Vec2):Int {
-		return cast(pos.x/cellSize,Int) % cols
-			+ cast((pos.y/cellSize) * cols, Int);
+		return Math.floor(pos.x/cellSize) % cols
+			+ Math.floor(pos.y/cellSize) * cols;
 	}
 
 	function posToNodeIdx(x:Int, y:Int):Int {
 		return x % cols
-			+ cast(y * cols, Int);
+			+ Math.floor(y * cols);
 	}
 
 	public function toCoordinate(nodeIdx:Int):Coordinate {
-		return new Coordinate(nodeIdx % cols, cast(nodeIdx / cols, Int));
+		return new Coordinate(nodeIdx % cols, Math.floor(nodeIdx / cols));
 	}
 }
 
@@ -48,7 +48,7 @@ class PathFinding {
 		var source = map.toCoordinate(sourceIdx);
 		var toTarget = map.toCoordinate(toTargetIdx);
 		var pathFinder = new Pathfinder(map);
-		return pathFinder.createPath(new Coordinate(cast(source.x, Int), cast(source.y, Int)), new Coordinate(cast(toTarget.x, Int), cast(toTarget.y, Int)), EHeuristic.PRODUCT, false, false).map(function(coord) {
+		return pathFinder.createPath(source, toTarget, EHeuristic.PRODUCT, false, false).map(function(coord) {
 			return new Vec2(coord.x*map.cellSize+map.cellSize/2, coord.y*map.cellSize+map.cellSize/2);
 		});
 	}

@@ -37,7 +37,7 @@ class EnemyAI {
 	var enemyMap:PathFinding.GameMap;
 	
 	var currentPathStack:GenericStack<Int> = new GenericStack<Int>();
-	var currentPath:Array<Vec2>;
+	var currentPath:Array<Vec2> = new Array<Vec2>();
 	var currentTarget: Vec2;
 	var knownWalkablePlaces:Array<Bool>;
 
@@ -54,36 +54,38 @@ class EnemyAI {
 		enemyMap = new PathFinding.GameMap(map.cols, map.rows, map.cellSize, function(idx) { 
 			return knownWalkablePlaces[idx];
 		});
+
+		currentTarget = controller.position;
 	}
 
 	public function performAction() {
 		if(currentPath.length == 0)
 		{
 			var currentIdx = map.toNodeIdx(controller.position);
-			var forwardIdx = map.toNodeIdx(controller.position) + map.cols;
-			var backwardIdx = map.toNodeIdx(controller.position) - map.cols;
-			var leftIdx = map.toNodeIdx(controller.position) - 1;
-			var rightIdx = map.toNodeIdx(controller.position) + 1;
+			var forwardIdx = currentIdx + map.cols;
+			var backwardIdx = currentIdx - map.cols;
+			var leftIdx = currentIdx - 1;
+			var rightIdx = currentIdx + 1;
 
-			if(map.isWalkableByIdx(forwardIdx) && !knownWalkablePlaces[forwardIdx])
+			if(forwardIdx >= 0 && map.isWalkableByIdx(forwardIdx) && !knownWalkablePlaces[forwardIdx])
 			{
 				currentPathStack.add(forwardIdx);
 				knownWalkablePlaces[forwardIdx] = true;
 			}
 
-			if(map.isWalkableByIdx(backwardIdx) && !knownWalkablePlaces[backwardIdx])
+			if(backwardIdx >= 0 && map.isWalkableByIdx(backwardIdx) && !knownWalkablePlaces[backwardIdx])
 			{
 				currentPathStack.add(backwardIdx);
 				knownWalkablePlaces[backwardIdx] = true;
 			}
 
-			if(map.isWalkableByIdx(leftIdx) && !knownWalkablePlaces[leftIdx])
+			if(leftIdx >= 0 && map.isWalkableByIdx(leftIdx) && !knownWalkablePlaces[leftIdx])
 			{
 				currentPathStack.add(leftIdx);
 				knownWalkablePlaces[leftIdx] = true;
 			}
 
-			if(map.isWalkableByIdx(rightIdx) && !knownWalkablePlaces[rightIdx])
+			if(rightIdx >= 0 && map.isWalkableByIdx(rightIdx) && !knownWalkablePlaces[rightIdx])
 			{
 				currentPathStack.add(rightIdx);
 				knownWalkablePlaces[rightIdx] = true;
@@ -91,19 +93,18 @@ class EnemyAI {
 
 			var nextPath = currentPathStack.pop();
 			if(nextPath != null) {
-				currentPath = new PathFinding().ShortestPath(currentIdx, cast(nextPath, Int), this.enemyMap);
+				currentPath = new PathFinding().ShortestPath(currentIdx, nextPath, this.enemyMap);
 				currentPath.reverse();
 			}
 		}
 
-		if(currentPath.length == 0)
-			trace("Enemy: I'm stuck!");
+		trace(currentPath);
 
-		if(Vec2.distance(currentTarget, controller.position) < 10) {
+		if(Vec2.distance(currentTarget, controller.position) < 2 && currentPath.length > 0) {
 			currentTarget = currentPath.pop();
 		}
 
-		var dir;
+		var dir = new Vec2(0,0);
 		Vec2.normalize(currentTarget - controller.position, dir);
 		controller.move(dir);
 	}
