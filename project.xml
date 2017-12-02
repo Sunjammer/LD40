@@ -10,6 +10,7 @@
 	
 	<haxelib name="openfl" />
 	<haxelib name="delta" />
+	<haxelib name="hscript" />
 	
 	<assets path="Assets" rename="assets" />
 	
