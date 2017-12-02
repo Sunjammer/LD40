@@ -142,6 +142,36 @@ private class RBTileMap implements MapGenerator.TileMap {
     public function getHeight(): UInt {
         return height;
     }
+
+    public function getMap(): Array<Int> {
+        var size = (width * 3) * (height * 3);
+        var map = [for (i in 0...size) 1];
+        plotNode(node, width * 3, height * 3, map);
+        return map;
+    }
+
+    private function plotNode(node: Node, width: UInt, height: UInt, map: Array<Int>) {
+        for (child in node.children) {
+            plotLine(
+                width,
+                height,
+                new Point(node.position.x * 3 + 1, node.position.y * 3 + 1),
+                new Point(child.position.x * 3 + 1, child.position.y * 3 + 1),
+                map);
+            plotNode(child, width, height, map);
+        }
+    }
+
+    private function plotLine(width: Int, height: Int, p1: Point, p2: Point, map: Array<Int>) {
+        var len = Math.ceil(Point.distance(p1, p2));
+        for (i in 0...len) {
+            var p = Point.interpolate(p1, p2, i / len);
+            var x = Math.floor(Math.max(Math.min(p.x, width * 3 - 1), 0));
+            var y = Math.floor(Math.max(Math.min(p.y, height * 3 - 1), 0));
+            var offset = y * height + x;
+            map[offset] = 0;
+        }
+    }
 }
 
 private class Node {

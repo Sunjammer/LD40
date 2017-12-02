@@ -117,6 +117,10 @@ class Kurskal implements TileMap {
         return height;
     }
 
+    public function getMap(): Array<Int> {
+        return null;
+    }
+
     private static function offset(coord: Vec2, width: UInt, height: UInt): UInt {
         var x = Math.floor(coord.x);
         var y = Math.floor(coord.y);

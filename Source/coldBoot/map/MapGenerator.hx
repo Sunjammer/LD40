@@ -41,6 +41,7 @@ interface TileMap {
     public function getBitmap(): Bitmap;
     public function getWidth(): UInt;
     public function getHeight(): UInt;
+    public function getMap(): Array<Int>;
 }
 
 class MapGenerator {
