@@ -1,4 +1,4 @@
-package;
+package coldBoot.ai;
 
 import lime.math.Vector2;
 import haxe.ds.GenericStack;

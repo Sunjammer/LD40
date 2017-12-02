@@ -1,4 +1,4 @@
-package;
+package coldBoot.ai;
 
 import pathfinder.*;
 import lime.math.Vector2;
