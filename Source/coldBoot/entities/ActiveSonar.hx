@@ -14,8 +14,6 @@ class ActiveSonar extends Sonar
 	
 	public function firePulse(level: Level)
 	{
-		trace("Active sonar fired pulse");
-		new Pulse(level);
 	}
 	
 	override public function render(state:GamePlayState) 

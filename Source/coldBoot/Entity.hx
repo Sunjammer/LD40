@@ -4,8 +4,8 @@ import glm.Vec2;
 
 class Entity
 {
-	public var position: Vec2;
-	public var rotation: Float;
+	public var position: Vec2 = new Vec2(0,0);
+	public var rotation: Float = 0;
 
 	public var children:Array<Entity>;
 	public function new()
