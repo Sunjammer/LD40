@@ -11,13 +11,13 @@
     <movie version="1" />
     <movie minorVersion="0" />
     <movie platform="Lime" />
-    <movie background="FFFFFF" />
+    <movie background="#FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="C:\HaxeToolkit\haxe\lib\openfl\6,5,1" />
     <class path="C:\HaxeToolkit\haxe\lib\lime\5,9,1" />
-    <class path="C:\HaxeToolkit\haxe\lib\delta\git" />
+    <class path="C:\Users\Andreas\Documents\Delta" />
     <class path="C:\HaxeToolkit\haxe\lib\hscript\2,1,1" />
     <class path="Source" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\6,5,1\externs\core\openfl" />
@@ -31,7 +31,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--macro openfl._internal.utils.ExtraParams.include()&#xA;--macro lime.Lib.extraParams()&#xA;--remap flash:openfl&#xA;-debug " />
+    <option additional="--macro openfl._internal.utils.ExtraParams.include()&#xA;--macro lime.Lib.extraParams()&#xA;--remap flash:openfl" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -39,7 +39,7 @@
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <!-- example: <compile path="..." /> -->
+    <compile path="Source\Main.hx" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>

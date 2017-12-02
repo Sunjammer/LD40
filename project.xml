@@ -12,6 +12,6 @@
 	<haxelib name="delta" />
 	<haxelib name="hscript" />
 	
-	<assets path="Assets" rename="assets" />
+	<!--assets path="Assets" rename="assets" /-->
 	
 </project>
