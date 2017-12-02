@@ -2,11 +2,13 @@
 Let's make a thing
 
 ### How to run
-1. `cd haxe_project`
-2. `openfl test neko`
+1. `openfl test neko`
+
+### Visual Code code completion
+1. Install https://marketplace.visualstudio.com/items?itemName=nadako.vshaxe
+1. `openfl display neko > build.hxml`
 
 ### Auto-reload
-1. `cd haxe_project`
-2. `npm install`
-3. `npm run start`
-4. In a new terminal window run each time you have changed something `openfl build html5`
+1. `npm install`
+1. `npm run start`
+1. In a new terminal window run each time you have changed something `openfl build html5`

@@ -41,7 +41,6 @@ class Main extends Sprite {
 		super ();
 		
 		if (OpenGLView.isSupported) {
-			
 			view = new OpenGLView ();
 			
 			fragmentShaders = randomizeArray (fragmentShaders);
@@ -151,7 +150,6 @@ class Main extends Sprite {
 			
 			var randomIndex = Math.round (Math.random () * (arrayCopy.length - 1));
 			randomArray.push (arrayCopy.splice (randomIndex, 1)[0]);
-			
 		}
 		
 		return randomArray;
