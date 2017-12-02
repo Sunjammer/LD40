@@ -95,7 +95,7 @@ class Machine
 			case Operator.Move(src, Operand.Register(reg)): {
 				var value = readOperand(src);
 				register(reg).write(value);
-			};
+			}
 			case Operator.Compare(lhs, rhs): {
 				compareLeft = readOperand(lhs);
 				compareRight = readOperand(rhs);
@@ -104,10 +104,12 @@ class Machine
 				if (testComparison(comparison)) {
 					nextPc = getPcForLabel(target);
 				}
-			};
-			case Operator.Add(Operand.Register(reg), rhs): {
-				register(reg).write(register(reg).read() + readOperand(rhs));
-			};
+			}
+			case Operator.Add(Operand.Register(ri), rhs): {
+				var reg = register(ri);
+				reg.write(reg.read() + readOperand(rhs));
+			}
+
 			case _: throw "Unimplemented operator " + instr.op.getName();
 		}
 
