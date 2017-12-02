@@ -7,7 +7,6 @@ import glm.Vec2;
 import MapGenerator.Direction;
 import MapGenerator.Tile;
 import MapGenerator.TileMap;
-import neko.Random;
 
 private class DirectionHelper {
     public static function toPoint(direction: Direction):Point {
@@ -158,6 +157,7 @@ private class Node {
 class RecursiveBacktracking {
 
     public static function generate(randomSeed: Int, startPoint: Vec2, width: UInt, height: UInt):RBTileMap {
+        Randomize.setSeedRandom(randomSeed);
         var sp = new Point(startPoint.x, startPoint.y);
         var tileMap = new RBTileMap(width, height);
         var node = new Node(sp, null);
@@ -199,8 +199,6 @@ private class Rand {
     }
 
     public static inline function int(randomSeed: Int, from:Int, to:Int):Int {
-        var r = new Random();
-        r.setSeed(randomSeed);
-		return from + Math.floor(((to - from + 1) * r.float()));
+		return from + Math.floor(((to - from + 1) * Randomize.getSeededRandom()));
     }
 }
