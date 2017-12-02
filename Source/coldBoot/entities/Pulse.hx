@@ -1,41 +1,131 @@
 package coldBoot.entities;
 import coldBoot.Level;
+import coldBoot.Wall;
 import coldBoot.states.GamePlayState;
 import differ.Collision;
 import differ.data.RayCollision;
 import differ.math.Vector;
-import differ.shapes.Polygon;
 import differ.shapes.Ray;
-import differ.shapes.Shape;
 import glm.Vec2;
+
+enum Edge
+{
+	Left;
+	Right;
+	Top;
+	Bottom;
+	None;
+}
+
+class Angles 
+{
+	public static function EdgeFromAngle(angle: Float) : Edge
+	{
+		if (angle < Math.PI/4 || angle > (Math.PI + (3*(Math.PI/4))))
+		{
+			return Edge.Right;
+		}
+		else if (angle > (Math.PI/4) && angle < (3 * (Math.PI / 4)))
+		{
+			return Edge.Top;
+		}
+		else if (angle > (3 * (Math.PI / 4)) && angle < Math.PI + (Math.PI / 4))
+		{
+			return Edge.Left;
+		}
+		else
+		{
+			return Edge.Bottom;
+		}
+	}
+	
+	public static function AngleInDirectionOfEdge(angle: Float, e: Edge): Bool
+	{
+		var dir = new Vec2(Math.cos(angle), Math.sin(angle));
+		switch (e) 
+		{
+			case Left: return dir.x < 0;
+			case Right: return dir.x > 0;
+			case Top: return dir.y < 0;
+			case Bottom: return dir.y > 0;
+			case _: return false;
+		}
+	}
+	
+}
 
 class PulseRay
 {
 	var ray: Ray;
+	var speed: Float;
 	var closestHit: RayCollision;
 	var pulseProgress: Float;
-	public function new(r: Ray)
+	var rayStartOffset: Float;
+	public var lastWallHit:Wall;
+	var ignoreWall:Wall;
+	
+	public function new(r: Ray, speed: Float, startOffet: Float, ignoreWall: Wall)
 	{
-		ray = r;
+		this.ignoreWall = ignoreWall;
+		this.ray = r;
+		this.speed = speed;
+		this.rayStartOffset = startOffet;
 	}
 	
-	public function checkCollision(wall: Shape)
+	public function getClosesCollisionPoint(): Vec2
 	{
-		var collideInfo  = Collision.rayWithShape(ray, wall);
+		var x = RayCollisionHelper.hitStartX(closestHit);
+		var y = RayCollisionHelper.hitStartY(closestHit);
+		return new Vec2(x, y);
+	}
+	
+	public function getEdgeOfLastWallHit(): Edge
+	{
+		if (lastWallHit != null)
+		{
+			var hitX = RayCollisionHelper.hitStartX(closestHit);
+			var hitY = RayCollisionHelper.hitStartY(closestHit);
+			var wallCenter = new Vec2(lastWallHit.x + (lastWallHit.w / 2.0), lastWallHit.y + (lastWallHit.h / 2.0));
+			var hit = new Vec2(hitX, hitY);
+			var dir = hit - wallCenter;
+			var dirNormal = Vec2.normalize(dir, dir);
+			var angle = Math.atan2(dirNormal.y, -dirNormal.x);
+
+			return Angles.EdgeFromAngle(angle);
+		}
+		return Edge.None;
+	}
+	
+	public function checkCollision(wall: Wall)
+	{
+		if (wall == ignoreWall)
+			return;
+		var w = wall.getPolygon();
+		var collideInfo  = Collision.rayWithShape(ray, w);
 		if (collideInfo != null)
 		{
 			if (closestHit == null)
+			{
 				closestHit = collideInfo;
+				lastWallHit = wall;
+			}
 			else if (collideInfo.start < closestHit.start)
 			{
 				closestHit = collideInfo;
+				lastWallHit = wall;
 			}
 		}
 	}
 	
-	public function update(pulseProgress: Float)
+	public function update(progress: Float): Bool
 	{
-		this.pulseProgress = pulseProgress;
+		this.pulseProgress = (progress - rayStartOffset) * speed;
+		if (closestHit != null && pulseProgress > closestHit.start)
+		{
+			trace("Closest hit: " + closestHit.start);
+			return true;
+		}
+		return false;
 	}
 	
 	public function render()
@@ -65,16 +155,10 @@ class Pulse extends Entity
 {
 	var strength: Float; //how long the pulse exists
 	var speed: Float = 0.08;
-	var timeSinceLaunch: Float;
+	var timeSinceLaunch: Float = 0;
 	var level:Level;
 
-	var rays: Array<PulseRay>;
-	var collisions: Array<Vec2> = [];
-	
-	function getPulseProgress()
-	{
-		return timeSinceLaunch * speed;
-	}
+	var rays: Array<PulseRay> = [];
 
 	public function new(level: Level)
 	{
@@ -85,7 +169,7 @@ class Pulse extends Entity
 	override public function onAdded()
 	{
 		super.onAdded();
-		generateRays();
+		generateRays(position, null, Edge.None);
 		traceRays();
 	}
 
@@ -93,27 +177,37 @@ class Pulse extends Entity
 	{
 		super.update(state, dt);
 		timeSinceLaunch += dt;
+		var toBeRemoved = [];
 		for (r in rays)
 		{
-			r.update(getPulseProgress());
+			if (r.update(timeSinceLaunch))
+			{
+				var lastEdgeHit = r.getEdgeOfLastWallHit();
+				toBeRemoved.push(r);
+				generateRays(r.getClosesCollisionPoint(), r.lastWallHit, lastEdgeHit);
+				traceRays();
+			}
 		}
+		for (r in toBeRemoved)
+			rays.remove(r);
 	}
 
-	function generateRays()
+	function generateRays(pos: Vec2, ignoreWall: Wall, edge: Edge)
 	{
 		trace("Genrating rays");
-		rays = [];
-		var nRays = 10;
+		var nRays = 1;
 		var rayLength = 200;
 		var segmentSize = 2 * Math.PI / nRays;
 		for (i in 0...nRays)
 		{
 			var angle = segmentSize * i;
+			if (Angles.AngleInDirectionOfEdge(angle, edge))
+				continue;
 			var endVec = new Vector(
-				(Math.cos(angle) * rayLength) + position.x,
-				(Math.sin(angle) * rayLength) + position.y);
-			var startVec = new Vector(position.x, position.y);
-			var r = new PulseRay(new Ray(startVec, endVec));
+				(Math.cos(angle) * rayLength) + pos.x,
+				(Math.sin(angle) * rayLength) + pos.y);
+			var startVec = new Vector(pos.x, pos.y);
+			var r = new PulseRay(new Ray(startVec, endVec), speed, timeSinceLaunch, ignoreWall);
 			rays.push(r);
 		}
 	}
@@ -122,16 +216,9 @@ class Pulse extends Entity
 	{
 		for (r in rays)
 		{
-			for (y in 0...level.levelData.length)
-			{
-				for (x in 0...level.levelData[y].length)
-				{
-					if (level.levelData[y][x] == 0) // empty space
-						continue;
-					
-					var wall = Polygon.rectangle(x * level.tileSize, y * level.tileSize, level.tileSize, level.tileSize, false);
-					r.checkCollision(wall);
-				}
+			for (w in level.levelData)
+			{		
+				r.checkCollision(w);
 			}
 		}
 	}
