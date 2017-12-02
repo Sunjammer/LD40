@@ -85,7 +85,6 @@ class PulseRay
 	{
 		var original = new Vec2(ray.dir.x, ray.dir.y);
 		trace("Original: " + original);
-		original = Vec2.normalize(original, original);
 		var edgeHit = getEdgeOfLastWallHit();
 		switch (edgeHit)
 		{
@@ -257,8 +256,9 @@ class Pulse extends Entity
 		//var edge = originRay.getEdgeOfLastWallHit();
 
 		var reflectionRay = originRay.getReflectionVector();
+		reflectionRay = Vec2.normalize(reflectionRay, reflectionRay);
 		
-		var reflectionRayAngle = Math.atan2(reflectionRay.y, reflectionRay.x) + Math.PI;
+		var reflectionRayAngle = Math.atan2(reflectionRay.y, reflectionRay.x);
 		var angle = reflectionRayAngle;
 /*		if (Angles.AngleInDirectionOfEdge(angle, edge))
 			return;*/
