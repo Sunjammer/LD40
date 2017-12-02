@@ -1,3 +1,5 @@
 **/Export
 **/node_modules
 build.hxml
+AudioJank/ndll/Windows/audiojank.ndll.hash
+AudioJank/project/obj/

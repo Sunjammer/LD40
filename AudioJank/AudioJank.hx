@@ -14,5 +14,5 @@ class AudioJank {
 	
 	
 	private static var audiojank_sample_method = CFFI.load ("audiojank", "audiojank_sample_method", 1);
-	
+    
 }
