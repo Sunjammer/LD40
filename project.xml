@@ -9,6 +9,7 @@
 	<source path="Source" />
 	
 	<haxelib name="openfl" />
+	<haxelib name="delta" />
 	
 	<assets path="Assets" rename="assets" />
 	

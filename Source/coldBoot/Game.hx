@@ -1,5 +1,8 @@
 package coldBoot;
+import openfl.display.Shape;
 import openfl.display.Sprite;
+import tween.Delta;
+import tween.easing.Elastic;
 
 interface IState {
 	function enter(g: Game): Void;
@@ -8,10 +11,17 @@ interface IState {
 	function exit(g: Game): Void;
 }
 
-class InitialState implements IState {
-	public function new() { }
+class InitialState extends Shape implements IState {
+	public function new() {
+		super();  
+		graphics.beginFill(0xff0000);
+		graphics.drawCircle(100, 100, 100);
+	}
 	
 	public function enter(g: Game): Void {
+		g.addChild(this);
+		alpha = 0;
+		Delta.tween(this).prop("alpha", 1, 2).ease(Elastic.easeIn);
 		trace("Entering initial state");
 	}
 	
@@ -25,6 +35,7 @@ class InitialState implements IState {
 	
 	public function exit(g: Game): Void {
 		trace("Exiting initial state");
+		g.removeChild(this);
 	}
 }
 
@@ -39,6 +50,7 @@ class Game extends Sprite
 	}
 	
 	public function update(dt: Float) {
+		Delta.step(dt);
 		currentState.update(this, dt);
 	}
 	

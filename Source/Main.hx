@@ -12,6 +12,7 @@ class Main extends Sprite {
 		super();
 		
 		game = new Game();
+		addChild(game);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		
