@@ -1,6 +1,6 @@
 package coldBoot.ai;
 
-import lime.math.Vector2;
+import glm.Vec2;
 import haxe.ds.GenericStack;
 
 interface Goal {
@@ -25,14 +25,9 @@ class PathMemory {
 	}
 }
 
-class EnemyController {
-	public var position = new Vector2(0,0);
-	var moveSpeed:Float = 10;
-
-	public function move(dir:Vector2) {
-		 position.x += dir.x * moveSpeed;
-		 position.y += dir.y * moveSpeed;
-	}
+interface EnemyController {
+	public var position = new Vec2(0,0);
+	public function move(dir:Vec2):Void;
 }
 
 class EnemyAI {
@@ -42,8 +37,8 @@ class EnemyAI {
 	var enemyMap:PathFinding.GameMap;
 	
 	var currentPathStack:GenericStack<Int> = new GenericStack<Int>();
-	var currentPath:Array<Vector2>;
-	var currentTarget: Vector2;
+	var currentPath:Array<Vec2>;
+	var currentTarget: Vec2;
 	var knownWalkablePlaces:Array<Bool>;
 
 	public function new(map:PathFinding.GameMap, controller:EnemyController) {
@@ -102,12 +97,12 @@ class EnemyAI {
 		if(currentPath.length == 0)
 			neko.Lib.print("I'm stuck!");
 
-		if(Vector2.distance(currentTarget, controller.position) < 10) {
+		if(Vec2.distance(currentTarget, controller.position) < 10) {
 			currentTarget = currentPath.pop();
 		}
 
-		var dir = currentTarget.subtract(controller.position);
-		dir.normalize(1);
+		var dir;
+		Vec2.normalize(currentTarget - controller.position, dir);
 		controller.move(dir);
 	}
 }

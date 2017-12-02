@@ -1,7 +1,7 @@
 package coldBoot.ai;
 
 import pathfinder.*;
-import lime.math.Vector2;
+import glm.Vec2;
 
 class GameMap implements IMap {	
 	public var rows( default, null ):Int;
@@ -29,7 +29,7 @@ class GameMap implements IMap {
 		return this.isWalkableData[nodeIdx];
 	}
 
-	public function toNodeIdx(pos:Vector2):Int {
+	public function toNodeIdx(pos:Vec2):Int {
 		return cast(pos.x/cellSize,Int) % cols
 			+ cast((pos.y/cellSize) * cols, Int);
 	}
@@ -49,12 +49,12 @@ class PathFinding {
 
 	}
 
-	public function ShortestPath(sourceIdx:Int, toTargetIdx:Int, map:GameMap):Array<Vector2> {
+	public function ShortestPath(sourceIdx:Int, toTargetIdx:Int, map:GameMap):Array<Vec2> {
 		var source = map.toCoordinate(sourceIdx);
 		var toTarget = map.toCoordinate(toTargetIdx);
 		var pathFinder = new Pathfinder(map);
 		return pathFinder.createPath(new Coordinate(cast(source.x, Int), cast(source.y, Int)), new Coordinate(cast(toTarget.x, Int), cast(toTarget.y, Int)), EHeuristic.PRODUCT, false, false).map(function(coord) {
-			return new Vector2(coord.x*map.cellSize+map.cellSize/2, coord.y*map.cellSize+map.cellSize/2);
+			return new Vec2(coord.x*map.cellSize+map.cellSize/2, coord.y*map.cellSize+map.cellSize/2);
 		});
 	}
 }

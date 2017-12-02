@@ -1,7 +1,11 @@
 package coldBoot.entities;
 
+import coldBoot.ai.*;
+
 class Enemy extends Entity {
-	public function new() 
+	var brain:EnemyAI;
+
+	public function new()
 	{
 		super();
 	}
