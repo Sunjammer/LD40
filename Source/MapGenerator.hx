@@ -1,8 +1,6 @@
 import openfl.display.Sprite;
 import openfl.display.BitmapData;
 import openfl.display.Bitmap;
-import openfl.geom.Rectangle;
-import openfl.geom.Point;
 import glm.Vec2;
 
 enum Direction {
@@ -13,6 +11,7 @@ enum Direction {
 }
 
 interface Tile {
+    public function isOpen(): Bool;
     public function isPathOpen(direction: Direction): Bool;
 }
 
@@ -24,7 +23,7 @@ interface TileMap {
 }
 
 class MapGenerator {
-    public static function recursiveBacktracking(startPoint: Point, width: UInt, height: UInt): TileMap {
-        return RecursiveBacktracking.generate(startPoint, width, height);
+    public static function recursiveBacktracking(randomSeed: Int, startPoint: Vec2, width: UInt, height: UInt): TileMap {
+        return RecursiveBacktracking.generate(randomSeed, startPoint, width, height);
     }
 }
