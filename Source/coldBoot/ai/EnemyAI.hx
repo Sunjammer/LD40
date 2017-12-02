@@ -51,7 +51,9 @@ class EnemyAI {
 		}
 		knownWalkablePlaces[map.toNodeIdx(controller.position)] = true; // Add spawn point
 
-		enemyMap = new PathFinding.GameMap(map.cols, map.rows, map.cellSize, knownWalkablePlaces);
+		enemyMap = new PathFinding.GameMap(map.cols, map.rows, map.cellSize, function(idx) { 
+			return knownWalkablePlaces[idx];
+		});
 	}
 
 	public function performAction() {
@@ -63,25 +65,25 @@ class EnemyAI {
 			var leftIdx = map.toNodeIdx(controller.position) - 1;
 			var rightIdx = map.toNodeIdx(controller.position) + 1;
 
-			if(map.isWalkableIdx(forwardIdx) && !knownWalkablePlaces[forwardIdx])
+			if(map.isWalkableByIdx(forwardIdx) && !knownWalkablePlaces[forwardIdx])
 			{
 				currentPathStack.add(forwardIdx);
 				knownWalkablePlaces[forwardIdx] = true;
 			}
 
-			if(map.isWalkableIdx(backwardIdx) && !knownWalkablePlaces[backwardIdx])
+			if(map.isWalkableByIdx(backwardIdx) && !knownWalkablePlaces[backwardIdx])
 			{
 				currentPathStack.add(backwardIdx);
 				knownWalkablePlaces[backwardIdx] = true;
 			}
 
-			if(map.isWalkableIdx(leftIdx) && !knownWalkablePlaces[leftIdx])
+			if(map.isWalkableByIdx(leftIdx) && !knownWalkablePlaces[leftIdx])
 			{
 				currentPathStack.add(leftIdx);
 				knownWalkablePlaces[leftIdx] = true;
 			}
 
-			if(map.isWalkableIdx(rightIdx) && !knownWalkablePlaces[rightIdx])
+			if(map.isWalkableByIdx(rightIdx) && !knownWalkablePlaces[rightIdx])
 			{
 				currentPathStack.add(rightIdx);
 				knownWalkablePlaces[rightIdx] = true;
@@ -95,7 +97,7 @@ class EnemyAI {
 		}
 
 		if(currentPath.length == 0)
-			neko.Lib.print("I'm stuck!");
+			trace("Enemy: I'm stuck!");
 
 		if(Vec2.distance(currentTarget, controller.position) < 10) {
 			currentTarget = currentPath.pop();

@@ -8,25 +8,20 @@ class GameMap implements IMap {
 	public var cols( default, null ):Int;
 
 	public var cellSize:Float;
-	var isWalkableData:Array<Bool>;
+	public var isWalkableByIdx:Int -> Bool;
 
-	public function new(p_cols:Int, p_rows:Int, cellSize:Float, isWalkableData:Array<Bool>)
+	public function new(p_cols:Int, p_rows:Int, cellSize:Float, isWalkableByIdx:Int -> Bool)
 	{
 		cols = p_cols;
 		rows = p_rows;
 		this.cellSize = cellSize;
-		this.isWalkableData = isWalkableData;
+		this.isWalkableByIdx = isWalkableByIdx;
 		// create an array of tiles, and determine if they are walkable or obstructed
 	}
 	
 	public function isWalkable(p_x:Int, p_y:Int):Bool
 	{
-		return isWalkableIdx(posToNodeIdx(p_x, p_y));
-	}
-
-	public function isWalkableIdx(nodeIdx:Int):Bool
-	{
-		return this.isWalkableData[nodeIdx];
+		return isWalkableByIdx(posToNodeIdx(p_x, p_y));
 	}
 
 	public function toNodeIdx(pos:Vec2):Int {
