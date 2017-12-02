@@ -12,6 +12,7 @@
 	<haxelib name="delta" />
 	<haxelib name="hscript" />
 	<haxelib name="glm" />
+	<haxelib name="pathfinder" />
 	
 	<!--assets path="Assets" rename="assets" /-->
 	
