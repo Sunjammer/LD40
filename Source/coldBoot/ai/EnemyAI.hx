@@ -35,7 +35,7 @@ class EnemyController {
 	}
 }
 
-class Enemy {
+class EnemyAI {
 	var pathMemory:PathMemory;
 	var controller:EnemyController;
 	var map:PathFinding.GameMap;
@@ -43,6 +43,7 @@ class Enemy {
 	
 	var currentPathStack:GenericStack<Int> = new GenericStack<Int>();
 	var currentPath:Array<Vector2>;
+	var currentTarget: Vector2;
 	var knownWalkablePlaces:Array<Bool>;
 
 	public function new(map:PathFinding.GameMap, controller:EnemyController) {
@@ -101,12 +102,11 @@ class Enemy {
 		if(currentPath.length == 0)
 			neko.Lib.print("I'm stuck!");
 
-		var supposedToBeHere = currentPath[currentPath.length - 1];
-		if(Vector2.distance(supposedToBeHere, controller.position) < 10) {
-			currentPath.pop();
+		if(Vector2.distance(currentTarget, controller.position) < 10) {
+			currentTarget = currentPath.pop();
 		}
 
-		var dir = supposedToBeHere.subtract(controller.position);
+		var dir = currentTarget.subtract(controller.position);
 		dir.normalize(1);
 		controller.move(dir);
 	}
