@@ -129,7 +129,7 @@ class PulseRay
 		var progressDT = newProgress - pulseProgress;
 		pulseProgress = newProgress;
 		health -= progressDT * healthDecay;
-		trace("Health: " + health);
+		//trace("Health: " + health);
 		if (closestHit != null && pulseProgress > closestHit.start)
 		{
 			trace("Closest hit: " + closestHit.start);
