@@ -1,13 +1,11 @@
+package coldBoot.map;
+
 import openfl.display.Sprite;
 import openfl.display.BitmapData;
 import openfl.display.Bitmap;
 import openfl.geom.Rectangle;
 import openfl.geom.Point;
 import glm.Vec2;
-import MapGenerator.Direction;
-import MapGenerator.DirectionExtensions;
-import MapGenerator.Tile;
-import MapGenerator.TileMap;
 
 class Node implements Tile {
 
