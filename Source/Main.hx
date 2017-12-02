@@ -15,6 +15,7 @@ class Input {
 class Main extends Sprite {
 	var game: Game;
 	var input: Input;
+	public static var debugDraw: Sprite;
 	
 	public function test(): Void {
 		trace("somethign");
@@ -25,7 +26,9 @@ class Main extends Sprite {
 		super();
 		
 		game = new Game();
+		debugDraw = new Sprite();
 		addChild(game);
+		game.addChild(debugDraw);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
@@ -63,13 +66,14 @@ class Main extends Sprite {
 		
 	}
 	
-	
-	
 	function onEnterFrame(e:Event):Void
 	{
 		var newTime = Timer.stamp();
 		var dt = newTime- prevTime;
 		prevTime = newTime;
+					
+		debugDraw.removeChildren();
+		debugDraw.graphics.clear();
 		
 		game.update(dt);
 		game.render();

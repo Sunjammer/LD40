@@ -18,7 +18,7 @@ class InitialState extends Shape implements IGameState
 	{
 		g.addChild(this);
 		alpha = 0;
-		Delta.tween(this).prop("alpha", 1, 2).ease(Elastic.easeIn).onComplete(doneInitializing);
+		Delta.tween(this).prop("alpha", 1, 0.1).ease(Elastic.easeIn).onComplete(doneInitializing);
 		trace("Entering initial state");
 	}
 	
