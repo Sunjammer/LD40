@@ -1,6 +1,8 @@
 package coldBoot.states;
 import coldBoot.Entity;
+import coldBoot.Level;
 import coldBoot.entities.ActiveSonar;
+import glm.Vec2;
 import openfl.display.DisplayObjectContainer;
 
 class GamePlayState extends DisplayObjectContainer implements IGameState
@@ -17,7 +19,13 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		trace("Entered gameplay state");
 		rootEntity = new Entity();
 		g.addChild(this);
-		rootEntity.add(new ActiveSonar());
+		
+		var level = new Level();
+		rootEntity.add(level);
+		var sonar = new ActiveSonar();
+		sonar.position = new Vec2(60, 60);
+		rootEntity.add(sonar);
+		sonar.firePulse(level);
 	}
 	
 	public function render(g:Game):Void
