@@ -19,28 +19,35 @@ enum Edge
 }
 
 class Angles
-{	
+{
 	public static function AngleToEdge(angle: Float): Edge
 	{
-		trace("Angle before: " + angle);
 
 		angle += Math.PI / 4;
 		angle = angle % (Math.PI * 2);
-		
-		trace("Angle after: " + angle);
+
 		if (angle >= 0 && angle < Math.PI / 2.0)
 			return Edge.Right;
-		if (angle >= Math.PI / 2.0 && angle < Math.PI) 
+		if (angle >= Math.PI / 2.0 && angle < Math.PI)
 			return Edge.Bottom;
-		if (angle >= Math.PI && angle < Math.PI + Math.PI/2.0) 
+		if (angle >= Math.PI && angle < Math.PI + Math.PI/2.0)
 			return Edge.Left;
 		else {
 			return Edge.Top;
 		}
 	}
-	
+
 	public static function AngleInDirectionOfEdge(angle: Float, e: Edge): Bool
 	{
+		var dir = new Vec2(Math.cos(angle), Math.sin(angle));
+		if (e == Edge.Left && dir.x > 0)
+			return true;
+		if (e == Edge.Right && dir.x < 0)
+			return true;
+		if (e == Edge.Top && dir.y > 0)
+			return true;
+		if (e == Edge.Bottom && dir.y < 0)
+			return true;
 		return false;
 	}
 }
@@ -57,7 +64,7 @@ class PulseRay
 	public var health:Float;
 	public var lastWallHit:Wall;
 	var ignoreWall:Wall;
-	
+
 	public function new(r: Ray, speed: Float, startOffet: Float, ignoreWall: Wall, health: Float)
 	{
 		this.health = health;
@@ -66,7 +73,7 @@ class PulseRay
 		this.speed = speed;
 		this.rayStartOffset = startOffet;
 	}
-	
+
 	public function getClosesCollisionPoint(): Vec2
 	{
 		var x = RayCollisionHelper.hitStartX(closestHit);
@@ -74,6 +81,21 @@ class PulseRay
 		return new Vec2(x, y);
 	}
 	
+	public function getReflectionVector(): Vec2
+	{
+		var original = new Vec2(ray.dir.x, ray.dir.y);
+		trace("Original: " + original);
+		original = Vec2.normalize(original, original);
+		var edgeHit = getEdgeOfLastWallHit();
+		switch (edgeHit)
+		{
+			case Edge.Left | Edge.Right: return new Vec2( -original.x, original.y);
+			case Edge.Top | Edge.Bottom: return new Vec2( original.x, -original.y);
+			case _: throw "hax er dust";
+		}
+		return new Vec2();
+	}
+
 	public function getEdgeOfLastWallHit(): Edge
 	{
 		if (lastWallHit != null)
@@ -83,23 +105,20 @@ class PulseRay
 			var hit = new Vec2(hitX, hitY);
 			var boxOrigin = new Vec2(lastWallHit.x, lastWallHit.y);
 			var boxSize = new Vec2(lastWallHit.w, lastWallHit.h);
-			
+
 			var boxRelativeHit = Vec2.subtractVecOp(hit, boxOrigin);
 			var scaledBoxRelativeHit =  new Vec2(boxRelativeHit.x / boxSize.x, boxRelativeHit.y / boxSize.y);
 			var scaledBoxCenter = new Vec2(0.5, 0.5);
 			var centerRelativeHit = Vec2.subtractVecOp(scaledBoxRelativeHit, scaledBoxCenter);
-			
-			
-			
+
 			var angle = Math.atan2(centerRelativeHit.y, centerRelativeHit.x) + (Math.PI * 2);
 
 			var ret = Angles.AngleToEdge(angle);
-			trace("Edge: " + ret);
 			return ret;
 		}
 		return Edge.None;
 	}
-	
+
 	public function checkCollision(wall: Wall)
 	{
 		if (wall == ignoreWall)
@@ -120,7 +139,7 @@ class PulseRay
 			}
 		}
 	}
-	
+
 	public function update(progress: Float): Bool
 	{
 		var newProgress = (progress - rayStartOffset) * speed;
@@ -130,26 +149,26 @@ class PulseRay
 		//trace("Health: " + health);
 		if (closestHit != null && pulseProgress > closestHit.start)
 		{
-			trace("Closest hit: " + closestHit.start);
-			health -= progressDT * 2 * healthDecay;
+			health -= progressDT * 4 * healthDecay;
 			return true;
 		}
 		return false;
 	}
-	
+
 	public function render()
 	{
 		Main.debugDraw.graphics.lineStyle(1, 0x0000ff);
 		Main.debugDraw.graphics.moveTo(ray.start.x, ray.start.y);
-		Main.debugDraw.graphics.lineTo(ray.end.x, ray.end.y);
-		
-		
+
 		var start = new Vec2(ray.start.x, ray.start.y);
 		var end = new Vec2(ray.end.x, ray.end.y);
 		var outRay = new Vec2();
 		var pulseRayPos = Vec2.lerp(start, end, pulseProgress, outRay);
-		Main.debugDraw.graphics.drawCircle(pulseRayPos.x, pulseRayPos.y, 2);
 		
+		Main.debugDraw.graphics.lineTo(pulseRayPos.x, pulseRayPos.y);
+		
+		Main.debugDraw.graphics.drawCircle(pulseRayPos.x, pulseRayPos.y, 2);
+
 		Main.debugDraw.graphics.beginFill(0xff00ff);
 		if (closestHit != null)
 		{
@@ -166,6 +185,8 @@ class Pulse extends Entity
 	var speed: Float = 0.08;
 	var timeSinceLaunch: Float = 0;
 	var level:Level;
+	
+	var segmentOffset: Float = 0;
 
 	var rays: Array<PulseRay> = [];
 
@@ -178,7 +199,7 @@ class Pulse extends Entity
 	override public function onAdded()
 	{
 		super.onAdded();
-		generateRays(position, null, Edge.None);
+		generateOriginalRays();
 		traceRays();
 	}
 
@@ -191,9 +212,8 @@ class Pulse extends Entity
 		{
 			if (r.update(timeSinceLaunch))
 			{
-				var lastEdgeHit = r.getEdgeOfLastWallHit();
 				toBeRemoved.push(r);
-				generateRays(r.getClosesCollisionPoint(), r.lastWallHit, lastEdgeHit, r.health);
+				generateRays(r);
 				traceRays();
 			}
 			if (r.health <= 0)
@@ -204,26 +224,50 @@ class Pulse extends Entity
 		for (r in toBeRemoved)
 			rays.remove(r);
 	}
-
-	function generateRays(pos: Vec2, ignoreWall: Wall, edge: Edge, health: Float = 10)
+	
+	function generateOriginalRays()
 	{
-		trace("Genrating rays");
-		var nRays = 1;
+		var health = 20;
+		
+		var pos = position;
+		
+		var nRays = 5;
 		var rayLength = 200;
-		var segmentOffset = -1.2;
+		segmentOffset = 0.5;
 		var segmentSize = 2 * Math.PI / nRays;
 		for (i in 0...nRays)
 		{
 			var angle = segmentOffset + segmentSize * i;
-			if (Angles.AngleInDirectionOfEdge(angle, edge))
-				continue;
 			var endVec = new Vector(
 				(Math.cos(angle) * rayLength) + pos.x,
 				(Math.sin(angle) * rayLength) + pos.y);
 			var startVec = new Vector(pos.x, pos.y);
-			var r = new PulseRay(new Ray(startVec, endVec), speed, timeSinceLaunch, ignoreWall, health);
+			var r = new PulseRay(new Ray(startVec, endVec), speed, timeSinceLaunch, null, health);
 			rays.push(r);
 		}
+	}
+
+	function generateRays(originRay: PulseRay)
+	{
+		var rayLength = 200;
+		
+		var pos = originRay.getClosesCollisionPoint();
+		var ignoreWall = originRay.lastWallHit;
+		
+		//var edge = originRay.getEdgeOfLastWallHit();
+
+		var reflectionRay = originRay.getReflectionVector();
+		
+		var reflectionRayAngle = Math.atan2(reflectionRay.y, reflectionRay.x) + Math.PI;
+		var angle = reflectionRayAngle;
+/*		if (Angles.AngleInDirectionOfEdge(angle, edge))
+			return;*/
+		var endVec = new Vector(
+			(Math.cos(angle) * rayLength) + pos.x,
+			(Math.sin(angle) * rayLength) + pos.y);
+		var startVec = new Vector(pos.x, pos.y);
+		var r = new PulseRay(new Ray(startVec, endVec), speed, timeSinceLaunch, ignoreWall, originRay.health);
+		rays.push(r);
 	}
 
 	function traceRays()
@@ -231,7 +275,7 @@ class Pulse extends Entity
 		for (r in rays)
 		{
 			for (w in level.levelData)
-			{		
+			{
 				r.checkCollision(w);
 			}
 		}
