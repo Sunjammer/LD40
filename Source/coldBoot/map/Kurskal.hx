@@ -6,6 +6,10 @@ import openfl.display.Bitmap;
 import openfl.geom.Rectangle;
 import openfl.geom.Point;
 import glm.Vec2;
+import coldBoot.map.MapGenerator.Direction;
+import coldBoot.map.MapGenerator.DirectionExtensions;
+import coldBoot.map.MapGenerator.Tile;
+import coldBoot.map.MapGenerator.TileMap;
 
 class Node implements Tile {
 
