@@ -13,7 +13,8 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 
 	public function enter(g:Game):Void
 	{
-    rootEntity = new Entity();
+		trace("Entered gameplay state");
+		rootEntity = new Entity();
 		g.addChild(this);
 	}
 	
@@ -22,9 +23,10 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		rootEntity.render(this);
 	}
 
-	public function update(g:Game, dt:Float):IGameState
+	public function update(g:Game, dt:Float): IGameState
 	{
 		rootEntity.update(this, dt);
+		return this;
 	}
 
 	public function exit(g:Game):Void

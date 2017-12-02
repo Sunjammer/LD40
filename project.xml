@@ -11,6 +11,7 @@
 	<haxelib name="openfl" />
 	<haxelib name="delta" />
 	<haxelib name="hscript" />
+	<haxelib name="glm" />
 	
 	<!--assets path="Assets" rename="assets" /-->
 	

@@ -6,6 +6,7 @@ import tween.easing.Elastic;
 
 class InitialState extends Shape implements IGameState
 {
+	var initialized:Bool;
 	public function new()
 	{
 		super();
@@ -17,12 +18,23 @@ class InitialState extends Shape implements IGameState
 	{
 		g.addChild(this);
 		alpha = 0;
-		Delta.tween(this).prop("alpha", 1, 2).ease(Elastic.easeIn);
+		Delta.tween(this).prop("alpha", 1, 2).ease(Elastic.easeIn).onComplete(doneInitializing);
 		trace("Entering initial state");
+	}
+	
+	function doneInitializing() 
+	{
+		initialized = true;
 	}
 
 	public function update(g: Game, dt: Float): IGameState
 	{
+		if (initialized) 
+		{
+			var gamePlayState = new GamePlayState();
+			g.setState(gamePlayState);
+			return gamePlayState;
+		}
 		return this;
 	}
 
