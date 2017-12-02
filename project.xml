@@ -3,6 +3,7 @@
 	
 	<meta title="LD40" package="com.idiots.games" version="1.0.0" company="Fools" />
 	<app main="Main" path="Export" file="LD40" />
+	
 	<window require-shaders="true" />
 	
 	<source path="Source" />
