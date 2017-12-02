@@ -1,7 +1,6 @@
 package coldBoot.entities;
 import coldBoot.Level;
 import coldBoot.Wall;
-import coldBoot.entities.Pulse.Edges;
 import coldBoot.states.GamePlayState;
 import differ.Collision;
 import differ.data.RayCollision;
@@ -17,6 +16,10 @@ class Edges
 	public var bottom: Bool;
 
 	public function new () { }
+	public function toString() 
+	{
+		return "L: " + left + ", R: " + right + ", T: " + top + ", B: " + bottom;
+	}
 }
 
 class Angles 
@@ -25,7 +28,9 @@ class Angles
 	{
 		var e = 0.1;
 		var ret = new Edges();
-		if (angle < Math.PI/4 + e || angle > (Math.PI + (3*(Math.PI/4))) - e)
+		trace("Angle: " + angle);
+		if ((angle < Math.PI / 4 + e && angle > 0 - e) 
+		|| (angle > (Math.PI + (3*(Math.PI/4))) - e && angle < 2*Math.PI + e))
 		{
 			ret.right = true;
 		}
@@ -41,18 +46,25 @@ class Angles
 		{
 			ret.bottom = true;
 		}
+		trace("Edge hit: " + ret);
 		return ret;
 	}
 	
 	public static function AngleInDirectionOfEdge(angle: Float, e: Edges): Bool
 	{
 		var dir = new Vec2(Math.cos(angle), Math.sin(angle));
-		
-		if (e.left) return dir.x < 0;
-		if (e.right) return dir.x > 0;
-		if (e.top) return dir.y < 0;
-		if (e.bottom) return dir.y > 0;
-		return false;
+		trace("DIr: " + dir);
+		var ret = false;
+		if (e.left && dir.x > 0) 
+			ret = true;
+		if (e.right && dir.x < 0) 
+			ret = true;
+		if (e.top && dir.y < 0) 
+			ret = true;
+		if (e.bottom && dir.y > 0)  
+			ret = true;
+		trace("Angle in dir: " + ret);
+		return ret;
 	}
 }
 
@@ -95,7 +107,7 @@ class PulseRay
 			var hit = new Vec2(hitX, hitY);
 			var dir = hit - wallCenter;
 			var dirNormal = Vec2.normalize(dir, dir);
-			var angle = Math.atan2(dirNormal.y, -dirNormal.x);
+			var angle = Math.atan(dirNormal.y / dirNormal.x) % (Math.PI * 2);
 
 			return Angles.EdgeFromAngle(angle);
 		}
@@ -212,7 +224,7 @@ class Pulse extends Entity
 		trace("Genrating rays");
 		var nRays = 1;
 		var rayLength = 200;
-		var segmentOffset = 1.5523;
+		var segmentOffset = 1.0;
 		var segmentSize = 2 * Math.PI / nRays;
 		for (i in 0...nRays)
 		{
