@@ -1,12 +1,8 @@
 package coldBoot;
 import coldBoot.IGameState;
 import coldBoot.states.InitialState;
-import coldBoot.IGameState;
-import flash.display.DisplayObjectContainer;
-import openfl.display.Shape;
 import openfl.display.Sprite;
 import tween.Delta;
-import tween.easing.Elastic;
 
 class Game extends Sprite
 {

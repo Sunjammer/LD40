@@ -1,7 +1,8 @@
 package coldBoot.entities;
 import coldBoot.Entity;
+import coldBoot.states.GamePlayState;
 
-class Sonar extends Entity
+class Sonar extends ScriptableEntity
 {
 	var radius: Float = 10;
 
@@ -13,6 +14,5 @@ class Sonar extends Entity
 	override public function update(state:GamePlayState, dt:Float) 
 	{
 		super.update(state, dt);
-		
 	} 
 }

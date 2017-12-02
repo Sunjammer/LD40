@@ -1,7 +1,6 @@
 package coldBoot.entities;
-import coldBoot.Entity;
 
-class Turret extends Entity
+class Turret extends ScriptableEntity
 {
 	var orientation: Float = 0;
 	var shootRadius: Float = 10;
@@ -10,6 +9,11 @@ class Turret extends Entity
 	public function new()
 	{
 		super();
+	}
+	
+	public function shoot() 
+	{
+		trace("Turret fired shot");
 	}
 
 }
