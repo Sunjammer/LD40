@@ -1,6 +1,7 @@
 package coldBoot.entities;
 import coldBoot.Level;
 import coldBoot.Wall;
+import coldBoot.entities.Pulse.Edge;
 import coldBoot.states.GamePlayState;
 import differ.Collision;
 import differ.data.RayCollision;
@@ -8,63 +9,39 @@ import differ.math.Vector;
 import differ.shapes.Ray;
 import glm.Vec2;
 
-class Edges
+enum Edge
 {
-	public var left: Bool;
-	public var right: Bool;
-	public var top: Bool;
-	public var bottom: Bool;
-
-	public function new () { }
-	public function toString() 
-	{
-		return "L: " + left + ", R: " + right + ", T: " + top + ", B: " + bottom;
-	}
+	Left;
+	Right;
+	Top;
+	Bottom;
+	None;
 }
 
-class Angles 
-{
-	public static function EdgeFromAngle(angle: Float) : Edges
+class Angles
+{	
+	public static function AngleToEdge(angle: Float): Edge
 	{
-		var e = 0.1;
-		var ret = new Edges();
-		trace("Angle: " + angle);
-		if ((angle < Math.PI / 4 + e && angle > 0 - e) 
-		|| (angle > (Math.PI + (3*(Math.PI/4))) - e && angle < 2*Math.PI + e))
-		{
-			ret.right = true;
+		trace("Angle before: " + angle);
+
+		angle += Math.PI / 4;
+		angle = angle % (Math.PI * 2);
+		
+		trace("Angle after: " + angle);
+		if (angle >= 0 && angle < Math.PI / 2.0)
+			return Edge.Right;
+		if (angle >= Math.PI / 2.0 && angle < Math.PI) 
+			return Edge.Bottom;
+		if (angle >= Math.PI && angle < Math.PI + Math.PI/2.0) 
+			return Edge.Left;
+		else {
+			return Edge.Top;
 		}
-		if (angle > (Math.PI/4) - e && angle < (3 * (Math.PI / 4)) + e)
-		{
-			ret.top = true;
-		}
-		if (angle > (3 * (Math.PI / 4)) - e && angle < Math.PI + (Math.PI / 4) + e)
-		{
-			ret.left = true;
-		}
-		if (angle > Math.PI + (Math.PI / 4) - e && e < Math.PI + 3 * (Math.PI / 4) + e)
-		{
-			ret.bottom = true;
-		}
-		trace("Edge hit: " + ret);
-		return ret;
 	}
 	
-	public static function AngleInDirectionOfEdge(angle: Float, e: Edges): Bool
+	public static function AngleInDirectionOfEdge(angle: Float, e: Edge): Bool
 	{
-		var dir = new Vec2(Math.cos(angle), Math.sin(angle));
-		trace("DIr: " + dir);
-		var ret = false;
-		if (e.left && dir.x > 0) 
-			ret = true;
-		if (e.right && dir.x < 0) 
-			ret = true;
-		if (e.top && dir.y < 0) 
-			ret = true;
-		if (e.bottom && dir.y > 0)  
-			ret = true;
-		trace("Angle in dir: " + ret);
-		return ret;
+		return false;
 	}
 }
 
@@ -97,21 +74,30 @@ class PulseRay
 		return new Vec2(x, y);
 	}
 	
-	public function getEdgeOfLastWallHit(): Edges
+	public function getEdgeOfLastWallHit(): Edge
 	{
 		if (lastWallHit != null)
 		{
 			var hitX = RayCollisionHelper.hitStartX(closestHit);
 			var hitY = RayCollisionHelper.hitStartY(closestHit);
-			var wallCenter = new Vec2(lastWallHit.x + (lastWallHit.w / 2.0), lastWallHit.y + (lastWallHit.h / 2.0));
 			var hit = new Vec2(hitX, hitY);
-			var dir = hit - wallCenter;
-			var dirNormal = Vec2.normalize(dir, dir);
-			var angle = Math.atan(dirNormal.y / dirNormal.x) % (Math.PI * 2);
+			var boxOrigin = new Vec2(lastWallHit.x, lastWallHit.y);
+			var boxSize = new Vec2(lastWallHit.w, lastWallHit.h);
+			
+			var boxRelativeHit = Vec2.subtractVecOp(hit, boxOrigin);
+			var scaledBoxRelativeHit =  new Vec2(boxRelativeHit.x / boxSize.x, boxRelativeHit.y / boxSize.y);
+			var scaledBoxCenter = new Vec2(0.5, 0.5);
+			var centerRelativeHit = Vec2.subtractVecOp(scaledBoxRelativeHit, scaledBoxCenter);
+			
+			
+			
+			var angle = Math.atan2(centerRelativeHit.y, centerRelativeHit.x) + (Math.PI * 2);
 
-			return Angles.EdgeFromAngle(angle);
+			var ret = Angles.AngleToEdge(angle);
+			trace("Edge: " + ret);
+			return ret;
 		}
-		return new Edges();
+		return Edge.None;
 	}
 	
 	public function checkCollision(wall: Wall)
@@ -192,7 +178,7 @@ class Pulse extends Entity
 	override public function onAdded()
 	{
 		super.onAdded();
-		generateRays(position, null, new Edges());
+		generateRays(position, null, Edge.None);
 		traceRays();
 	}
 
@@ -219,17 +205,17 @@ class Pulse extends Entity
 			rays.remove(r);
 	}
 
-	function generateRays(pos: Vec2, ignoreWall: Wall, edges: Edges, health: Float = 10)
+	function generateRays(pos: Vec2, ignoreWall: Wall, edge: Edge, health: Float = 10)
 	{
 		trace("Genrating rays");
 		var nRays = 1;
 		var rayLength = 200;
-		var segmentOffset = 1.0;
+		var segmentOffset = -1.2;
 		var segmentSize = 2 * Math.PI / nRays;
 		for (i in 0...nRays)
 		{
 			var angle = segmentOffset + segmentSize * i;
-			if (Angles.AngleInDirectionOfEdge(angle, edges))
+			if (Angles.AngleInDirectionOfEdge(angle, edge))
 				continue;
 			var endVec = new Vector(
 				(Math.cos(angle) * rayLength) + pos.x,
