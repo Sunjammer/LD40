@@ -1,7 +1,9 @@
 package coldBoot;
 import coldBoot.IGameState;
+#if windows
 import coldBoot.rendering.PostEffect;
 import coldBoot.rendering.SceneRenderBase;
+#end
 import coldBoot.states.InitialState;
 import openfl.display.Sprite;
 import tween.Delta;
@@ -10,13 +12,16 @@ class Game extends Sprite
 {
 	var currentState: IGameState;
 
+  #if windows
   var sceneRenderer:SceneRenderBase;
+  #end
   
 	public function new()
 	{
 		super();
 		setState(new InitialState());
     
+    #if windows
     addChild(sceneRenderer = new SceneRenderBase({width:800, height:600}));
     sceneRenderer.setPostEffects(
       [
@@ -24,6 +29,7 @@ class Game extends Sprite
         //new PostEffect("assets/scanline.frag")
       ]
     );
+    #end
       
 	}
   
@@ -31,10 +37,12 @@ class Game extends Sprite
 	public function update(dt: Float)
 	{
 		Delta.step(dt);
+    #if windows
 		sceneRenderer.update(this, dt);
+    #end
 	}
 
- #if !display
+ #if (!display && windows)
   override function __renderGL(renderSession):Void {
     sceneRenderer.preRender();
 		currentState.render(this);

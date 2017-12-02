@@ -1,10 +1,8 @@
 package;
 import coldBoot.Game;
-import coldBoot.rendering.PostEffect;
 import haxe.Timer;
 import hscript.Interp;
 import hscript.Parser;
-import openfl.display.OpenGLView;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
@@ -25,7 +23,6 @@ class Main extends Sprite {
 	}
 	
 	var prevTime: Float;
-  var post:coldBoot.rendering.PostEffect;
 	public function new () {
 		super();
 		
