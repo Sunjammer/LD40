@@ -103,8 +103,8 @@ private class RBTileMap implements MapGenerator.TileMap {
         var len = Math.ceil(Point.distance(p1, p2));
         for (i in 0...len) {
             var p = Point.interpolate(p1, p2, i / len);
-            var x = cast(Math.max(Math.min(p.x, width * 3 - 1), 0), Int);
-            var y = cast(Math.max(Math.min(p.y, height * 3 - 1), 0), Int);
+            var x = Math.floor(Math.max(Math.min(p.x, width * 3 - 1), 0));
+            var y = Math.floor(Math.max(Math.min(p.y, height * 3 - 1), 0));
             bitmapData.setPixel(x, y, 0xffffffff);
         }
     }
@@ -112,7 +112,7 @@ private class RBTileMap implements MapGenerator.TileMap {
     public function getTile(point: Vec2): RBTile {
         if (point.x >= 0 && point.x < width &&
             point.y >= 0 && point.y < height) {
-            var offset = cast(point.y, UInt) * width + cast(point.x, UInt);
+            var offset = Math.floor(point.y) * width + Math.floor(point.x);
             return tiles[offset];
         } else {
             return null;
@@ -122,7 +122,7 @@ private class RBTileMap implements MapGenerator.TileMap {
     public function getTilePoint(point: Point): RBTile {
         if (point.x >= 0 && point.x < width &&
             point.y >= 0 && point.y < height) {
-            var offset = cast(point.y, UInt) * width + cast(point.x, UInt);
+            var offset = Math.floor(point.y) * width + Math.floor(point.x);
             return tiles[offset];
         } else {
             return null;
@@ -168,7 +168,7 @@ class RecursiveBacktracking {
     }
 
     private static function carvePassageFrom(randomSeed:Int, node: Node, origin: RBTile, point: Point, tileMap: RBTileMap) {
-        var directions = Rand.shuffle(randomSeed, [Direction.North, Direction.East, Direction.South, Direction.West]);
+        var directions = Randomize.shuffle([Direction.North, Direction.East, Direction.South, Direction.West]);
         for (d in directions) {
             var newPoint = point.add(DirectionHelper.toPoint(d));
             var tile = tileMap.getTilePoint(newPoint);
@@ -181,24 +181,5 @@ class RecursiveBacktracking {
             carvePassageFrom(randomSeed, n, tile, newPoint, tileMap);
             node.children.push(n);
         }   
-    }
-}
-
-private class Rand {
-    public static function shuffle<T>(randomSeed: Int, arr:Array<T>):Array<T> {
-		if (arr!=null) {
-			for (i in 0...arr.length) {
-				var j = int(randomSeed, 0, arr.length - 1);
-				var a = arr[i];
-				var b = arr[j];
-				arr[i] = b;
-				arr[j] = a;
-			}
-		}
-		return arr;
-    }
-
-    public static inline function int(randomSeed: Int, from:Int, to:Int):Int {
-		return from + Math.floor(((to - from + 1) * Randomize.getSeededRandom()));
     }
 }
