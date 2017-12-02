@@ -14,7 +14,8 @@
 	<haxelib name="glm" />
 	<haxelib name="pathfinder" />
 	<haxelib name="differ" />
-  <haxelib name="AudioJank"/>
+	<haxelib name="AudioJank"/>
+	<haxelib name="random" />
 	
 	<assets path="Assets" rename="assets" />
 	

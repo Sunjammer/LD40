@@ -2,6 +2,7 @@ package coldBoot.ai;
 
 import glm.Vec2;
 import haxe.ds.GenericStack;
+import Random;
 
 interface Goal {
 }
@@ -59,36 +60,56 @@ class EnemyAI {
 	}
 
 	public function performAction() {
-		if(currentPath.length == 0)
+		if(currentPath.length == 0 && nearTarget())
 		{
+			controller.position = currentTarget;
 			var currentIdx = map.toNodeIdx(controller.position);
-			var forwardIdx = currentIdx + map.cols;
-			var backwardIdx = currentIdx - map.cols;
-			var leftIdx = currentIdx - 1;
-			var rightIdx = currentIdx + 1;
+			var currentPos = map.toCoordinate(currentIdx);
 
-			if(forwardIdx >= 0 && map.isWalkableByIdx(forwardIdx) && !knownWalkablePlaces[forwardIdx])
+			var newStackItems = new Array<Int>();
+
+			if(currentPos.y + 1 < map.rows)
 			{
-				currentPathStack.add(forwardIdx);
-				knownWalkablePlaces[forwardIdx] = true;
+				var forwardIdx = map.posToNodeIdx(currentPos.x, currentPos.y + 1);
+				if(map.isWalkableByIdx(forwardIdx) && !knownWalkablePlaces[forwardIdx])
+				{
+					newStackItems.push(forwardIdx);
+					knownWalkablePlaces[forwardIdx] = true;
+				}
 			}
 
-			if(backwardIdx >= 0 && map.isWalkableByIdx(backwardIdx) && !knownWalkablePlaces[backwardIdx])
+			if(currentPos.y - 1 >= 0)
 			{
-				currentPathStack.add(backwardIdx);
-				knownWalkablePlaces[backwardIdx] = true;
+				var backwardIdx = map.posToNodeIdx(currentPos.x, currentPos.y - 1);
+				if(map.isWalkableByIdx(backwardIdx) && !knownWalkablePlaces[backwardIdx])
+				{
+					newStackItems.push(backwardIdx);
+					knownWalkablePlaces[backwardIdx] = true;
+				}
 			}
 
-			if(leftIdx >= 0 && map.isWalkableByIdx(leftIdx) && !knownWalkablePlaces[leftIdx])
+			if(currentPos.x + 1 < map.cols)
 			{
-				currentPathStack.add(leftIdx);
-				knownWalkablePlaces[leftIdx] = true;
+				var rightIdx = map.posToNodeIdx(currentPos.x + 1, currentPos.y);
+				if(map.isWalkableByIdx(rightIdx) && !knownWalkablePlaces[rightIdx])
+				{
+					newStackItems.push(rightIdx);
+					knownWalkablePlaces[rightIdx] = true;
+				}
 			}
 
-			if(rightIdx >= 0 && map.isWalkableByIdx(rightIdx) && !knownWalkablePlaces[rightIdx])
+			if(currentPos.x - 1 >= 0)
 			{
-				currentPathStack.add(rightIdx);
-				knownWalkablePlaces[rightIdx] = true;
+				var leftIdx = map.posToNodeIdx(currentPos.x - 1, currentPos.y);
+				if(map.isWalkableByIdx(leftIdx) && !knownWalkablePlaces[leftIdx])
+				{
+					newStackItems.push(leftIdx);
+					knownWalkablePlaces[leftIdx] = true;
+				}
+			}
+
+			for(i in Random.shuffle(newStackItems)) {
+				currentPathStack.add(i);
 			}
 
 			var nextPath = currentPathStack.pop();
@@ -98,14 +119,20 @@ class EnemyAI {
 			}
 		}
 
-		trace(currentPath);
-
-		if(Vec2.distance(currentTarget, controller.position) < 2 && currentPath.length > 0) {
-			currentTarget = currentPath.pop();
+		if(nearTarget()) {
+			controller.position = currentTarget;
+			if(currentPath.length > 0) {
+				currentTarget = currentPath.pop();
+			}
 		}
-
+		
 		var dir = new Vec2(0,0);
 		Vec2.normalize(currentTarget - controller.position, dir);
+		trace(dir);
 		controller.move(dir);
+	}
+
+	function nearTarget() {
+		return Vec2.distance(currentTarget, controller.position) < 2;
 	}
 }

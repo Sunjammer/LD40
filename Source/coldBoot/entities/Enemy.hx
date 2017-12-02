@@ -7,11 +7,10 @@ import glm.Vec2;
 class Enemy extends Entity implements EnemyAI.EnemyController {
 	var brain:EnemyAI;
 
-	public function new(map:PathFinding.GameMap)
+	public function new(map:PathFinding.GameMap, position:Vec2)
 	{
 		super();
-		position.x = 60;
-		position.y = 60;
+		this.position = position;
 		brain = new EnemyAI(map, this);
 	}
 

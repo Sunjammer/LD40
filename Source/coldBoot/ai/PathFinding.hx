@@ -29,9 +29,9 @@ class GameMap implements IMap {
 			+ Math.floor(pos.y/cellSize) * cols;
 	}
 
-	function posToNodeIdx(x:Int, y:Int):Int {
+	public function posToNodeIdx(x:Int, y:Int):Int {
 		return x % cols
-			+ Math.floor(y * cols);
+			+ y * cols;
 	}
 
 	public function toCoordinate(nodeIdx:Int):Coordinate {
