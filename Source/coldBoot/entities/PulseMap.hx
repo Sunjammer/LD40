@@ -79,7 +79,6 @@ class PulseTileBuffer
 	{
 		var pt = pulseTiles[x + (y * width)];
 		var id = pulsesIdCounter;
-		trace("PulseID : " + id);
 		pt.setPulse(id, new Intensity(type, intensity));
 		pulsesIdCounter++;
 		pulsesTimers.set(id, 1.0);
@@ -113,7 +112,6 @@ class PulseTileBuffer
 				{
 					if (pulsesTimers[k] <= 0)
 					{
-						trace("Removing pulse: " + (rmCount++));
 						pt.pulses.remove(k);
 						continue;
 					}

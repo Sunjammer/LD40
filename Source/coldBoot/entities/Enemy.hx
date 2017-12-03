@@ -43,7 +43,7 @@ class Enemy extends Entity implements EnemyAI.EnemyController {
 		if (hp <= 0)
 			info.game.getCurrentState().getRootEntity().remove(this);
 			
-		/*timer += info.deltaTime;
+		timer += info.deltaTime;
 		if (timer > pulseTimer)
 		{
 			var pulseBuffer: PulseMap = cast info.game.getCurrentState().getRootEntity().getChildEntitiesByTag("pulseMap")[0];
@@ -52,9 +52,9 @@ class Enemy extends Entity implements EnemyAI.EnemyController {
 			var tileX = Math.floor((position.x - 5) / level.pixelSize);
 			var tileY = Math.floor((position.y - 5) / level.pixelSize);
 			trace("X: " + tileX + ", " + tileY);
-			pulseBuffer.startPulse(tileX, tileY, 50, 0);
+			pulseBuffer.startPulse(tileX, tileY, 50, 1);
 			timer = 0;
-		}*/
+		}
 	}
 	
 	public function getShape() : Shape
