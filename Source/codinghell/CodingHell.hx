@@ -43,7 +43,7 @@ class CodingHell extends Sprite{
     
     state = Status;
     
-    var tf = new TextFormat("Perfect DOS VGA 437 Win", 16, 0xff0000);
+    var tf = new TextFormat("Perfect DOS VGA 437 Win", 16, 0xFFFFFF);
     
     output = new TextField();
     input = new TextField();
@@ -130,11 +130,11 @@ class CodingHell extends Sprite{
     graphics.beginFill(0);
     graphics.drawRect(0, 0, terminalWidth, stage.stageHeight);
     
-    graphics.beginFill(0xff0000);
+    graphics.beginFill(0xFFFFFF);
     graphics.drawRect(0, input.y, terminalWidth, 3);
-    graphics.beginFill(0xff0000);
+    graphics.beginFill(0xFFFFFF);
     graphics.drawRect(0, statusText.y, terminalWidth, 3);
-    graphics.beginFill(0xff0000);
+    graphics.beginFill(0xFFFFFF);
     graphics.drawRect(0, 0, 2, stage.stageHeight);
     
   }
