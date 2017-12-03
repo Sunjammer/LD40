@@ -96,7 +96,9 @@ class PostEffect
 		else
 		{
 			var id = shader.uniform(uniform);
+			#if js
 			if (id != null) uniforms.set(uniform, {id: id, value: value});
+			#end
 		}
 	}
   
