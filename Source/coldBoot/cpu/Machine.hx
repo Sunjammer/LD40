@@ -54,6 +54,10 @@ class Machine
 		this.registers = registers;
 	}
 
+	public function getPC(): Int {
+		return pc;
+	}
+
 	function setupLabelCache() {
 		labelCache = new Map();
 		program.mapi(function(lineNumber, instr) {
