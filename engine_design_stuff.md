@@ -49,6 +49,12 @@ As described above, this mixture of renderers means we have to be aware of what 
 
 Personally I think Sprite/TextField/Bitmap and all that Flash jazz is perfect for UI, but for game rendering we should do as much GL as possible.
 
+##### Notes on OpenGLView
+
+OpenGLView is a DisplayObject that lets you override its render call in an OpenFL-friendly way (which means it's a little annoying). You extend OpenGLView and assign a render callback by setting `this.render = myRenderFunc;` 
+
+https://github.com/openfl/openfl-samples/blob/master/features/display/SimpleOpenGLView/Source/Main.hx is a fairly complete example including texture loading from the Assets system.
+
 #### Entities
 
 Entities are basically our Unity GameObjects, but they're not really developed yet. They're just nodes like what OpenFL has but without all the overhead, so we can really decide for ourselves what to do with them. I imagined Entities would only really be relevant to game updates to represent game state, or to be a graph that can be looked up during a GL-driven render update.
