@@ -5,6 +5,7 @@ import coldBoot.Level;
 import coldBoot.UpdateInfo;
 import coldBoot.entities.ActiveSonar;
 import coldBoot.entities.Base;
+import coldBoot.entities.Enemy;
 import coldBoot.entities.Pulse;
 import coldBoot.entities.Turret;
 import glm.Vec2;
@@ -24,7 +25,8 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	{
 		rootEntity = new Entity();
 		
-		level = new Level();
+		var enemySpawnPoint = new glm.Vec2(1,1);
+		level = new Level(enemySpawnPoint);
 		rootEntity.add(level);
 		
 		var base = new Base(100);
@@ -42,6 +44,10 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		/*var pulse = new Pulse(level);
 		pulse.position = new Vec2(9 * level.pixelSize, 4 * level.pixelSize);
 		rootEntity.add(pulse);*/
+		
+		for(i in 0...50) {
+			addChildEntity(new Enemy(level, enemySpawnPoint * (level.pixelSize * 3) - (level.pixelSize * 3) / 2 + 1));
+		}
 		
 		g.spriteContainer.addChild(this);
 	}

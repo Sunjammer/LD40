@@ -2,6 +2,7 @@ package coldBoot;
 import coldBoot.TileType;
 import coldBoot.entities.*;
 import coldBoot.map.*;
+import coldBoot.ai.PathFinding.GameMap;
 import glm.Vec2;
 
 class Level extends Entity
@@ -11,44 +12,39 @@ class Level extends Entity
 	public var width: Int;
 	public var height: Int;
 	
+	public var map: GameMap;
 
-	public function new() 
+	public function new(enemySpawnPoint: Vec2) 
 	{
 		super();
 
-		var enemySpawnPoint = new glm.Vec2(1,1);
 		var mapGenerator = MapGenerator.recursiveBacktracking(1, enemySpawnPoint, 16, 16);
-		var map = new coldBoot.ai.PathFinding.GameMap(
+		map = new coldBoot.ai.PathFinding.GameMap(
 			mapGenerator.getWidth()*3,
 			mapGenerator.getHeight()*3,
 			pixelSize,
 			function(idx) {
 				return mapGenerator.getMap()[idx] == 0;
 			});
-
-		for(i in 0...50) {
-			add(new coldBoot.entities.Enemy(map, enemySpawnPoint * (pixelSize * 3) - (pixelSize * 3) / 2 + 1));
-		}
 		
 		width = mapGenerator.getWidth() * 3;
 		height = mapGenerator.getHeight() * 3;
 		
-		var map = mapGenerator.getMap();
+		var tileMap = mapGenerator.getMap();
 		
 		for (y in 0...height)
 		{
 			for (x in 0...width)
 			{
 			
-				var tile = map[x + (y * width)];
-				trace("Tile: " + tile);
+				var tile = tileMap[x + (y * width)];
 				if (tile == 0)
 				{
 					tiles.push(TileType.Air);
 				}
 				else
 				{
-					tiles.push(TileType.Wall);					
+					tiles.push(TileType.Wall);				
 				}
 			}
 		}

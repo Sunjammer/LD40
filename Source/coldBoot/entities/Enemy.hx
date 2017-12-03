@@ -8,11 +8,11 @@ import glm.Vec2;
 class Enemy extends Entity implements EnemyAI.EnemyController {
 	var brain:EnemyAI;
 
-	public function new(map:PathFinding.GameMap, position:Vec2)
+	public function new(level: Level, position:Vec2)
 	{
 		super();
 		this.position = position;
-		brain = new EnemyAI(false, new EnemyAI.SquadController(), map, this);
+		brain = new EnemyAI(false, new EnemyAI.SquadController(), level.map, this);
 	}
 
 	public function move(dir:Vec2) {
