@@ -46,7 +46,12 @@ class Machine
 
 	public function setProgram(program: Array<Instruction>) {
 		this.program = program;
+		this.pc = 0;
 		setupLabelCache();
+	}
+
+	public function setRegisters(registers: Array<IRegister>) {
+		this.registers = registers;
 	}
 
 	function setupLabelCache() {
