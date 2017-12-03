@@ -20,7 +20,7 @@
   <haxedef name="HXCPP_DEBUGGER" if="debug cpp boof" />
   <haxedef name="HX_UTF8_STRINGS" if="debug cpp boof" />
   
-	<haxedef name="ogl" />
+	<haxedef name="ogl" unless="flash" />
   
 	<assets path="Assets" rename="assets" />
 	
