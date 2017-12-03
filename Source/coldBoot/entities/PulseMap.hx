@@ -1,5 +1,6 @@
 package coldBoot.entities;
 import coldBoot.Level;
+import coldBoot.entities.PulseMap.Intensity;
 
 class Index 
 {
@@ -12,27 +13,60 @@ class Index
 	}
 }
 
+class Intensity
+{
+	public var pulseId: Int;
+	public var type: Int;
+	public var intensity: Float;
+	public var life: Float;
+	
+	public function new(type: Int, intensity: Float, life: Float)
+	{
+		this.type = type;
+		this.intensity = intensity;
+		this.life = life;
+	}
+	
+	public function update(dt: Float)
+	{
+		this.life -= dt;
+	}
+}
+
 class PulseTile
 {
-	public var intensities: Map<Int,Float>;
+	public var pulses: Map<Int,Intensity>;
 	public var isWall: Bool;
 	
 	public function new(isWall: Bool = false) {
-		this.intensities = new Map();
+		this.pulses = new Map();
 		this.isWall = isWall;
 	}
 	
-	public function setIntensity(id: Int, intensity: Float)
+	public function setPulse(pulseId: Int, intensity: Intensity)
 	{
-		this.intensities.set(id, intensity);
+		this.pulses.set(pulseId, intensity);
 	}
 	
-	public function getIntensity(id: Int) : Float
+	public function getPulse(pulseId: Int) : Intensity
 	{
-		if (!this.intensities.exists(id)) 
-			return 0;
-		var ret = this.intensities.get(id);
+		if (!this.pulses.exists(pulseId)) 
+			return null;
+		var ret = this.pulses.get(pulseId);
 		return ret;
+	}
+	
+	public function update(dt: Float)
+	{
+		for (k in pulses.keys())
+		{
+			var p = pulses[k];
+			p.update(dt);
+			if (p.life <= 0)
+			{
+				pulses.remove(k);
+			}
+		}
 	}
 }
 
@@ -60,17 +94,16 @@ class PulseTileBuffer
 		}
 	}
 	
-	public function startPulse(x: Int, y: Int, intensity: Float, type: Int) 
+	public function startPulse(x: Int, y: Int, type: Int, intensity: Float) 
 	{
-		trace("Starting pulse: " + type);
 		var pt = pulseTiles[x + (y * width)];
-		pt.setIntensity(type, intensity);
+		pt.setPulse(type, new Intensity(type, intensity, life));
 	}
 	
-	public function checkTile(x: Int, y: Int, type: Int): Float
+	public function checkTile(x: Int, y: Int, pulseId: Int): Intensity
 	{
 		var pt = pulseTiles[x + (y * width)];
-		return pt.getIntensity(type);
+		return pt.getPulse(pulseId);
 	}
 	
 	public function update(info:UpdateInfo)
@@ -84,10 +117,12 @@ class PulseTileBuffer
 			{
 				var pt = pulseTiles[y * width + x];
 				
-				for (k in pt.intensities.keys())
+				for (k in pt.pulses.keys())
 				{
-					if (pt.getIntensity(k) > 0.1)
+					var ptPulse = pt.getPulse(k);
+					if (ptPulse.intensity > 0.1)
 					{
+						trace("Got some pulse at least: " + k + ", " + ptPulse.intensity);
 						for (ny in 0...3)
 						{
 							for (nx in 0...3)
@@ -101,18 +136,22 @@ class PulseTileBuffer
 								
 								if (neighbor.isWall)
 									continue;// neighbor.intensity += pt.intensity * wallBleed * dt;
-									
-								var c = 0;
 								
-								var ni = neighbor.getIntensity(k);
-								var pi = pt.getIntensity(k);
+								var ni = neighbor.getPulse(k);
+								if (ni == null)
+								{
+									ni = new Intensity(ptPulse.type, 0, ptPulse.life);
+									neighbor.setPulse(k, ni);
+								}
+									
+								var pi = ptPulse;
 								//trace("Pi: " + pi);
 								//trace("Dt: " + dt);
-								var inc = (pi * dt * decay);
+								var inc = (pi.intensity * dt * decay);
 								//trace("Inc: " + inc);
-								var newIntensity = ni + inc;
-								//trace("New intensity: " + newIntensity);
-								neighbor.setIntensity(k, newIntensity);
+								var newIntensity = ni.intensity + inc;
+								trace("New intensity: " + newIntensity);
+								ni.intensity = newIntensity;
 							}
 						}
 					}
@@ -142,10 +181,10 @@ class PulseMap extends Entity
 	
 	public function startPulse(x: Int, y: Int, intensity: Float, type: Int) 
 	{
-		tileBuffer.startPulse(x, y, intensity, type);
+		tileBuffer.startPulse(x, y, type, intensity);
 	}
 	
-	public function checkTile(x: Int, y: Int, type: Int): Float
+	public function checkTile(x: Int, y: Int, type: Int): Intensity
 	{
 		return tileBuffer.checkTile(x, y, type);
 	}
@@ -178,9 +217,10 @@ class PulseMap extends Entity
 			for (x in 0...level.width)
 			{
 				var pt = tileBuffer.pulseTiles[y * level.width + x];
-				for (k in pt.intensities.keys())
+				for (k in pt.pulses.keys())
 				{
-					Main.debugDraw.graphics.beginFill(colors[k], pt.getIntensity(k) / 40);
+					var pulse = pt.getPulse(k);
+					Main.debugDraw.graphics.beginFill(colors[pulse.type], pulse.intensity / 40);
 					Main.debugDraw.graphics.drawRect(x * level.pixelSize, y * level.pixelSize, level.pixelSize, level.pixelSize);
 				}
 			}
