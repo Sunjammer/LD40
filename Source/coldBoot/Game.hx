@@ -37,7 +37,7 @@ class Game extends Sprite
 		sceneRenderer.setPostEffects(
 			[
 				//new PostEffect("assets/invert.frag")
-				new PostEffect("assets/crt.frag")
+				//new PostEffect("assets/crt.frag")
 			]
 		);
 		#end

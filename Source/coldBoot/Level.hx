@@ -67,7 +67,7 @@ class Level extends Entity
 				}
 				else 
 				{
-					Main.debugDraw.graphics.beginFill(0xff0000);
+					Main.debugDraw.graphics.beginFill(0xffffff);
 					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 				}
 			}

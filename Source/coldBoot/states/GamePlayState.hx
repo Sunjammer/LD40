@@ -1,20 +1,38 @@
 package coldBoot.states;
-import coldBoot.IGameState;
 import codinghell.CodingHell;
 import coldBoot.Entity;
 import coldBoot.Game;
+import coldBoot.IGameState;
 import coldBoot.IState;
-import coldBoot.RenderInfo;
 import coldBoot.Level;
+import coldBoot.RenderInfo;
 import coldBoot.UpdateInfo;
-import coldBoot.entities.ActiveSonar;
 import coldBoot.entities.Base;
 import coldBoot.entities.Enemy;
-import coldBoot.entities.Pulse;
+import coldBoot.entities.PulseMap;
 import coldBoot.entities.Turret;
-import coldBoot.states.GamePlayState.WaveState;
 import glm.Vec2;
 import openfl.display.DisplayObjectContainer;
+
+class WaveCompletedState implements IState
+{
+	public function new () {}
+	
+	public function enter(g:Game):Void 
+	{
+		
+	}
+	
+	public function update(info:UpdateInfo): IState 
+	{
+		return this;
+	}
+	
+	public function exit(g:Game):Void 
+	{
+		
+	}
+}
 
 class WaveState implements IState
 {
@@ -23,8 +41,9 @@ class WaveState implements IState
 	var enemySpawnPoint:Vec2;
 	var level:Level;
 	
-	public function new(level: Level, enemySpawnPoint: Vec2)
+	public function new(level: Level, enemySpawnPoint: Vec2, nEnemies: Int)
 	{
+		this.nEnemies = nEnemies;
 		this.level = level;
 		this.enemySpawnPoint = enemySpawnPoint;
 	}
@@ -33,7 +52,7 @@ class WaveState implements IState
 	{
 		var root = g.getCurrentState().getRootEntity();
 		
-		for (i in 0...50) {
+		for (i in 0...nEnemies) {
 			var enemy = new Enemy(level, enemySpawnPoint * (level.pixelSize * 3) - (level.pixelSize * 3) / 2 + 1);
 			enemy.addTag("enemy");
 			root.add(enemy);
@@ -41,7 +60,13 @@ class WaveState implements IState
 	}
 	
 	public function update(info:UpdateInfo):IState 
-	{ 
+	{
+		var enemies = info.game.getCurrentState().getRootEntity().getChildEntitiesByTag("enemy");
+		if (enemies.length == 0)
+		{
+			trace("Wave completed");
+			return new WaveCompletedState();
+		}
 		return this;
 	}
 	
@@ -67,8 +92,9 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	public function enter(g:Game):Void
 	{
 		rootEntity = new Entity();
+		
 
-        		
+
         terminal = new CodingHell(200);
         addChild(terminal);
     
@@ -76,19 +102,28 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		level = new Level(enemySpawnPoint);
 		rootEntity.add(level);
 		
-		waveState = new WaveState(level, enemySpawnPoint);
+		var pulseMap = new PulseMap(level);
+		pulseMap.addTag("pulseMap");
+		rootEntity.add(pulseMap);
+		
+		waveState = new WaveState(level, enemySpawnPoint, 5);
 		
 		var base = new Base(100);
 		base.position = new Vec2(150, 150);
 		rootEntity.add(base);
 	
-		var turret = new Turret();
+		/*var turret = new Turret();
 		turret.position = new Vec2(200, 200);
-		rootEntity.add(turret);
+		rootEntity.add(turret);*/
 	   
 		g.spriteContainer.addChild(this);
 		
 		waveState.enter(g);
+		
+		
+		pulseMap.startPulse(10, 4, 80, 0);
+		pulseMap.startPulse(16, 15, 90, 1);
+
 	}
 	
 	public function render(info:RenderInfo):Void
