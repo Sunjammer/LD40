@@ -1,69 +1,76 @@
 package coldBoot;
-import coldBoot.states.GamePlayState;
-import coldBoot.map.*;
+import coldBoot.TileType;
 import coldBoot.entities.*;
-import openfl.display.Bitmap;
-import openfl.display.DisplayObjectContainer;
+import coldBoot.map.*;
+import coldBoot.ai.PathFinding.GameMap;
+import glm.Vec2;
 
 class Level extends Entity
 {
-	public var levelData: Array<Wall> = [];
-	public var tileSize = 60;
+	public var tiles: Array<TileType> = [];
+	public var pixelSize = 20;
+	public var width: Int;
+	public var height: Int;
+	
+	public var map: GameMap;
 
-	public function new(container:DisplayObjectContainer) 
+	public function new(enemySpawnPoint: Vec2) 
 	{
 		super();
-		var ld = [
-			[1, 1, 1, 1, 1, 1, 1, 1, 1],
-			[1, 0, 1, 1, 1, 1, 1, 1, 1],
-			[1, 0, 1, 1, 1, 1, 1, 1, 1],
-			[1, 0, 1, 1, 0, 1, 1, 1, 1],
-			[1, 0, 1, 1, 0, 1, 1, 1, 1],
-			[1, 0, 1, 1, 0, 1, 1, 1, 1],
-			[1, 0, 0, 0, 0, 0, 0, 1, 1],
-			[1, 0, 0, 0, 0, 0, 0, 1, 1], 
-			[1, 1, 1, 1, 1, 1, 1, 1, 1],
-			[1, 1, 1, 1, 1, 1, 1, 1, 1],
-			[1, 1, 1, 1, 1, 1, 1, 1, 1]
-		];
-		
-		for (y in 0...ld.length)
-		{
-			for (x in 0...ld[y].length)
-			{
-				if (ld[y][x] == 1)
-					levelData.push(new Wall(x * tileSize, y * tileSize, tileSize, tileSize));
-			}
-		}
 
-		var enemySpawnPoint = new glm.Vec2(1,1);
-		var pixelSize = 20;
 		var mapGenerator = MapGenerator.recursiveBacktracking(1, enemySpawnPoint, 16, 16);
-		var map = new coldBoot.ai.PathFinding.GameMap(
+		map = new coldBoot.ai.PathFinding.GameMap(
 			mapGenerator.getWidth()*3,
 			mapGenerator.getHeight()*3,
 			pixelSize,
 			function(idx) {
 				return mapGenerator.getMap()[idx] == 0;
 			});
-
-		for(i in 0...50) {
-			add(new coldBoot.entities.Enemy(map, enemySpawnPoint * (pixelSize * 3) - (pixelSize * 3) / 2 + 1));
+		
+		width = mapGenerator.getWidth() * 3;
+		height = mapGenerator.getHeight() * 3;
+		
+		var tileMap = mapGenerator.getMap();
+		
+		for (y in 0...height)
+		{
+			for (x in 0...width)
+			{
+			
+				var tile = tileMap[x + (y * width)];
+				if (tile == 0)
+				{
+					tiles.push(TileType.Air);
+				}
+				else
+				{
+					tiles.push(TileType.Wall);				
+				}
+			}
 		}
-		var bitmap = mapGenerator.getBitmap();
-		bitmap.width *= pixelSize;
-		bitmap.height *= pixelSize;
-		container.addChild(bitmap);
 	}
 	
-	/*override public function render(info:RenderInfo) 
+	override public function render(info:RenderInfo) 
 	{
 		super.render(info);
-		info.game.addChild bitmap
-		/*Main.debugDraw.graphics.beginFill(0x00ff00);
 		
-		for (w in levelData)
-			w.render();
-		
-	}*/
+		for (x in 0...width)
+		{
+			for (y in 0...height)
+			{
+				var tile = tiles[x + (y * width)];
+				if (tile == Wall)
+				{
+					Main.debugDraw.graphics.beginFill(0x000000);
+					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+
+				}
+				else 
+				{
+					Main.debugDraw.graphics.beginFill(0xff0000);
+					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+				}
+			}
+		}
+	}
 }

@@ -1,11 +1,15 @@
 package coldBoot;
 import coldBoot.IGameState;
+import coldBoot.states.GamePlayState;
+
 #if ogl
 	import coldBoot.rendering.PostEffect;
 	import coldBoot.rendering.SceneRenderBase;
 #end
+
 import coldBoot.states.InitialState;
 import openfl.display.Shape;
+import glm.Vec2;
 import openfl.display.Sprite;
 import tween.Delta;
 
@@ -92,5 +96,4 @@ class Game extends Sprite
 		currentState.enter(this);
 		return currentState;
 	}
-
 }

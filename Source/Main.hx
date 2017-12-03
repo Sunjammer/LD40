@@ -1,5 +1,6 @@
 package;
 import coldBoot.Game;
+import glm.Vec2;
 import haxe.Timer;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -21,8 +22,7 @@ class Main extends Sprite
 	public function new ()
 	{
 		super();
-    
-    #if debug && boof
+    #if boof
     new debugger.Local(true);
     #end
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -39,11 +39,20 @@ class Main extends Sprite
 		addChild(game);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
-		addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
+		addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		addEventListener(MouseEvent.MOUSE_UP, mouseUp);
 		addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
 		addEventListener(KeyboardEvent.KEY_UP, keyUp);
 
+	}
+	
+	function addedToStage(e:Event):Void 
+	{
+		stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
+	
+		
+		removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
+		
 	}
 
 	function onStageResize(e:Event):Void
@@ -63,7 +72,7 @@ class Main extends Sprite
 
 	function mouseUp(e:MouseEvent):Void
 	{
-
+	
 	}
 
 	function mouseDown(e:MouseEvent):Void

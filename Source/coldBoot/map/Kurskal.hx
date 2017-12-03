@@ -102,9 +102,9 @@ class Edge {
 
 class Kurskal implements TileMap {
 
-    private var nodes: Array<Node>;
-    private var width: UInt;
-    private var height: UInt;
+    public var nodes: Array<Node>;
+    public var width: UInt;
+    public var height: UInt;
 
     public function getTile(position: Vec2): Tile {
         return nodes[offset(position)];
