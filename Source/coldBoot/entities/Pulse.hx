@@ -59,7 +59,7 @@ class PulseTileBuffer
 	{
 		var dt = info.deltaTime;
 		life -= dt;
-		var decay = 2;
+		var decay = 10;
 		for (y in 0...height)
 		{
 			for (x in 0...width)
@@ -103,8 +103,11 @@ class Pulse extends Entity
 	{
 		super();
 		this.level = level;
-		tileBuffer = new PulseTileBuffer(level, 3);
+		tileBuffer = new PulseTileBuffer(level, 0.8);
 		tileBuffer.startPulse(19, 19, pulseIntensity);
+		tileBuffer.startPulse(39, 29, pulseIntensity);
+		tileBuffer.startPulse(50, 19, pulseIntensity);
+		
 	}
 
 	override public function onAdded()
@@ -118,8 +121,10 @@ class Pulse extends Entity
 		tileBuffer.update(info);
 		if (tileBuffer.life <= 0)
 		{
-			tileBuffer = new PulseTileBuffer(level, 3);
+			tileBuffer = new PulseTileBuffer(level, 0.8);
 			tileBuffer.startPulse(19, 19, pulseIntensity);
+			tileBuffer.startPulse(39, 29, pulseIntensity);
+			tileBuffer.startPulse(50, 19, pulseIntensity);
 		}
 	}
 
