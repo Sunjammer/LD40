@@ -5,12 +5,6 @@ import coldBoot.states.GamePlayState;
 class PulseTile
 {
 	public var intensity: Float = 20;
-	
-	
-	public function new() 
-	{
-		
-	}
 }
 
 class Pulse extends Entity
@@ -33,9 +27,9 @@ class Pulse extends Entity
 		super.onAdded();
 	}
 
-	override public function update(state:GamePlayState, dt:Float)
+	override public function update(info:UpdateInfo)
 	{
-		super.update(state, dt);
+		super.update(info);
 		
 		var decay = 0.1;
 		for (y in 0...level.height)
@@ -43,6 +37,8 @@ class Pulse extends Entity
 			for (x in 0...level.width)
 			{
 				var pt = pulseTiles[y * level.width + x];
+				if (pt == null)
+					continue;
 				
 				if (pt.intensity > 0)
 				{
@@ -64,14 +60,15 @@ class Pulse extends Entity
 		}
 	}
 
-	override public function render(state:GamePlayState)
+	override public function render(info:RenderInfo)
 	{
-		super.render(state);
-		for (y in 0...level.height)
-		{
+		super.render(info);
+		for (y in 0...level.height){
 			for (x in 0...level.width)
 			{
 				var pt = pulseTiles[y * level.width + x];
+				if (pt == null)
+					continue;
 				Main.debugDraw.graphics.beginFill(0xff0000, pt.intensity / 20.0);
 				Main.debugDraw.graphics.drawRect(x * 60, y * 60, 60, 60);
 			}

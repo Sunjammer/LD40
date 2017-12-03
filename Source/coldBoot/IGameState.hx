@@ -1,8 +1,8 @@
 package coldBoot;
 import coldBoot.IState;
-import coldBoot.Game;
+import coldBoot.RenderInfo;
 
 interface IGameState extends IState
 {
-	function render(g: Game): Void;
+	function render(info:RenderInfo): Void;
 }

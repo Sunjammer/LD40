@@ -1,8 +1,14 @@
 # LD40
 Let's make a thing
 
+### Set up dependencies
+1. `bash setup.sh`
+
 ### How to run
 1. `openfl test neko`
+
+## Windows IDE w. refactoring/completion etc
+http://haxedevelop.org/
 
 ### Visual Code code completion
 1. Install https://marketplace.visualstudio.com/items?itemName=nadako.vshaxe

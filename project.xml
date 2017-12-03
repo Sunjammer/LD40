@@ -12,8 +12,13 @@
 	<haxelib name="delta" />
 	<haxelib name="hscript" />
 	<haxelib name="glm" />
+	<haxelib name="pathfinder" />
 	<haxelib name="differ" />
+	<haxelib name="AudioJank"/>
+	<haxelib name="random" />
 	
-	<!--assets path="Assets" rename="assets" /-->
+	<haxedef name="ogl" />
+  
+	<assets path="Assets" rename="assets" />
 	
 </project>

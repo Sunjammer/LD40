@@ -1,5 +1,6 @@
 package coldBoot.states;
 import coldBoot.Game;
+import coldBoot.UpdateInfo;
 import openfl.display.Shape;
 import tween.Delta;
 import tween.easing.Elastic;
@@ -27,23 +28,23 @@ class InitialState extends Shape implements IGameState
 		initialized = true;
 	}
 
-	public function update(g: Game, dt: Float): IGameState
+	public function update(info:UpdateInfo): IGameState
 	{
 		if (initialized) 
 		{
 			var gamePlayState = new GamePlayState();
-			g.setState(gamePlayState);
+			info.game.setState(gamePlayState);
 			return gamePlayState;
 		}
 		return this;
 	}
 
-	public function render(g: Game): Void
+	public function render(info:RenderInfo): Void
 	{
 
 	}
 
-	public function exit(g: Game): Void
+	public function exit(g:Game): Void
 	{
 		trace("Exiting initial state");
 		g.removeChild(this);

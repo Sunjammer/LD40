@@ -1,6 +1,8 @@
 package coldBoot.states;
 import coldBoot.Entity;
+import coldBoot.RenderInfo;
 import coldBoot.Level;
+import coldBoot.UpdateInfo;
 import coldBoot.entities.ActiveSonar;
 import coldBoot.entities.Pulse;
 import glm.Vec2;
@@ -18,9 +20,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 
 	public function enter(g:Game):Void
 	{
-		trace("Entered gameplay state");
 		rootEntity = new Entity();
-		g.addChild(this);
 		
 		level = new Level();
 		rootEntity.add(level);
@@ -30,16 +30,17 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		var pulse = new Pulse(level);
 		pulse.position = new Vec2(90, 90);
 		rootEntity.add(pulse);
+		g.addChild(this);
 	}
 	
-	public function render(g:Game):Void
+	public function render(info:RenderInfo):Void
 	{
-		rootEntity.render(this);
+		rootEntity.render(info);
 	}
 
-	public function update(g:Game, dt:Float): IGameState
+	public function update(info:UpdateInfo): IGameState
 	{
-		rootEntity.update(this, dt);
+		rootEntity.update(info);
 		return this;
 	}
 
