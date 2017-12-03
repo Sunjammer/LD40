@@ -11,23 +11,31 @@ import coldBoot.entities.Pulse;
 import coldBoot.entities.Turret;
 import glm.Vec2;
 import openfl.display.DisplayObjectContainer;
+import openfl.display.OpenGLView;
 
 class GamePlayState extends DisplayObjectContainer implements IGameState
 {
-  var terminal:CodingHell;
 	public var rootEntity: Entity;
+  var terminal:CodingHell;
 	var level: Level;
+  var glView:OpenGLView;
+  
+  public var playerInfo:PlayerInfo;
 	
 	public function new()
 	{
 		super();
+    glView = new OpenGLView();
+    glView.render = onGLRender;
 	}
+  
 
 	public function enter(g:Game):Void
 	{
+    playerInfo = new PlayerInfo(100, 100);
 		rootEntity = new Entity();
-
     terminal = new CodingHell(g, 400);
+    addChild(glView);
     addChild(terminal);
     
 		var enemySpawnPoint = new glm.Vec2(1,1);
@@ -49,7 +57,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 			rootEntity.add(enemy);
 		}
 	   
-		g.spriteContainer.addChild(this);
+		g.stateSpriteContainer.addChild(this);
 		g.viewportChanged.add(onViewportChanged);
 	}
   
@@ -58,9 +66,12 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		terminal.x = w - 400;
 	}
 	
+  function onGLRender(){
+    rootEntity.render(null);
+  }
+  
 	public function render(info:RenderInfo):Void
 	{
-		rootEntity.render(info);
 	}
 
 	public function update(info:UpdateInfo): IGameState
@@ -72,7 +83,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	public function exit(g:Game):Void
 	{
 		g.viewportChanged.remove(onViewportChanged);
-		g.spriteContainer.removeChild(this);
+		g.stateSpriteContainer.removeChild(this);
 	}
 	
 	

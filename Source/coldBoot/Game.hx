@@ -21,7 +21,7 @@ import tween.Delta;
 class Game extends Sprite
 {
 	var currentState: IGameState;
-	public var spriteContainer:Sprite;
+	public var stateSpriteContainer:Sprite;
 	public var debugContainer:Sprite;
   var backgroundShape:Shape;
 
@@ -38,7 +38,7 @@ class Game extends Sprite
 
     viewportChanged = new Signal2<Int,Int>();
     addChild(backgroundShape = new Shape());
-		addChild(spriteContainer = new Sprite());
+		addChild(stateSpriteContainer = new Sprite());
 		addChild(debugContainer = new Sprite()); 
 		#if ogl
     viewportSize = {width:0, height:0};
@@ -49,7 +49,7 @@ class Game extends Sprite
 			]
 		);
 		#end
-		setState(new InitialState());
+		setState(new GamePlayState());
 	}
 
 	public function resize(dims: {width:Int, height:Int})

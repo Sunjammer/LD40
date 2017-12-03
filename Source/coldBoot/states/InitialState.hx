@@ -2,25 +2,27 @@ package coldBoot.states;
 import coldBoot.Entity;
 import coldBoot.Game;
 import coldBoot.UpdateInfo;
+import openfl.Assets;
+import openfl.display.Bitmap;
 import openfl.display.Shape;
+import openfl.display.Sprite;
 import tween.Delta;
 import tween.easing.Elastic;
 
-class InitialState extends Shape implements IGameState
+class InitialState extends Sprite implements IGameState
 {
 	var initialized:Bool;
 	public function new()
 	{
 		super();
-		graphics.beginFill(0xff0000);
-		graphics.drawCircle(100, 100, 100);
+    addChild(new Bitmap(Assets.getBitmapData("assets/c1.jpg")));
 	}
 
 	public function enter(g: Game): Void
 	{
-		g.spriteContainer.addChild(this);
+		g.stateSpriteContainer.addChild(this);
 		alpha = 0;
-		Delta.tween(this).prop("alpha", 1, 0.1).ease(Elastic.easeIn).onComplete(doneInitializing);
+		Delta.tween(this).prop("alpha", 1, 1).wait(2).prop("alpha", 0, 1).onComplete(doneInitializing);
 		trace("Entering initial state");
 	}
 	
@@ -46,7 +48,7 @@ class InitialState extends Shape implements IGameState
 	public function exit(g:Game): Void
 	{
 		trace("Exiting initial state");
-		g.spriteContainer.removeChild(this);
+		g.stateSpriteContainer.removeChild(this);
 	}
 	
 	
