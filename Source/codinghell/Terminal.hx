@@ -1,21 +1,13 @@
 package codinghell;
-import coldBoot.UpdateInfo;
-import coldBoot.IGameState;
 import coldBoot.Game;
-import coldBoot.IState;
-import flash.display.Sprite;
 import coldBoot.cpu.*;
+import flash.display.Sprite;
 import flash.text.TextFormat;
 import lime.ui.KeyCode;
 import openfl.events.Event;
-import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
-import openfl.text.AntiAliasType;
-import openfl.text.Font;
 import openfl.text.GridFitType;
 import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
-import openfl.text.TextFieldType;
 /**
  * ...
  * @author Andreas Kennedy
@@ -26,7 +18,7 @@ import openfl.text.TextFieldType;
   Status;
  }
  
-class CodingHell extends Sprite{
+class Terminal extends Sprite{
   var output:TextField;
   var input:TextField;
   var inputTextBfr:String;

@@ -1,27 +1,21 @@
 package coldBoot;
 import coldBoot.IGameState;
 import coldBoot.states.GamePlayState;
-
-#if ogl
-	import coldBoot.rendering.PostEffect;
-	import coldBoot.rendering.SceneRenderBase;
-#end
-import coldBoot.cpu.Bytecode.Comparison;
-import coldBoot.rendering.ScreenNoisePostEffect;
-import coldBoot.states.InitialState;
-import fsignal.Signal;
-import fsignal.Signal1;
 import fsignal.Signal2;
 import openfl.display.Shape;
-import glm.Vec2;
 import openfl.display.Sprite;
 import tween.Delta;
+
+#if ogl
+	import coldBoot.rendering.SceneRenderBase;
+  import coldBoot.rendering.ScreenNoisePostEffect;
+#end
   
 
 class Game extends Sprite
 {
 	var currentState: IGameState;
-	public var spriteContainer:Sprite;
+	public var stateSpriteContainer:Sprite;
 	public var debugContainer:Sprite;
   var backgroundShape:Shape;
 
@@ -38,7 +32,7 @@ class Game extends Sprite
 
     viewportChanged = new Signal2<Int,Int>();
     addChild(backgroundShape = new Shape());
-		addChild(spriteContainer = new Sprite());
+		addChild(stateSpriteContainer = new Sprite());
 		addChild(debugContainer = new Sprite()); 
 		#if ogl
     viewportSize = {width:0, height:0};
@@ -49,7 +43,7 @@ class Game extends Sprite
 			]
 		);
 		#end
-		setState(new InitialState());
+		setState(new GamePlayState());
 	}
 
 	public function resize(dims: {width:Int, height:Int})
