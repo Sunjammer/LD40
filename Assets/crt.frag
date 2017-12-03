@@ -10,7 +10,7 @@ uniform sampler2D uImage0;
 uniform sampler2D uImage1;
 uniform float uTime;
 
-const float BARREL_DISTORTION = 0.25;
+const float BARREL_DISTORTION = 0.1;
 const float rescale = 1.0 - (0.25 * BARREL_DISTORTION);
 
 void main() {
@@ -25,8 +25,9 @@ void main() {
     }
     else {
         uv += .5;
-        float x = 1.0 / uResolution.x;
-        float y = 1.0 / uResolution.y;
+        vec2 stepSize = 1.0 / uResolution;
+        float x = stepSize.x;
+        float y = stepSize.y;
         vec4 horizEdge = vec4( 0.0 );
         horizEdge -= texture2D( uImage0, vec2( uv.x - x, uv.y - y ) ) * 1.0;
         horizEdge -= texture2D( uImage0, vec2( uv.x - x, uv.y     ) ) * 2.0;
@@ -43,7 +44,17 @@ void main() {
         vertEdge += texture2D( uImage0, vec2( uv.x    , uv.y + y ) ) * 2.0;
         vertEdge += texture2D( uImage0, vec2( uv.x + x, uv.y + y ) ) * 1.0;
         vec3 edge = smoothstep(vec3(0.), vec3(1), sqrt((horizEdge.rgb * horizEdge.rgb) + (vertEdge.rgb * vertEdge.rgb)));
-        edge += texture2D(uImage0, uv).rgb * .3;
+        edge += texture2D(uImage0,uv).rgb*.5;
+        /*vec3 s01 = texture2D(uImage0,uv-vec2(1,0)*stepSize).rgb;
+        vec3 s02 = texture2D(uImage0,uv+vec2(1,0)*stepSize).rgb;
+        vec3 s03 = texture2D(uImage0,uv-vec2(0,1)*stepSize).rgb;
+        vec3 s04 = texture2D(uImage0,uv+vec2(0,1)*stepSize).rgb;
+        vec3 s05 = texture2D(uImage0,uv).rgb;
+        
+        vec3 grad1 = (s02 - s01);
+        vec3 grad2 = (s04 - s03);
+        vec3 edge = (grad2 + grad1) * 0.5;
+        edge += s05 * .3;*/
 
         float strength = 30.0;
         float foo = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (uTime * 10.0);
