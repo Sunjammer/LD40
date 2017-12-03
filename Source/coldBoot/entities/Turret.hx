@@ -30,7 +30,7 @@ class Turret extends ScriptableEntity
 		var state = info.game.getCurrentState();
 		
 		timer += info.deltaTime;
-		if (timer > 1)
+		if (timer > 0.1)
 		{
 			shoot(state);
 			timer = 0;

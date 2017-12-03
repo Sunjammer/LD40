@@ -1,15 +1,22 @@
 package coldBoot.entities;
 import coldBoot.RenderInfo;
 import coldBoot.UpdateInfo;
+import differ.Collision;
+import differ.ShapeDrawer;
+import differ.shapes.Polygon;
+import differ.shapes.Shape;
 import glm.Vec2;
 
 class Missile extends Entity
 {
 	var speed: Float = 53;
-	var damage: Float = 3;
+	var damage: Float = 20;
 	
 	var lifetime: Float = 3;
 	var direction: Vec2;
+	
+	
+	var shape: Shape;
 	
 	public function new(direction: Vec2)
 	{
@@ -23,18 +30,40 @@ class Missile extends Entity
 		
 	}
 	
+	
+	function destroyMissile(info:UpdateInfo) 
+	{
+		info.game.getCurrentState().getRootEntity().remove(this);
+	}
+
+	
 	override public function update(info:UpdateInfo) 
 	{
 		super.update(info);
 		lifetime -= info.deltaTime;
 		if (lifetime <= 0)
 		{
-			info.game.getCurrentState().getRootEntity().remove(this);
+			destroyMissile(info);
 		}
 		
 		position += direction * info.deltaTime * speed;
 		
 		var enemies = info.game.getCurrentState().getRootEntity().getChildEntitiesByTag("enemy");
+		
+		var missileShape = Polygon.rectangle(position.x, position.y, 15, 15, false);
+		for (e in enemies)
+		{
+			var e: Enemy = cast e;
+			var enemyShape = e.getShape();
+			var collisionInfo = Collision.shapeWithShape(missileShape, enemyShape);
+			if (collisionInfo != null)
+			{
+				trace("Doing damage to an enemy");
+				e.doDamage(damage);
+				destroyMissile(info);
+				break;
+			}
+		}
 	}
 	
 	override public function render(info:RenderInfo) 
