@@ -8,6 +8,7 @@ class PulseTile
 	public var intensity: Float;
 	public var isWall: Bool;
 	
+	
 	public function new(intensity: Float = 0, isWall: Bool = false) {
 		this.intensity = intensity;
 		this.isWall = isWall;
@@ -43,7 +44,7 @@ class PulseTileBuffer
 	
 	public function update(info:UpdateInfo)
 	{
-		var decay = 1;
+		var decay = 0.1;
 		for (y in 0...height)
 		{
 			for (x in 0...width)
@@ -52,7 +53,7 @@ class PulseTileBuffer
 				
 				if (pt.intensity > 0)
 				{
-					var nextIntensity = (pt.intensity - decay);
+					var bleed = (pt.intensity - decay) * info.deltaTime;
 					
 					for (ny in 0...3)
 					{
@@ -74,10 +75,9 @@ class PulseTileBuffer
 								continue;
 							}
 							if (nb.intensity < pt.intensity)
-								nb.intensity = nextIntensity;
+								nb.intensity += bleed;
 						}
 					}
-					//pt.intensity -= decay * 4;
 				}
 			}
 		}
@@ -91,6 +91,8 @@ class Pulse extends Entity
 	var timeSinceLaunch: Float = 0;
 	var level:Level;
 	
+	var pulseIntensity: Float = 50;
+	
 	var tileBuffer: PulseTileBuffer;
 	
 	public function new(level: Level)
@@ -98,7 +100,7 @@ class Pulse extends Entity
 		super();
 		this.level = level;
 		tileBuffer = new PulseTileBuffer(level);
-		tileBuffer.startPulse(19, 19, 35);
+		tileBuffer.startPulse(19, 19, pulseIntensity);
 	}
 
 	override public function onAdded()
@@ -121,7 +123,7 @@ class Pulse extends Entity
 				var pt = tileBuffer.pulseTiles[y * level.width + x];
 				if (pt == null)
 					continue;
-				Main.debugDraw.graphics.beginFill(0xff0000, pt.intensity / 30.0);
+				Main.debugDraw.graphics.beginFill(0xff0000, pt.intensity / pulseIntensity);
 				Main.debugDraw.graphics.drawRect(x * level.pixelSize, y * level.pixelSize, level.pixelSize, level.pixelSize);
 			}
 		}
