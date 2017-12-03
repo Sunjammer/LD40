@@ -15,21 +15,13 @@ class Index
 
 class Intensity
 {
-	public var pulseId: Int;
 	public var type: Int;
 	public var intensity: Float;
-	public var life: Float;
 	
-	public function new(type: Int, intensity: Float, life: Float)
+	public function new(type: Int, intensity: Float)
 	{
 		this.type = type;
 		this.intensity = intensity;
-		this.life = life;
-	}
-	
-	public function update(dt: Float)
-	{
-		this.life -= dt;
 	}
 }
 
@@ -50,23 +42,10 @@ class PulseTile
 	
 	public function getPulse(pulseId: Int) : Intensity
 	{
-		if (!this.pulses.exists(pulseId)) 
+		if (!this.pulses.exists(pulseId))
 			return null;
 		var ret = this.pulses.get(pulseId);
 		return ret;
-	}
-	
-	public function update(dt: Float)
-	{
-		for (k in pulses.keys())
-		{
-			var p = pulses[k];
-			p.update(dt);
-			if (p.life <= 0)
-			{
-				pulses.remove(k);
-			}
-		}
 	}
 }
 
@@ -76,11 +55,13 @@ class PulseTileBuffer
 	var width: Int;
 	var height: Int;
 	
-	public var life: Float;
+	var decay = 5.0;
 	
-	public function new(level: Level, life: Float)
+	var pulsesIdCounter = 0;
+	var pulsesTimers: Map<Int, Float> = new Map();
+	
+	public function new(level: Level)
 	{
-		this.life = life;
 		width = level.width;
 		height = level.height;
 		
@@ -94,10 +75,15 @@ class PulseTileBuffer
 		}
 	}
 	
-	public function startPulse(x: Int, y: Int, type: Int, intensity: Float) 
+	public function startPulse(x: Int, y: Int, type: Int, intensity: Float): Int
 	{
 		var pt = pulseTiles[x + (y * width)];
-		pt.setPulse(type, new Intensity(type, intensity, life));
+		var id = pulsesIdCounter;
+		trace("PulseID : " + id);
+		pt.setPulse(id, new Intensity(type, intensity));
+		pulsesIdCounter++;
+		pulsesTimers.set(id, 1.0);
+		return id;
 	}
 	
 	public function checkTile(x: Int, y: Int, pulseId: Int): Intensity
@@ -106,11 +92,17 @@ class PulseTileBuffer
 		return pt.getPulse(pulseId);
 	}
 	
+	var rmCount = 0;
 	public function update(info:UpdateInfo)
 	{
 		var dt = info.deltaTime;
-		life -= dt;
-		var decay = 1.0;
+		
+		for (k in pulsesTimers.keys())
+		{
+			var t = pulsesTimers[k];
+			pulsesTimers[k] = t - dt;
+		}
+		
 		for (y in 0...height)
 		{
 			for (x in 0...width)
@@ -119,10 +111,16 @@ class PulseTileBuffer
 				
 				for (k in pt.pulses.keys())
 				{
+					if (pulsesTimers[k] <= 0)
+					{
+						trace("Removing pulse: " + (rmCount++));
+						pt.pulses.remove(k);
+						continue;
+					}
+					
 					var ptPulse = pt.getPulse(k);
 					if (ptPulse.intensity > 0.1)
 					{
-						trace("Got some pulse at least: " + k + ", " + ptPulse.intensity);
 						for (ny in 0...3)
 						{
 							for (nx in 0...3)
@@ -140,17 +138,12 @@ class PulseTileBuffer
 								var ni = neighbor.getPulse(k);
 								if (ni == null)
 								{
-									ni = new Intensity(ptPulse.type, 0, ptPulse.life);
+									ni = new Intensity(ptPulse.type, 0);
 									neighbor.setPulse(k, ni);
 								}
-									
-								var pi = ptPulse;
-								//trace("Pi: " + pi);
-								//trace("Dt: " + dt);
-								var inc = (pi.intensity * dt * decay);
-								//trace("Inc: " + inc);
+								
+								var inc = (ptPulse.intensity * dt * decay);
 								var newIntensity = ni.intensity + inc;
-								trace("New intensity: " + newIntensity);
 								ni.intensity = newIntensity;
 							}
 						}
@@ -158,14 +151,20 @@ class PulseTileBuffer
 				}
 			}
 		}
+		/*for (k in pulsesTimers.keys())
+		{
+			var t = pulsesTimers[k];
+			if (t <= 0)
+			{
+				pulsesTimers.remove(k);
+			}
+		}*/
 	}
 }
-
 
 class PulseMap extends Entity
 {
 	var strength: Float; //how long the pulse exists
-	var speed: Float = 0.58;
 	var timeSinceLaunch: Float = 0;
 	var level:Level;
 	
@@ -175,7 +174,7 @@ class PulseMap extends Entity
 	{
 		super();
 		this.level = level;
-		tileBuffer = new PulseTileBuffer(level, 5);
+		tileBuffer = new PulseTileBuffer(level);
 		
 	}
 	
@@ -197,10 +196,6 @@ class PulseMap extends Entity
 	override public function update(info:UpdateInfo)
 	{
 		tileBuffer.update(info);
-		if (tileBuffer.life <= 0)
-		{
-			tileBuffer = new PulseTileBuffer(level, 5);
-		}
 	}
 
 	override public function render(info:RenderInfo)

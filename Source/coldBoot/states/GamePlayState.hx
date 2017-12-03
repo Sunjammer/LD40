@@ -106,7 +106,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		pulseMap.addTag("pulseMap");
 		rootEntity.add(pulseMap);
 		
-		waveState = new WaveState(level, enemySpawnPoint, 5);
+		waveState = new WaveState(level, enemySpawnPoint, 1);
 		
 		var base = new Base(100);
 		base.position = new Vec2(150, 150);
@@ -121,8 +121,8 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		waveState.enter(g);
 		
 		
-		pulseMap.startPulse(10, 4, 80, 0);
-		pulseMap.startPulse(16, 15, 90, 1);
+		//pulseMap.startPulse(10, 4, 80, 0);
+		//pulseMap.startPulse(16, 15, 90, 1);
 
 	}
 	
@@ -131,10 +131,21 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		rootEntity.render(info);
 	}
 
+	var timer = 0.0;
 	public function update(info:UpdateInfo): IGameState
 	{
 		rootEntity.update(info);
 		waveState.update(info);
+		
+		timer += info.deltaTime;
+		if (timer > 5.0)
+		{
+			trace("Pulsing");
+			var pulseMap: PulseMap = cast rootEntity.getChildEntitiesByTag("pulseMap")[0];
+			pulseMap.startPulse(10, 1, 40, 0);
+			timer = 0;
+		}
+		
 		return this;
 	}
 	
