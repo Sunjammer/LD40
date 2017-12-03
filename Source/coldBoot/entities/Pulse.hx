@@ -1,6 +1,5 @@
 package coldBoot.entities;
 import coldBoot.Level;
-import coldBoot.states.GamePlayState;
 import glm.Vec2;
 
 class PulseTile
@@ -8,10 +7,22 @@ class PulseTile
 	public var intensity: Float;
 	public var isWall: Bool;
 	
+	public var leftVel: Float;
+	public var rightVel: Float;
+	public var upVel: Float;
+	public var downVel: Float;
 	
 	public function new(intensity: Float = 0, isWall: Bool = false) {
 		this.intensity = intensity;
 		this.isWall = isWall;
+	}
+	
+	public function setVel(left: Float, right: Float, up: Float, down: Float)
+	{
+		leftVel = left;
+		rightVel = right;
+		upVel = up;
+		downVel = down;
 	}
 }
 
@@ -40,11 +51,13 @@ class PulseTileBuffer
 	{
 		var pt = pulseTiles[x + (y * width)];
 		pt.intensity = intensity;
+		pt.setVel(1, 1, 1, 1);
 	}
 	
 	public function update(info:UpdateInfo)
 	{
-		var decay = 0.1;
+		var decay = 0.9;
+		var velDecay = 0.1;
 		for (y in 0...height)
 		{
 			for (x in 0...width)
@@ -53,31 +66,47 @@ class PulseTileBuffer
 				
 				if (pt.intensity > 0)
 				{
-					var bleed = (pt.intensity - decay) * info.deltaTime;
+					var bleed = (pt.intensity - decay);
 					
 					for (ny in 0...3)
 					{
 						for (nx in 0...3)
 						{
-							var neightborX = x + nx - 1;
-							var neightborY = y + ny - 1;
+							var neighborX = x + nx - 1;
+							var neighborY = y + ny - 1;
 							if (nx == x && ny == y)
 								continue;
-							if (neightborX < 0 || neightborX >= width)
+							if (neighborX < 0 || neighborX >= width)
 								continue;
-							if (neightborY < 0 || neightborY >= height)
+							if (neighborY < 0 || neighborY >= height)
 								continue;
 								
-							var nb = pulseTiles[neightborY * width + neightborX];
+							var nb = pulseTiles[neighborY * width + neighborX];
 							if (nb.isWall)
-							{
-								trace("Is wall: " + x + ", " + y);
 								continue;
-							}
+								
 							if (nb.intensity < pt.intensity)
-								nb.intensity += bleed;
+							{
+								if (neighborX < x){
+									nb.intensity = bleed;
+									nb.leftVel = pt.leftVel - velDecay * info.deltaTime;
+								}
+								else if (neighborX > x) {
+									nb.intensity = bleed;
+									nb.rightVel = pt.rightVel - velDecay * info.deltaTime;
+								}
+								if (neighborY < y){
+									nb.intensity = bleed;
+									nb.upVel = pt.upVel - velDecay * info.deltaTime;
+								}
+								else if (neighborY > y) {
+									nb.intensity = bleed;
+									nb.downVel = pt.downVel - velDecay * info.deltaTime;
+								}
+							}
 						}
 					}
+					pt.intensity -= decay;
 				}
 			}
 		}
