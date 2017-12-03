@@ -12,7 +12,7 @@ class Enemy extends Entity implements EnemyAI.EnemyController {
 	{
 		super();
 		this.position = position;
-		brain = new EnemyAI(map, this);
+		brain = new EnemyAI(false, new EnemyAI.SquadController(), map, this);
 	}
 
 	public function move(dir:Vec2) {

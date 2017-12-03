@@ -35,7 +35,7 @@ class Main extends Sprite {
 		debugDraw = new Sprite();
     game = new Game({width:stage.stageWidth, height:stage.stageHeight});
 		addChild(game);
-		game.addChild(debugDraw);
+		addChild(debugDraw);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);

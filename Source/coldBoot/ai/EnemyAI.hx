@@ -4,17 +4,6 @@ import glm.Vec2;
 import haxe.ds.GenericStack;
 import Random;
 
-interface Goal {
-}
-
-interface AtomicGoal extends Goal {
-
-}
-
-interface CompositeGoal extends Goal {
-
-}
-
 class PathMemory {
 	var nodesVisited:Map<Int,Bool>;
 
@@ -31,6 +20,43 @@ interface EnemyController {
 	public function move(dir:Vec2):Void;
 }
 
+class Message
+{
+	public var type:String;
+	public var location:Vec2;
+}
+
+class SquadController {
+	public function new() {
+		
+	}
+	/*var backMessages = new Array<Message>();
+	var frontMessages = new Array<Message>();
+	var maxRange = 200;
+
+	public function roger(location:Vec2) {
+		frontMessages.push(new Message() {
+			type: "roger",
+			location: location
+		});
+	}
+
+	public function pullMessage(location:Vec2) {
+		for(msg in backMessages) {
+			if(Vec2.distance(location, msg.location) < maxRange) {
+				return msg;
+			}
+		}
+
+		return null;
+	}
+
+	public function reset() {
+		backMessages = frontMessages;
+		frontMessages = new Array<Message>();
+	}*/
+}
+
 class EnemyAI {
 	var pathMemory:PathMemory;
 	var controller:EnemyController;
@@ -41,9 +67,13 @@ class EnemyAI {
 	var currentPath:Array<Vec2> = new Array<Vec2>();
 	var currentTarget: Vec2;
 	var knownWalkablePlaces:Array<Bool>;
+	var isLeader:Bool;
+	var squadController:SquadController;
 
-	public function new(map:PathFinding.GameMap, controller:EnemyController) {
+	public function new(isLeader:Bool, squadController:SquadController, map:PathFinding.GameMap, controller:EnemyController) {
 		this.controller = controller;
+		this.isLeader = isLeader;
+		this.squadController = squadController;
 		pathMemory = new PathMemory();
 		this.map = map;
 		knownWalkablePlaces = new Array<Bool>();
@@ -108,8 +138,14 @@ class EnemyAI {
 				}
 			}
 
-			for(i in Random.shuffle(newStackItems)) {
-				currentPathStack.add(i);
+			/*var msg = squadController.pullMessage(controller.position);
+			if(msg != null && msg.type == "followMe" && !isLeader) {
+				msg.location
+			}
+			else*/ {
+				for(i in Random.shuffle(newStackItems)) {
+					currentPathStack.add(i);
+				}
 			}
 
 			var nextPath = currentPathStack.pop();
@@ -117,6 +153,10 @@ class EnemyAI {
 				currentPath = new PathFinding().ShortestPath(currentIdx, nextPath, this.enemyMap);
 				currentPath.reverse();
 			}
+
+			/*if(isLeader) {
+				squadController.followMe(controller.position);
+			}*/
 		}
 
 		if(nearTarget()) {
@@ -128,7 +168,6 @@ class EnemyAI {
 		
 		var dir = new Vec2(0,0);
 		Vec2.normalize(currentTarget - controller.position, dir);
-		trace(dir);
 		controller.move(dir);
 	}
 

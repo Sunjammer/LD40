@@ -20,9 +20,8 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	public function enter(g:Game):Void
 	{
 		rootEntity = new Entity();
-		g.addChild(this);
 		
-		var level = new Level();
+		var level = new Level(this);
 		rootEntity.add(level);
 		var sonar = new ActiveSonar();
 		sonar.position = new Vec2(90, 90);
@@ -30,6 +29,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		var pulse = new Pulse(level);
 		pulse.position = new Vec2(90, 90);
 		rootEntity.add(pulse);
+		g.addChild(this);
 	}
 	
 	public function render(info:RenderInfo):Void
