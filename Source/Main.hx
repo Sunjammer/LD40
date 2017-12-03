@@ -26,6 +26,10 @@ class Main extends Sprite
 	public function new ()
 	{
 		super();
+    
+    #if debug
+    new debugger.Local(true);
+    #end
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
