@@ -6,21 +6,9 @@ using StringTools;
 using Lambda;
 using Std;
 
-class Parser
-{
-	var program: String;
-	var labelCache: Map<String, Int>;
-	
-	public function new(program: String)
-	{
-		this.program = program;
-		this.labelCache = new Map();
-	}
-
-	public function parse(): Iterable<Instruction>
-	{
-		return program.split("\n")
-		.mapi(function(lineNumber, line) {
+class Parser {
+	public static function parse(program: String) {
+		return program.split("\n").mapi(function(lineNumber, line) {
 			var parsed = new InstructionParser(line).parse();
 			switch (parsed) {
 				case InstructionParserResult.Empty: return new Instruction(null, Operator.Skip);
@@ -34,7 +22,7 @@ class Parser
 	}
 }
 
-class InstructionParser
+private class InstructionParser
 {
 	var tokens: Array<String>;
 
