@@ -12,6 +12,7 @@ import openfl.display.Shape;
 import glm.Vec2;
 import openfl.display.Sprite;
 import tween.Delta;
+import AudioJank.AudioJank;
 
 class Game extends Sprite
 {
@@ -28,9 +29,11 @@ class Game extends Sprite
 	{
 		super();
 
+                AudioJank.createContext();
+
     addChild(backgroundShape = new Shape());
 		addChild(spriteContainer = new Sprite());
-		addChild(debugContainer = new Sprite()); 
+		addChild(debugContainer = new Sprite());
 		#if ogl
 		trace("Setting up post proc!");
 		addChild(sceneRenderer = new SceneRenderBase(config));
