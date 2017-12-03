@@ -1,5 +1,6 @@
 package;
 import coldBoot.Game;
+import glm.Vec2;
 import haxe.Timer;
 import hscript.Interp;
 import hscript.Parser;
@@ -31,7 +32,7 @@ class Main extends Sprite {
 		game.addChild(debugDraw);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
-		addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
+		addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		addEventListener(MouseEvent.MOUSE_UP, mouseUp);
 		addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
 		addEventListener(KeyboardEvent.KEY_UP, keyUp);
@@ -44,6 +45,15 @@ class Main extends Sprite {
 		i.variables["foo"] = 132;
 		i.variables["funcdood"] = test;
 		i.execute(prog);
+	}
+	
+	function addedToStage(e:Event):Void 
+	{
+		stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
+	
+		
+		removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
+		
 	}
 	
 	function keyUp(e:KeyboardEvent):Void 
@@ -63,7 +73,10 @@ class Main extends Sprite {
 	
 	function mouseDown(e:MouseEvent):Void 
 	{
-		
+		var x = e.localX;
+		var y = e.localY;
+		trace("MouseX "  + x + ", " + y);
+		game.pulse(new Vec2(x,y));
 	}
 	
 	function onEnterFrame(e:Event):Void

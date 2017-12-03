@@ -59,14 +59,16 @@ class PulseRay
 	var closestHit: RayCollision;
 	var pulseProgress: Float;
 	var rayStartOffset: Float;
+	var originPos: Vec2;
 
-	public var healthDecay: Float = 20;
+	public var healthDecay: Float = 40;
 	public var health:Float;
 	public var lastWallHit:Wall;
 	var ignoreWall:Wall;
 
-	public function new(r: Ray, speed: Float, startOffet: Float, ignoreWall: Wall, health: Float)
+	public function new(orig: Vec2, r: Ray, speed: Float, startOffet: Float, ignoreWall: Wall, health: Float)
 	{
+		this.originPos = orig;
 		this.health = health;
 		this.ignoreWall = ignoreWall;
 		this.ray = r;
@@ -84,7 +86,6 @@ class PulseRay
 	public function getReflectionVector(): Vec2
 	{
 		var original = new Vec2(ray.dir.x, ray.dir.y);
-		trace("Original: " + original);
 		var edgeHit = getEdgeOfLastWallHit();
 		switch (edgeHit)
 		{
@@ -122,6 +123,14 @@ class PulseRay
 	{
 		if (wall == ignoreWall)
 			return;
+		if (lastWallHit != null)
+		{
+			var distCurr = Vec2.subtractVecOp(lastWallHit.pos, originPos);
+			var distNew = Vec2.subtractVecOp(wall.pos, originPos);
+			
+			if (distNew.x > distCurr.x && distNew.y > distCurr.y)
+				return;
+		}
 		var w = wall.getPolygon();
 		var collideInfo  = Collision.rayWithShape(ray, w);
 		if (collideInfo != null)
@@ -181,7 +190,7 @@ class PulseRay
 class Pulse extends Entity
 {
 	var strength: Float; //how long the pulse exists
-	var speed: Float = 0.08;
+	var speed: Float = 0.58;
 	var timeSinceLaunch: Float = 0;
 	var level:Level;
 	
@@ -226,14 +235,14 @@ class Pulse extends Entity
 	
 	function generateOriginalRays()
 	{
-		var health = 20;
+		var health = 80;
 		
 		var pos = position;
 		
-		var nRays = 5;
+		var nRays = 25;
 		var rayLength = 200;
 		segmentOffset = 0.5;
-		var segmentSize = 2 * Math.PI / nRays;
+		var segmentSize = 2 * (Math.PI / nRays / 10);
 		for (i in 0...nRays)
 		{
 			var angle = segmentOffset + segmentSize * i;
@@ -241,7 +250,7 @@ class Pulse extends Entity
 				(Math.cos(angle) * rayLength) + pos.x,
 				(Math.sin(angle) * rayLength) + pos.y);
 			var startVec = new Vector(pos.x, pos.y);
-			var r = new PulseRay(new Ray(startVec, endVec), speed, timeSinceLaunch, null, health);
+			var r = new PulseRay(pos, new Ray(startVec, endVec), speed, timeSinceLaunch, null, health);
 			rays.push(r);
 		}
 	}
@@ -266,7 +275,7 @@ class Pulse extends Entity
 			(Math.cos(angle) * rayLength) + pos.x,
 			(Math.sin(angle) * rayLength) + pos.y);
 		var startVec = new Vector(pos.x, pos.y);
-		var r = new PulseRay(new Ray(startVec, endVec), speed, timeSinceLaunch, ignoreWall, originRay.health);
+		var r = new PulseRay(pos, new Ray(startVec, endVec), speed, timeSinceLaunch, ignoreWall, originRay.health);
 		rays.push(r);
 	}
 

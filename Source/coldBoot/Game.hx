@@ -1,6 +1,8 @@
 package coldBoot;
 import coldBoot.IGameState;
+import coldBoot.states.GamePlayState;
 import coldBoot.states.InitialState;
+import glm.Vec2;
 import openfl.display.Sprite;
 import tween.Delta;
 
@@ -34,6 +36,16 @@ class Game extends Sprite
 		currentState = s;
 		currentState.enter(this);
 		return currentState;
+	}
+	
+	public function pulse(pos: Vec2)
+	{
+		trace("Pulsing perhaps");
+		try {
+			var ss = cast(currentState, GamePlayState);
+			trace("About ot pulse");
+			ss.pulse(pos);
+		}
 	}
 
 }

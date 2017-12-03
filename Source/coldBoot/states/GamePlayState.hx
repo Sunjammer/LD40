@@ -9,6 +9,7 @@ import openfl.display.DisplayObjectContainer;
 class GamePlayState extends DisplayObjectContainer implements IGameState
 {
 	public var rootEntity: Entity;
+	var level: Level;
 	
 	public function new() 
 	{
@@ -21,7 +22,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		rootEntity = new Entity();
 		g.addChild(this);
 		
-		var level = new Level();
+		level = new Level();
 		rootEntity.add(level);
 		var sonar = new ActiveSonar();
 		sonar.position = new Vec2(90, 90);
@@ -46,4 +47,13 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	{
 		g.removeChild(this);
 	}
+	
+	public function pulse(pos: Vec2)
+	{
+		trace("We are pulsing");
+		var pulse = new Pulse(level);
+		pulse.position = pos;
+		rootEntity.add(pulse);
+	}
+	
 }
