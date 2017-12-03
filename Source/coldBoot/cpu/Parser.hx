@@ -58,7 +58,7 @@ private class InstructionParser
 	}
 	
 	function parseOperator(mnemonic: String) {
-		switch (mnemonic) {
+		switch (mnemonic.toLowerCase()) {
 			case "mov": {
 				var operands = parseOperands(2);
 				var src = operands[0];
