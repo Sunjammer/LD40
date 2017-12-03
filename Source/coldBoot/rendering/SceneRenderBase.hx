@@ -1,7 +1,6 @@
 package coldBoot.rendering;
 import coldBoot.Game;
 import coldBoot.rendering.PostEffect;
-import lime.app.Config.WindowConfig;
 import openfl.display.OpenGLView;
 import openfl.geom.Rectangle;
 
@@ -12,9 +11,9 @@ import openfl.geom.Rectangle;
 class SceneRenderBase extends OpenGLView {
   var effects:Array<PostEffect>;
   var prevDelta:Float;
-  var config:WindowConfig;
+  var config:{width:Int, height:Int};
 
-  public function new(config:WindowConfig) {
+  public function new(config:{width:Int, height:Int}) {
     super();
     this.render = renderView;
     this.config = config; 
@@ -42,7 +41,7 @@ class SceneRenderBase extends OpenGLView {
     
   }
   
-  public function setWindowSize(config:WindowConfig){
+  public function setWindowSize(config:{width:Int, height:Int}){
     this.config = config;
     for (p in effects){
       p.bind(config);

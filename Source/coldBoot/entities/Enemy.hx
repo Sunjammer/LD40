@@ -1,5 +1,6 @@
 package coldBoot.entities;
 
+import coldBoot.RenderInfo;
 import coldBoot.ai.*;
 import coldBoot.states.*;
 import glm.Vec2;
@@ -18,7 +19,7 @@ class Enemy extends Entity implements EnemyAI.EnemyController {
 		position += dir * 4;
 	}
 
-	public override function render(state:GamePlayState) {
+	public override function render(info:RenderInfo) {
 		brain.performAction();
 
 		Main.debugDraw.graphics.beginFill(0x00ffff);

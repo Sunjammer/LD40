@@ -8,7 +8,7 @@ varying vec2 vTexCoord;
 uniform vec2 uResolution;
 uniform float uTime;
 uniform sampler2D uImage0;
-
+uniform float uPoo;
 uniform float scale = 1.0;
 
 void main()

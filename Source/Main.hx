@@ -25,9 +25,15 @@ class Main extends Sprite {
 	var prevTime: Float;
 	public function new () {
 		super();
+    addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+	}
+  
+  function onAddedToStage(e:Event):Void {
+    removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+    stage.addEventListener(Event.RESIZE, onStageResize);
 		
-		game = new Game();
 		debugDraw = new Sprite();
+    game = new Game({width:stage.stageWidth, height:stage.stageHeight});
 		addChild(game);
 		game.addChild(debugDraw);
 		prevTime = Timer.stamp();
@@ -37,7 +43,11 @@ class Main extends Sprite {
 		addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
 		addEventListener(KeyboardEvent.KEY_UP, keyUp);
     
-	}
+  }
+  
+  function onStageResize(e:Event):Void {
+    game.resize({width:stage.stageWidth, height:stage.stageHeight});
+  }
 	
 	function keyUp(e:KeyboardEvent):Void 
 	{
@@ -69,5 +79,8 @@ class Main extends Sprite {
 		debugDraw.graphics.clear();
 		
 		game.update(dt);
+    #if !ogl
+    game.render(dt);
+    #end
 	}
 }

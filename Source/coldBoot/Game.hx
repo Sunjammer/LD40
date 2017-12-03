@@ -4,12 +4,10 @@ import coldBoot.IGameState;
 import coldBoot.rendering.PostEffect;
 import coldBoot.rendering.SceneRenderBase;
 #end
-import coldBoot.UpdateInfo;
 import coldBoot.states.InitialState;
 import openfl.display.Sprite;
 import tween.Delta;
 
-import haxe.ds.Option;
 
 class Game extends Sprite
 {
@@ -19,13 +17,13 @@ class Game extends Sprite
   var sceneRenderer:SceneRenderBase;
   #end
   
-	public function new()
+	public function new(config:{width:Int, height:Int})
 	{
 		super();
 		setState(new InitialState());
     
     #if ogl
-    addChild(sceneRenderer = new SceneRenderBase({width:800, height:600}));
+    addChild(sceneRenderer = new SceneRenderBase(config));
     sceneRenderer.setPostEffects(
       [
         new PostEffect("assets/invert.frag")
@@ -34,6 +32,10 @@ class Game extends Sprite
     #end
       
 	}
+  
+  public function resize(dims:{width:Int, height:Int}){
+    sceneRenderer.setWindowSize(dims);
+  }
   
   public function getCurrentState():IGameState{
     return currentState;
@@ -56,6 +58,12 @@ class Game extends Sprite
     sceneRenderer.preRender();
 		currentState.render({game:this});
     super.__renderGL(renderSession);
+  }
+ #end
+ 
+ #if !ogl
+  public function render(dt:Float){
+		currentState.render({game:this});
   }
  #end
 

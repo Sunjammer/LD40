@@ -17,7 +17,7 @@
 	<haxelib name="AudioJank"/>
 	<haxelib name="random" />
 	
-  <haxedef name="ogl" if="mac || windows"/>
+  <haxedef name="ogl" />
   
 	<assets path="Assets" rename="assets" />
 	

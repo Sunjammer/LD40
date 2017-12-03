@@ -5,12 +5,13 @@ import lime.graphics.opengl.GLBuffer;
 import lime.graphics.opengl.GLFramebuffer;
 import lime.graphics.opengl.GLRenderbuffer;
 import lime.graphics.opengl.GLTexture;
+import lime.graphics.opengl.GLUniformLocation;
 import openfl.Assets;
 
 typedef PostProcessConfig = { width:Int, height:Int }
 
 typedef Uniform = {
-	var id:Int;
+	var id:GLUniformLocation;
 	var value:Float;
 };
 
@@ -31,9 +32,9 @@ class PostEffect
 
 	private var vertexSlot:Int;
 	private var texCoordSlot:Int;
-	private var imageUniform:Int;
-	private var resolutionUniform:Int;
-	private var timeUniform:Int;
+	private var imageUniform:GLUniformLocation;
+	private var resolutionUniform:GLUniformLocation;
+	private var timeUniform:GLUniformLocation;
 	private var uniforms:Map<String, Uniform>;
 
 	private static inline var fullscreenQuadFrag:String = "
@@ -94,8 +95,8 @@ class PostEffect
 		}
 		else
 		{
-			var id:Int = shader.uniform(uniform);
-			if (id != -1) uniforms.set(uniform, {id: id, value: value});
+			var id = shader.uniform(uniform);
+			if (id != null) uniforms.set(uniform, {id: id, value: value});
 		}
 	}
   
@@ -191,6 +192,7 @@ class PostEffect
 		GL.vertexAttribPointer(vertexSlot, 2, GL.FLOAT, false, 16, 0);
 		GL.vertexAttribPointer(texCoordSlot, 2, GL.FLOAT, false, 16, 8);
 
+    
 		GL.uniform1i(imageUniform, 0);
 		GL.uniform1f(timeUniform, time);
 		GL.uniform2f(resolutionUniform, config.width, config.height);

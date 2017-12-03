@@ -19,7 +19,6 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 
 	public function enter(g:Game):Void
 	{
-		trace("Entered gameplay state");
 		rootEntity = new Entity();
 		g.addChild(this);
 		

@@ -2,6 +2,7 @@ package coldBoot.rendering;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLProgram;
 import lime.graphics.opengl.GLShader;
+import lime.graphics.opengl.GLUniformLocation;
 import openfl.gl.*;
 
 typedef ShaderSource = {
@@ -75,7 +76,7 @@ class Shader
 	 * Return the uniform location in this shader
 	 * @param a  The uniform name to find
 	 */
-	public inline function uniform(u:String):Int
+	public inline function uniform(u:String):GLUniformLocation
 	{
 		return GL.getUniformLocation(program, u);
 	}
