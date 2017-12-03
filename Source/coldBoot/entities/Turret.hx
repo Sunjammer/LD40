@@ -20,7 +20,7 @@ class Turret extends ScriptableEntity
 		Vec2.normalize(dir, dir);
 		var ms = new Missile(dir);
 		ms.position = position;
-		gameState.addChildEntity(ms);
+		gameState.getRootEntity().add(ms);
 	}
 
 	var timer: Float = 0;

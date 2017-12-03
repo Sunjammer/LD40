@@ -29,7 +29,7 @@ class Missile extends Entity
 		lifetime -= info.deltaTime;
 		if (lifetime <= 0)
 		{
-			info.game.getCurrentState().removeChildEntity(this);
+			info.game.getCurrentState().getRootEntity().remove(this);
 		}
 		
 		position += direction * info.deltaTime * speed;

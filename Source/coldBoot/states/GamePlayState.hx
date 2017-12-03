@@ -18,7 +18,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	public var rootEntity: Entity;
 	var level: Level;
 	
-	public function new() 
+	public function new()
 	{
 		super();
 	}
@@ -45,7 +45,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		rootEntity.add(turret);		
 		
 		for(i in 0...50) {
-			addChildEntity(new Enemy(level, enemySpawnPoint * (level.pixelSize * 3) - (level.pixelSize * 3) / 2 + 1));
+			rootEntity.add(new Enemy(level, enemySpawnPoint * (level.pixelSize * 3) - (level.pixelSize * 3) / 2 + 1));
 		}
 	   
 		g.spriteContainer.addChild(this);
@@ -67,13 +67,12 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		g.spriteContainer.removeChild(this);
 	}
 	
-	public function addChildEntity(e:Entity):Void 
+	
+	/* INTERFACE coldBoot.IGameState */
+	
+	public function getRootEntity():Entity 
 	{
-		rootEntity.add(e);
+		return this.rootEntity;
 	}
 	
-	public function removeChildEntity(e:Entity):Void 
-	{
-		rootEntity.remove(e);
-	}
 }

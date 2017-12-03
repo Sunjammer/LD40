@@ -7,11 +7,18 @@ class Entity
 {
 	public var position: Vec2 = new Vec2(0,0);
 	public var rotation: Float = 0;
+	
+	var tags: Array<String> = [];
 
 	public var children:Array<Entity>;
 	public function new()
 	{
 		children = [];
+	}
+	
+	public function addTag(tag: String)
+	{
+		tags.push(tag);
 	}
 
 	public function add(e:Entity):Void

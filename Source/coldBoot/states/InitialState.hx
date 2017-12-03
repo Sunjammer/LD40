@@ -1,4 +1,5 @@
 package coldBoot.states;
+import coldBoot.Entity;
 import coldBoot.Game;
 import coldBoot.UpdateInfo;
 import openfl.display.Shape;
@@ -48,13 +49,13 @@ class InitialState extends Shape implements IGameState
 		g.spriteContainer.removeChild(this);
 	}
 	
-	public function addChildEntity(e:Entity):Void 
+	
+	/* INTERFACE coldBoot.IGameState */
+	
+	public function getRootEntity():Entity 
 	{
-		//rootEntity.add(e);
+		return null;
 	}
 	
-	public function removeChildEntity(e:Entity):Void 
-	{
-		//rootEntity.remove(e);
-	}
+	
 }
