@@ -24,12 +24,13 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		
 		level = new Level();
 		rootEntity.add(level);
-		var sonar = new ActiveSonar();
+		/*var sonar = new ActiveSonar();
 		sonar.position = new Vec2(90, 90);
 		rootEntity.add(sonar);
 		var pulse = new Pulse(level);
 		pulse.position = new Vec2(90, 90);
-		rootEntity.add(pulse);
+		rootEntity.add(pulse);*/
+		
 		g.addChild(this);
 	}
 	
