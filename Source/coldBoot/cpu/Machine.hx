@@ -37,10 +37,14 @@ class Machine
 	var compareLeft: Int = 0;
 	var compareRight: Int = 0;
 
-	public function new(registers: Array<IRegister>, program: Array<Instruction>)
+	public function new()
 	{
-		this.registers = registers;
+		this.registers = [];
 		this.pc = 0;
+		setProgram([]);
+	}
+
+	public function setProgram(program: Array<Instruction>) {
 		this.program = program;
 		setupLabelCache();
 	}
