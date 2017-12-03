@@ -27,9 +27,8 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	{
 		rootEntity = new Entity();
 
-        		
-	terminal = new CodingHell(g, 400);
-        addChild(terminal);
+    terminal = new CodingHell(g, 400);
+    addChild(terminal);
     
 		var enemySpawnPoint = new glm.Vec2(1,1);
 		level = new Level(enemySpawnPoint);
