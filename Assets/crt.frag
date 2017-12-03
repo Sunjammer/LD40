@@ -44,7 +44,11 @@ void main() {
         vertEdge += texture2D( uImage0, vec2( uv.x    , uv.y + y ) ) * 2.0;
         vertEdge += texture2D( uImage0, vec2( uv.x + x, uv.y + y ) ) * 1.0;
         vec3 edge = smoothstep(vec3(0.), vec3(1), sqrt((horizEdge.rgb * horizEdge.rgb) + (vertEdge.rgb * vertEdge.rgb)));
-        edge += texture2D(uImage0,uv).rgb*.5;
+        vec3 orig = texture2D(uImage0,vTexCoord).rgb;
+        if((orig.r > 0.5 && orig.g == .0 && orig.b == .0) || orig.rgb == vec3(0.))
+            edge = vec3(orig.r);
+        else
+            edge += orig*.5;
         /*vec3 s01 = texture2D(uImage0,uv-vec2(1,0)*stepSize).rgb;
         vec3 s02 = texture2D(uImage0,uv+vec2(1,0)*stepSize).rgb;
         vec3 s03 = texture2D(uImage0,uv-vec2(0,1)*stepSize).rgb;
