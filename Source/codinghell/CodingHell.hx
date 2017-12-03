@@ -24,7 +24,7 @@ class CodingHell extends Sprite{
     super();
     
     
-    var tf = new TextFormat("Perfect DOS VGA 437 Win", 16);
+    var tf = new TextFormat("Perfect DOS VGA 437 Win", 16, 0xFFFFFF);
     
     output = new TextField();
     input = new TextField();
@@ -44,7 +44,6 @@ class CodingHell extends Sprite{
     
     addChild(output);
     addChild(input);
-    input.autoSize = TextFieldAutoSize.LEFT;
     
     input.addEventListener(FocusEvent.FOCUS_IN, onInputFocus);
     input.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
