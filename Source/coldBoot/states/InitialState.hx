@@ -49,4 +49,14 @@ class InitialState extends Shape implements IGameState
 		trace("Exiting initial state");
 		g.spriteContainer.removeChild(this);
 	}
+	
+	public function addChildEntity(e:Entity):Void 
+	{
+		//rootEntity.add(e);
+	}
+	
+	public function removeChildEntity(e:Entity):Void 
+	{
+		//rootEntity.remove(e);
+	}
 }

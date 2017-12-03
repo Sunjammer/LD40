@@ -29,9 +29,6 @@ class Level extends Entity
 		for(i in 0...50) {
 			add(new coldBoot.entities.Enemy(map, enemySpawnPoint * (pixelSize * 3) - (pixelSize * 3) / 2 + 1));
 		}
-		/*var bitmap = mapGenerator.getBitmap();
-		bitmap.width *= pixelSize;
-		bitmap.height *= pixelSize;*/
 		
 		width = mapGenerator.getWidth() * 3;
 		height = mapGenerator.getHeight() * 3;
