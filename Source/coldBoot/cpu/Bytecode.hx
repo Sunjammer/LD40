@@ -1,4 +1,4 @@
-package turretscript;
+package coldBoot.cpu;
 
 enum Comparison
 {

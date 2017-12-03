@@ -1,6 +1,6 @@
-package turretscript;
+package coldBoot.cpu;
 
-import turretscript.Bytecode;
+import coldBoot.cpu.Bytecode;
 
 using Lambda;
 
