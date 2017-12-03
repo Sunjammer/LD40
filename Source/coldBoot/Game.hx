@@ -6,12 +6,16 @@ import coldBoot.states.GamePlayState;
 	import coldBoot.rendering.PostEffect;
 	import coldBoot.rendering.SceneRenderBase;
 #end
-
+import coldBoot.cpu.Bytecode.Comparison;
 import coldBoot.states.InitialState;
+import fsignal.Signal;
+import fsignal.Signal1;
+import fsignal.Signal2;
 import openfl.display.Shape;
 import glm.Vec2;
 import openfl.display.Sprite;
 import tween.Delta;
+  
 
 class Game extends Sprite
 {
@@ -21,22 +25,26 @@ class Game extends Sprite
   var backgroundShape:Shape;
 
 	#if ogl
-		var sceneRenderer:SceneRenderBase;
+	var sceneRenderer:SceneRenderBase;
 	#end
-
+  
+  public var viewportSize:{width:Int, height:Int};
+  public var viewportChanged:Signal2<Int,Int>;
+  
 	public function new(config: {width:Int, height:Int})
 	{
 		super();
 
+    viewportChanged = new Signal2<Int,Int>();
     addChild(backgroundShape = new Shape());
 		addChild(spriteContainer = new Sprite());
 		addChild(debugContainer = new Sprite()); 
 		#if ogl
 		trace("Setting up post proc!");
+    viewportSize = {width:0, height:0};
 		addChild(sceneRenderer = new SceneRenderBase(config));
 		sceneRenderer.setPostEffects(
 			[
-				//new PostEffect("assets/invert.frag")
 				new PostEffect("assets/crt.frag")
 			]
 		);
@@ -46,12 +54,15 @@ class Game extends Sprite
 
 	public function resize(dims: {width:Int, height:Int})
 	{
+    viewportSize.width = dims.width;
+    viewportSize.height = dims.height;
 		#if ogl
-		sceneRenderer.setWindowSize(dims);
+		sceneRenderer.setWindowSize(viewportSize);
 		#end
     backgroundShape.graphics.clear();
     backgroundShape.graphics.beginFill();
-    backgroundShape.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+    backgroundShape.graphics.drawRect(0, 0, viewportSize.width, viewportSize.height);
+    viewportChanged.dispatch(viewportSize.width, viewportSize.height);
 	}
 
 	public function getCurrentState():IGameState

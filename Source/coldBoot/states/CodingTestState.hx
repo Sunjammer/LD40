@@ -15,8 +15,6 @@ class CodingTestState extends Sprite implements IGameState {
 
   public function new() {
     super();
-    var terminal = new CodingHell(300);
-    addChild(terminal);
   }
   
   
@@ -28,6 +26,8 @@ class CodingTestState extends Sprite implements IGameState {
   
   public function enter(g:Game):Void {
     g.spriteContainer.addChild(this);
+    var terminal = new CodingHell(g, 300);
+    addChild(terminal);
   }
   
   public function update(info:UpdateInfo):IGameState {

@@ -36,9 +36,11 @@ class CodingHell extends Sprite{
   
   static inline var CARETCHAR:String = "//";
   var terminalWidth:Int;
+  var game:Game;
 
-  public function new(terminalWidth:Int) {
+  public function new(game:Game, terminalWidth:Int) {
     super();
+    this.game = game;
     this.terminalWidth = terminalWidth;
     
     state = Status;
@@ -63,6 +65,8 @@ class CodingHell extends Sprite{
     statusText.selectable = output.selectable = input.selectable = false;
     
     addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+   
+    updateUi();
   }
   
   public function setOutputText(string:String) {
@@ -105,7 +109,7 @@ class CodingHell extends Sprite{
   }
   
   function updateUi() {
-    x = stage.stageWidth - terminalWidth;
+    x = game.viewportSize.width - terminalWidth;
     
     statusText.text = ("mode:" + state).toUpperCase();
     input.width = output.width = statusText.width = terminalWidth;
@@ -116,26 +120,26 @@ class CodingHell extends Sprite{
     switch(state){
       case Edit:
         input.y = statusText.height;
-        input.height = stage.stageHeight - input.y;
+        input.height = game.viewportSize.height - input.y;
       case Status:
         addChild(output);
         input.height = 20;
         output.y = statusText.height;
-        output.height = stage.stageHeight - input.height - statusText.height;
-        input.y = stage.stageHeight - input.height;
+        output.height = game.viewportSize.height - input.height - statusText.height;
+        input.y = game.viewportSize.height - input.height;
     }
     
     
     graphics.clear();
     graphics.beginFill(0);
-    graphics.drawRect(0, 0, terminalWidth, stage.stageHeight);
+    graphics.drawRect(0, 0, terminalWidth, game.viewportSize.height);
     
     graphics.beginFill(0xFFFFFF);
     graphics.drawRect(0, input.y, terminalWidth, 3);
     graphics.beginFill(0xFFFFFF);
     graphics.drawRect(0, statusText.y, terminalWidth, 3);
     graphics.beginFill(0xFFFFFF);
-    graphics.drawRect(0, 0, 2, stage.stageHeight);
+    graphics.drawRect(0, 0, 2, game.viewportSize.height);
     
   }
     
@@ -144,7 +148,6 @@ class CodingHell extends Sprite{
     addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
     
     stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-    updateUi();
   }
   
   function onRemovedFromStage(e:Event):Void {

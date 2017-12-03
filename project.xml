@@ -16,6 +16,7 @@
 	<haxelib name="differ" />
 	<haxelib name="AudioJank"/>
 	<haxelib name="random" />
+  <haxelib name="fsignal"/>
   <haxelib name="hxcpp-debugger" if="debug cpp boof" />
   <haxedef name="HXCPP_DEBUGGER" if="debug cpp boof" />
   <haxedef name="HX_UTF8_STRINGS" if="debug cpp boof" />

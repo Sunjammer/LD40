@@ -28,7 +28,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		rootEntity = new Entity();
 
         		
-        terminal = new CodingHell(200);
+	terminal = new CodingHell(g, 400);
         addChild(terminal);
     
 		var enemySpawnPoint = new glm.Vec2(1,1);
@@ -51,6 +51,12 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		}
 	   
 		g.spriteContainer.addChild(this);
+		g.viewportChanged.add(onViewportChanged);
+	}
+  
+	function onViewportChanged(w:Int, h:Int):Void {
+		trace("Viewport changed");
+		terminal.x = w - 400;
 	}
 	
 	public function render(info:RenderInfo):Void
@@ -66,6 +72,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	
 	public function exit(g:Game):Void
 	{
+		g.viewportChanged.remove(onViewportChanged);
 		g.spriteContainer.removeChild(this);
 	}
 	
