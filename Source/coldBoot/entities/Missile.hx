@@ -2,19 +2,17 @@ package coldBoot.entities;
 import coldBoot.RenderInfo;
 import coldBoot.UpdateInfo;
 import differ.Collision;
-import differ.ShapeDrawer;
 import differ.shapes.Polygon;
 import differ.shapes.Shape;
 import glm.Vec2;
 
 class Missile extends Entity
 {
-	var speed: Float = 53;
+	var speed: Float = 100;
 	var damage: Float = 20;
 	
-	var lifetime: Float = 3;
+	var lifetime: Float = 5;
 	var direction: Vec2;
-	
 	
 	var shape: Shape;
 	
@@ -30,13 +28,11 @@ class Missile extends Entity
 		
 	}
 	
-	
 	function destroyMissile(info:UpdateInfo) 
 	{
 		info.game.getCurrentState().getRootEntity().remove(this);
 	}
 
-	
 	override public function update(info:UpdateInfo) 
 	{
 		super.update(info);
