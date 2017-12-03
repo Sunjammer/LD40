@@ -13,6 +13,7 @@ import glm.Vec2;
 import openfl.display.Sprite;
 import tween.Delta;
 import AudioJank.AudioJank;
+import AudioJank.SampleId;
 
 class Game extends Sprite
 {
@@ -30,6 +31,7 @@ class Game extends Sprite
 		super();
 
                 AudioJank.createContext();
+                AudioJank.playSampleInSpace(SampleId.EnemyDialogueHigh3, 0.0, 0.0);
 
     addChild(backgroundShape = new Shape());
 		addChild(spriteContainer = new Sprite());

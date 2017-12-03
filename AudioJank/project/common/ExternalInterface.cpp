@@ -23,14 +23,10 @@ static void audiojank_create_context()
 DEFINE_PRIM (audiojank_create_context, 0);
 
 
-static value audiojank_sample_method (value inputValue) {
-
-	int returnValue = SampleMethod(val_int(inputValue));
-	return alloc_int(returnValue);
-
+static void audiojank_play_sample_in_space(value sampleId, value relativeX, value relativeY) {
+    context_play_sample_in_space(context, val_int(sampleId), val_float(relativeX), val_float(relativeY));
 }
-DEFINE_PRIM (audiojank_sample_method, 1);
-
+DEFINE_PRIM (audiojank_play_sample_in_space, 3);
 
 
 extern "C" void audiojank_main () {
