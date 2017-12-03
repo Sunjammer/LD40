@@ -1,5 +1,5 @@
 package coldBoot.states;
-import codinghell.CodingHell;
+import codinghell.Terminal;
 import coldBoot.Entity;
 import coldBoot.UpdateInfo;
 import coldBoot.Game;
@@ -26,7 +26,7 @@ class CodingTestState extends Sprite implements IGameState {
   
   public function enter(g:Game):Void {
     g.stateSpriteContainer.addChild(this);
-    var terminal = new CodingHell(g, 300);
+    var terminal = new Terminal(g, 300);
     addChild(terminal);
   }
   

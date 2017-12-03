@@ -1,5 +1,5 @@
 package coldBoot.states;
-import codinghell.CodingHell;
+import codinghell.Terminal;
 import coldBoot.Entity;
 import coldBoot.RenderInfo;
 import coldBoot.Level;
@@ -16,7 +16,7 @@ import openfl.display.OpenGLView;
 class GamePlayState extends DisplayObjectContainer implements IGameState
 {
 	public var rootEntity: Entity;
-  var terminal:CodingHell;
+  var terminal:Terminal;
 	var level: Level;
   var glView:OpenGLView;
   
@@ -34,7 +34,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	{
     playerInfo = new PlayerInfo(100, 100);
 		rootEntity = new Entity();
-    terminal = new CodingHell(g, 400);
+    terminal = new Terminal(g, 400);
     addChild(glView);
     addChild(terminal);
     
