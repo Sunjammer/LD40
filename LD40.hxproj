@@ -22,8 +22,9 @@
     <class path="C:\HaxeToolkit\haxe\lib\glm\2,1,0\src" />
     <class path="C:\HaxeToolkit\haxe\lib\pathfinder\0,2,18" />
     <class path="C:\HaxeToolkit\haxe\lib\differ\1,3,0" />
-    <class path="C:\Users\krist\dev\LD40\AudioJank" />
+    <class path="C:\Users\hassel\dev\LD40\AudioJank" />
     <class path="C:\HaxeToolkit\haxe\lib\random\1,4,1\src" />
+    <class path="C:\HaxeToolkit\haxe\lib\fsignal\git" />
     <class path="Source" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\6,5,1\externs\core\openfl" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\6,5,1\externs\extras" />
@@ -31,7 +32,7 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="openfl=6.5.1&#xA;lime=5.9.1&#xA;delta=0.0.0&#xA;hscript=2.1.1&#xA;glm=2.1.0&#xA;Pathfinder=0.2.18&#xA;pathfinder=0.2.18&#xA;differ=1.3.0&#xA;AudioJank=1.0.0&#xA;random=1.4.1&#xA;tools=5.9.1&#xA;no-compilation&#xA;native&#xA;lime-native&#xA;lime-vorbis&#xA;openfl-native&#xA;ogl&#xA;lime-cffi&#xA;windows&#xA;desktop&#xA;display" />
+    <option directives="openfl=6.5.1&#xA;lime=5.9.1&#xA;delta=0.0.0&#xA;hscript=2.1.1&#xA;glm=2.1.0&#xA;Pathfinder=0.2.18&#xA;pathfinder=0.2.18&#xA;differ=1.3.0&#xA;AudioJank=1.0.0&#xA;random=1.4.1&#xA;fsignal=1.0.0&#xA;tools=5.9.1&#xA;no-compilation&#xA;native&#xA;lime-native&#xA;lime-vorbis&#xA;openfl-native&#xA;ogl&#xA;lime-cffi&#xA;windows&#xA;desktop&#xA;display" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />

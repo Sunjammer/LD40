@@ -1,9 +1,10 @@
 package coldBoot.entities;
+import coldBoot.IReactToSonarSignals;
 import coldBoot.IGameState;
 import coldBoot.UpdateInfo;
 import glm.Vec2;
 
-class Turret extends ScriptableEntity
+class Turret extends ScriptableEntity implements IReactToSonarSignals
 {
 	var orientation: Float = 0;
 	var shootRadius: Float = 10;
@@ -42,5 +43,10 @@ class Turret extends ScriptableEntity
 		super.render(info);
 		Main.debugDraw.graphics.beginFill(0x00ffff);
 		Main.debugDraw.graphics.drawRoundRect(position.x, position.y, 15, 15, 8, 8);
+	}
+	
+	public function signal(pulseType:Int):Void 
+	{
+		//Send signal to whatever script is active on the turret
 	}
 }
