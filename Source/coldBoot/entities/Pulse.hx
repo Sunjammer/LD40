@@ -1,9 +1,5 @@
 package coldBoot.entities;
 import coldBoot.Level;
-import coldBoot.entities.Pulse.Index;
-import coldBoot.entities.Pulse.PulseTile;
-import glm.Vec2;
-import haxe.ds.IntMap;
 
 class Index 
 {
@@ -19,27 +15,12 @@ class Index
 class PulseTile
 {
 	public var intensity: Float;
-	public var index: Index;
 	public var isWall: Bool;
 	var hasBeenAffectedByArray: Array<Index> = [];
 	
-	public function new(index:Index, intensity: Float = 0, isWall: Bool = false) {
-		this.index = index;
+	public function new(intensity: Float = 0, isWall: Bool = false) {
 		this.intensity = intensity;
 		this.isWall = isWall;
-	}
-	
-	public function affect(pt: PulseTile)
-	{
-		if (this.hasBeenAffectedByArray.indexOf(pt.index) == -1)
-		{
-			this.hasBeenAffectedByArray.push(pt.index);
-		}
-	}
-	
-	public function hasBeenAffectedBy(pt: PulseTile): Bool
-	{
-		return this.hasBeenAffectedByArray.indexOf(pt.index) != -1;
 	}
 	
 }
@@ -50,8 +31,11 @@ class PulseTileBuffer
 	var width: Int;
 	var height: Int;
 	
-	public function new(level: Level)
+	public var life: Float;
+	
+	public function new(level: Level, life: Float)
 	{
+		this.life = life;
 		width = level.width;
 		height = level.height;
 		
@@ -60,7 +44,7 @@ class PulseTileBuffer
 			for (x in 0...level.width)
 			{
 				var tileType = level.tiles[y * width + x];
-				pulseTiles.push(new PulseTile(new Index(x,y), 0, tileType == Wall));
+				pulseTiles.push(new PulseTile(0, tileType == Wall));
 			}
 		}
 	}
@@ -74,42 +58,31 @@ class PulseTileBuffer
 	public function update(info:UpdateInfo)
 	{
 		var dt = info.deltaTime;
-		var bleed = 0.1;
+		life -= dt;
+		var decay = 2;
 		for (y in 0...height)
 		{
 			for (x in 0...width)
 			{
 				var pt = pulseTiles[y * width + x];
-				var amountBled = 0.0;
-				
-				if (pt.intensity > 0.5)
+
+				for (ny in 0...3)
 				{
-					for (ny in 0...3)
+					for (nx in 0...3)
 					{
-						for (nx in 0...3)
-						{
-							var neighborX = nx - 1 + x;
-							var neighborY = ny - 1 + y;
-							if (neighborX < 0 || neighborX >= width || neighborY < 0 || neighborY >= height || (neighborX == x && neighborY == y))
-								continue;
-								
-							var neighbor = pulseTiles[neighborX + (neighborY * width)];
+						var neighborX = nx - 1 + x;
+						var neighborY = ny - 1 + y;
+						if (neighborX < 0 || neighborX >= width || neighborY < 0 || neighborY >= height || (neighborX == x && neighborY == y))
+							continue;
 							
-							if (pt.hasBeenAffectedBy(neighbor))
-								continue;
-							
-							if (neighbor.isWall)
-								continue; //neighbor.intensity += pt.intensity * wallBleed * dt;
-							 
-							var toBleed = pt.intensity * bleed * dt;
-							neighbor.intensity += toBleed;
-							amountBled += toBleed;
-							neighbor.affect(pt);
-						}
+						var neighbor = pulseTiles[neighborX + (neighborY * width)];
+						
+						if (neighbor.isWall)
+							continue;// neighbor.intensity += pt.intensity * wallBleed * dt;
+						 
+						neighbor.intensity += pt.intensity * dt * decay;
 					}
 				}
-					
-				pt.intensity -= amountBled;
 			}
 		}
 	}
@@ -122,7 +95,7 @@ class Pulse extends Entity
 	var timeSinceLaunch: Float = 0;
 	var level:Level;
 	
-	var pulseIntensity: Float = 500;
+	var pulseIntensity: Float = 50;
 	
 	var tileBuffer: PulseTileBuffer;
 	
@@ -130,7 +103,7 @@ class Pulse extends Entity
 	{
 		super();
 		this.level = level;
-		tileBuffer = new PulseTileBuffer(level);
+		tileBuffer = new PulseTileBuffer(level, 3);
 		tileBuffer.startPulse(19, 19, pulseIntensity);
 	}
 
@@ -143,6 +116,11 @@ class Pulse extends Entity
 	{
 		super.update(info);
 		tileBuffer.update(info);
+		if (tileBuffer.life <= 0)
+		{
+			tileBuffer = new PulseTileBuffer(level, 3);
+			tileBuffer.startPulse(19, 19, pulseIntensity);
+		}
 	}
 
 	override public function render(info:RenderInfo)
