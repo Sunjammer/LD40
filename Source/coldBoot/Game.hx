@@ -5,6 +5,7 @@ import coldBoot.IGameState;
 	import coldBoot.rendering.SceneRenderBase;
 #end
 import coldBoot.states.InitialState;
+import openfl.display.Shape;
 import openfl.display.Sprite;
 import tween.Delta;
 
@@ -13,6 +14,7 @@ class Game extends Sprite
 	var currentState: IGameState;
 	public var spriteContainer:Sprite;
 	public var debugContainer:Sprite;
+  var backgroundShape:Shape;
 
 	#if ogl
 		var sceneRenderer:SceneRenderBase;
@@ -22,6 +24,7 @@ class Game extends Sprite
 	{
 		super();
 
+    addChild(backgroundShape = new Shape());
 		addChild(spriteContainer = new Sprite());
 		addChild(debugContainer = new Sprite()); 
 		#if ogl
@@ -42,6 +45,9 @@ class Game extends Sprite
 		#if ogl
 		sceneRenderer.setWindowSize(dims);
 		#end
+    backgroundShape.graphics.clear();
+    backgroundShape.graphics.beginFill();
+    backgroundShape.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
 	}
 
 	public function getCurrentState():IGameState
