@@ -117,7 +117,6 @@ class Pulse extends Entity
 
 	override public function update(info:UpdateInfo)
 	{
-		super.update(info);
 		tileBuffer.update(info);
 		if (tileBuffer.life <= 0)
 		{
@@ -137,7 +136,7 @@ class Pulse extends Entity
 				var pt = tileBuffer.pulseTiles[y * level.width + x];
 				if (pt == null)
 					continue;
-				Main.debugDraw.graphics.beginFill(0xff0000, pt.intensity / pulseIntensity);
+				Main.debugDraw.graphics.beginFill(0xffffff, pt.intensity / pulseIntensity);
 				Main.debugDraw.graphics.drawRect(x * level.pixelSize, y * level.pixelSize, level.pixelSize, level.pixelSize);
 			}
 		}

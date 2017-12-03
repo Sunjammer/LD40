@@ -61,7 +61,6 @@ class Level extends Entity
 	{
 		super.render(info);
 		
-		Main.debugDraw.graphics.beginFill(0x000000);
 		for (x in 0...width)
 		{
 			for (y in 0...height)
@@ -69,6 +68,13 @@ class Level extends Entity
 				var tile = tiles[x + (y * width)];
 				if (tile == Wall)
 				{
+					Main.debugDraw.graphics.beginFill(0x000000);
+					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+
+				}
+				else 
+				{
+					Main.debugDraw.graphics.beginFill(0xff0000);
 					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 				}
 			}
