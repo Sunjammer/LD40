@@ -1,29 +1,47 @@
 package coldBoot.entities;
 import coldBoot.Level;
+import coldBoot.entities.Pulse.Index;
+import coldBoot.entities.Pulse.PulseTile;
 import glm.Vec2;
+import haxe.ds.IntMap;
+
+class Index 
+{
+	public var x: Int;
+	public var y: Int;
+	public function new (x: Int, y:Int)
+	{
+		this.x = x;
+		this.y = y;
+	}
+}
 
 class PulseTile
 {
 	public var intensity: Float;
+	public var index: Index;
 	public var isWall: Bool;
+	var hasBeenAffectedByArray: Array<Index> = [];
 	
-	public var leftVel: Bool;
-	public var rightVel: Bool;
-	public var upVel: Bool;
-	public var downVel: Bool;
-	
-	public function new(intensity: Float = 0, isWall: Bool = false) {
+	public function new(index:Index, intensity: Float = 0, isWall: Bool = false) {
+		this.index = index;
 		this.intensity = intensity;
 		this.isWall = isWall;
 	}
 	
-	public function setVel(left: Bool, right: Bool, up: Bool, down: Bool)
+	public function affect(pt: PulseTile)
 	{
-		leftVel = left;
-		rightVel = right;
-		upVel = up;
-		downVel = down;
+		if (this.hasBeenAffectedByArray.indexOf(pt.index) == -1)
+		{
+			this.hasBeenAffectedByArray.push(pt.index);
+		}
 	}
+	
+	public function hasBeenAffectedBy(pt: PulseTile): Bool
+	{
+		return this.hasBeenAffectedByArray.indexOf(pt.index) != -1;
+	}
+	
 }
 
 class PulseTileBuffer
@@ -42,7 +60,7 @@ class PulseTileBuffer
 			for (x in 0...level.width)
 			{
 				var tileType = level.tiles[y * width + x];
-				pulseTiles.push(new PulseTile(0, tileType == Wall));
+				pulseTiles.push(new PulseTile(new Index(x,y), 0, tileType == Wall));
 			}
 		}
 	}
@@ -51,66 +69,47 @@ class PulseTileBuffer
 	{
 		var pt = pulseTiles[x + (y * width)];
 		pt.intensity = intensity;
-		pt.setVel(true, true, true, true);
-	}
-	
-	function isOutsideBounds(x:Int, y: Int): Bool
-	{
-		return x < 0 || x >= width
-		 || y < 0 || y >= height;
 	}
 	
 	public function update(info:UpdateInfo)
 	{
-		var decay = 0.001;
 		var dt = info.deltaTime;
-
+		var bleed = 0.1;
 		for (y in 0...height)
 		{
 			for (x in 0...width)
 			{
 				var pt = pulseTiles[y * width + x];
+				var amountBled = 0.0;
 				
-				if (pt.intensity > 0)
+				if (pt.intensity > 0.5)
 				{
-					var bleed = (pt.intensity - decay) * dt;
 					for (ny in 0...3)
 					{
 						for (nx in 0...3)
 						{
-							var neighborX = x + nx - 1;
-							var neighborY = y + ny - 1;
-							if (neighborX == x && neighborY == y)
+							var neighborX = nx - 1 + x;
+							var neighborY = ny - 1 + y;
+							if (neighborX < 0 || neighborX >= width || neighborY < 0 || neighborY >= height || (neighborX == x && neighborY == y))
 								continue;
-							if (isOutsideBounds(neighborX, neighborY))
-								continue;
-							
-							var nb = pulseTiles[neighborY * width + neighborX];
-							if (nb.isWall)
-							{
 								
-							}
-						}
-					}
-					for (ny in 0...3)
-					{
-						for (nx in 0...3)
-						{
-							var neighborX = x + nx - 1;
-							var neighborY = y + ny - 1;
-							if (nx == x && ny == y)
-								continue;
-							if (neighborX < 0 || neighborX >= width)
-								continue;
-							if (neighborY < 0 || neighborY >= height)
-								continue;
-							var nb = pulseTiles[neighborY * width + neighborX];
-							if (nb.isWall)
+							var neighbor = pulseTiles[neighborX + (neighborY * width)];
+							
+							if (pt.hasBeenAffectedBy(neighbor))
 								continue;
 							
+							if (neighbor.isWall)
+								continue; //neighbor.intensity += pt.intensity * wallBleed * dt;
+							 
+							var toBleed = pt.intensity * bleed * dt;
+							neighbor.intensity += toBleed;
+							amountBled += toBleed;
+							neighbor.affect(pt);
 						}
 					}
 				}
+					
+				pt.intensity -= amountBled;
 			}
 		}
 	}
