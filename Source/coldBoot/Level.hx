@@ -33,18 +33,19 @@ class Level extends Entity
 		bitmap.width *= pixelSize;
 		bitmap.height *= pixelSize;*/
 		
-		width = mapGenerator.getWidth();
-		height = mapGenerator.getHeight();
+		width = mapGenerator.getWidth() * 3;
+		height = mapGenerator.getHeight() * 3;
 		
 		var map = mapGenerator.getMap();
 		
-		for (x in 0...width)
+		for (y in 0...height)
 		{
-			for (y in 0...height)
+			for (x in 0...width)
 			{
+			
 				var tile = map[x + (y * width)];
 				trace("Tile: " + tile);
-				if (tile == 1)
+				if (tile == 0)
 				{
 					tiles.push(TileType.Air);
 				}
@@ -60,8 +61,6 @@ class Level extends Entity
 	{
 		super.render(info);
 		
-		trace("Rendering level");
-		
 		Main.debugDraw.graphics.beginFill(0x000000);
 		for (x in 0...width)
 		{
@@ -70,7 +69,6 @@ class Level extends Entity
 				var tile = tiles[x + (y * width)];
 				if (tile == Wall)
 				{
-					trace("Drwaing shit");
 					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 				}
 			}
