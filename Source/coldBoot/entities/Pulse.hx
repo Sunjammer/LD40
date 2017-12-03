@@ -7,17 +7,17 @@ class PulseTile
 	public var intensity: Float;
 	public var isWall: Bool;
 	
-	public var leftVel: Float;
-	public var rightVel: Float;
-	public var upVel: Float;
-	public var downVel: Float;
+	public var leftVel: Bool;
+	public var rightVel: Bool;
+	public var upVel: Bool;
+	public var downVel: Bool;
 	
 	public function new(intensity: Float = 0, isWall: Bool = false) {
 		this.intensity = intensity;
 		this.isWall = isWall;
 	}
 	
-	public function setVel(left: Float, right: Float, up: Float, down: Float)
+	public function setVel(left: Bool, right: Bool, up: Bool, down: Bool)
 	{
 		leftVel = left;
 		rightVel = right;
@@ -51,13 +51,20 @@ class PulseTileBuffer
 	{
 		var pt = pulseTiles[x + (y * width)];
 		pt.intensity = intensity;
-		pt.setVel(1, 1, 1, 1);
+		pt.setVel(true, true, true, true);
+	}
+	
+	function isOutsideBounds(x:Int, y: Int): Bool
+	{
+		return x < 0 || x >= width
+		 || y < 0 || y >= height;
 	}
 	
 	public function update(info:UpdateInfo)
 	{
-		var decay = 0.9;
-		var velDecay = 0.1;
+		var decay = 0.001;
+		var dt = info.deltaTime;
+
 		for (y in 0...height)
 		{
 			for (x in 0...width)
@@ -66,8 +73,25 @@ class PulseTileBuffer
 				
 				if (pt.intensity > 0)
 				{
-					var bleed = (pt.intensity - decay);
-					
+					var bleed = (pt.intensity - decay) * dt;
+					for (ny in 0...3)
+					{
+						for (nx in 0...3)
+						{
+							var neighborX = x + nx - 1;
+							var neighborY = y + ny - 1;
+							if (neighborX == x && neighborY == y)
+								continue;
+							if (isOutsideBounds(neighborX, neighborY))
+								continue;
+							
+							var nb = pulseTiles[neighborY * width + neighborX];
+							if (nb.isWall)
+							{
+								
+							}
+						}
+					}
 					for (ny in 0...3)
 					{
 						for (nx in 0...3)
@@ -80,33 +104,12 @@ class PulseTileBuffer
 								continue;
 							if (neighborY < 0 || neighborY >= height)
 								continue;
-								
 							var nb = pulseTiles[neighborY * width + neighborX];
 							if (nb.isWall)
 								continue;
-								
-							if (nb.intensity < pt.intensity)
-							{
-								if (neighborX < x){
-									nb.intensity = bleed;
-									nb.leftVel = pt.leftVel - velDecay * info.deltaTime;
-								}
-								else if (neighborX > x) {
-									nb.intensity = bleed;
-									nb.rightVel = pt.rightVel - velDecay * info.deltaTime;
-								}
-								if (neighborY < y){
-									nb.intensity = bleed;
-									nb.upVel = pt.upVel - velDecay * info.deltaTime;
-								}
-								else if (neighborY > y) {
-									nb.intensity = bleed;
-									nb.downVel = pt.downVel - velDecay * info.deltaTime;
-								}
-							}
+							
 						}
 					}
-					pt.intensity -= decay;
 				}
 			}
 		}
@@ -120,7 +123,7 @@ class Pulse extends Entity
 	var timeSinceLaunch: Float = 0;
 	var level:Level;
 	
-	var pulseIntensity: Float = 50;
+	var pulseIntensity: Float = 500;
 	
 	var tileBuffer: PulseTileBuffer;
 	
