@@ -98,6 +98,8 @@ class PostEffect
 			var id = shader.uniform(uniform);
 			#if js
 			if (id != null) uniforms.set(uniform, {id: id, value: value});
+			#else
+			uniforms.set(uniform, {id: id, value: value});
 			#end
 		}
 	}
@@ -161,6 +163,10 @@ class PostEffect
 
 		// specify texture as color attachment
 		GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, texture, 0);
+		var status = GL.checkFramebufferStatus(GL.FRAMEBUFFER);
+		if(status != GL.FRAMEBUFFER_COMPLETE) {
+			trace("Framebuffer is fucked.");
+		}
 	}
 
 	public function capture()

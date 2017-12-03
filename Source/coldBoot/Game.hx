@@ -11,6 +11,8 @@ import tween.Delta;
 class Game extends Sprite
 {
 	var currentState: IGameState;
+	public var spriteContainer:Sprite;
+	public var debugContainer:Sprite;
 
 	#if ogl
 		var sceneRenderer:SceneRenderBase;
@@ -19,22 +21,27 @@ class Game extends Sprite
 	public function new(config: {width:Int, height:Int})
 	{
 		super();
-		setState(new InitialState());
 
+		addChild(spriteContainer = new Sprite());
+		addChild(debugContainer = new Sprite()); 
 		#if ogl
+		trace("Setting up post proc!");
 		addChild(sceneRenderer = new SceneRenderBase(config));
 		sceneRenderer.setPostEffects(
 			[
-				new PostEffect("assets/invert.frag")
+				//new PostEffect("assets/invert.frag")
+				new PostEffect("assets/crt.frag")
 			]
 		);
 		#end
-
+		setState(new InitialState());
 	}
 
 	public function resize(dims: {width:Int, height:Int})
 	{
+		#if ogl
 		sceneRenderer.setWindowSize(dims);
+		#end
 	}
 
 	public function getCurrentState():IGameState

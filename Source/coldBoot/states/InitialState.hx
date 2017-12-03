@@ -17,7 +17,7 @@ class InitialState extends Shape implements IGameState
 
 	public function enter(g: Game): Void
 	{
-		g.addChild(this);
+		g.spriteContainer.addChild(this);
 		alpha = 0;
 		Delta.tween(this).prop("alpha", 1, 0.1).ease(Elastic.easeIn).onComplete(doneInitializing);
 		trace("Entering initial state");
@@ -47,6 +47,6 @@ class InitialState extends Shape implements IGameState
 	public function exit(g:Game): Void
 	{
 		trace("Exiting initial state");
-		g.removeChild(this);
+		g.spriteContainer.removeChild(this);
 	}
 }
