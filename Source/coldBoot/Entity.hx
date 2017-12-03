@@ -68,4 +68,20 @@ class Entity
 		return ret;
 	}
 
+	public function getChildEntitiesByTagRecursive(tag: String, acc: Array<Entity> = null): Array<Entity>
+	{
+		if (acc == null) {
+			acc = [];
+		}
+
+		for (c in children)
+		{
+			if (c.tags.indexOf(tag) != -1) {
+				acc.push(c);
+			}
+			c.getChildEntitiesByTagRecursive(tag, acc);
+		}
+
+		return acc;
+	}
 }
