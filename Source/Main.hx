@@ -27,6 +27,7 @@ class Main extends Sprite
 	public function new ()
 	{
 		super();
+
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
@@ -37,8 +38,8 @@ class Main extends Sprite
 
 		debugDraw = new Sprite();
 		game = new Game({width:stage.stageWidth, height:stage.stageHeight});
+		game.debugContainer.addChild(debugDraw);
 		addChild(game);
-		addChild(debugDraw);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		addEventListener(Event.ADDED_TO_STAGE, addedToStage);

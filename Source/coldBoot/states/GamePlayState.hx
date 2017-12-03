@@ -30,8 +30,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		var pulse = new Pulse(level);
 		pulse.position = new Vec2(9 * level.pixelSize, 4 * level.pixelSize);
 		rootEntity.add(pulse);
-		
-		g.addChild(this);
+		g.spriteContainer.addChild(this);
 	}
 	
 	public function render(info:RenderInfo):Void
@@ -47,6 +46,6 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 
 	public function exit(g:Game):Void
 	{
-		g.removeChild(this);
+		g.spriteContainer.removeChild(this);
 	}
 }
