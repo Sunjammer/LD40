@@ -33,7 +33,7 @@ class CodingHell extends Sprite{
   var outputTextBfr:String;
   var state:TerminalState;
   var statusText:openfl.text.TextField;
-  
+  static inline var COLOR:Int = 0xFF0000;
   static inline var CARETCHAR:String = "//";
   var terminalWidth:Int;
   var game:Game;
@@ -45,7 +45,7 @@ class CodingHell extends Sprite{
     
     state = Status;
     
-    var tf = new TextFormat("Perfect DOS VGA 437 Win", 16, 0xFFFFFF);
+    var tf = new TextFormat("Perfect DOS VGA 437 Win", 16, COLOR);
     
     output = new TextField();
     input = new TextField();
@@ -134,11 +134,11 @@ class CodingHell extends Sprite{
     graphics.beginFill(0);
     graphics.drawRect(0, 0, terminalWidth, game.viewportSize.height);
     
-    graphics.beginFill(0xFFFFFF);
+    graphics.beginFill(COLOR);
     graphics.drawRect(0, input.y, terminalWidth, 3);
-    graphics.beginFill(0xFFFFFF);
+    graphics.beginFill(COLOR);
     graphics.drawRect(0, statusText.y, terminalWidth, 3);
-    graphics.beginFill(0xFFFFFF);
+    graphics.beginFill(COLOR);
     graphics.drawRect(0, 0, 2, game.viewportSize.height);
     
   }

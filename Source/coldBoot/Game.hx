@@ -7,6 +7,7 @@ import coldBoot.states.GamePlayState;
 	import coldBoot.rendering.SceneRenderBase;
 #end
 import coldBoot.cpu.Bytecode.Comparison;
+import coldBoot.rendering.ScreenNoisePostEffect;
 import coldBoot.states.InitialState;
 import fsignal.Signal;
 import fsignal.Signal1;
@@ -40,12 +41,11 @@ class Game extends Sprite
 		addChild(spriteContainer = new Sprite());
 		addChild(debugContainer = new Sprite()); 
 		#if ogl
-		trace("Setting up post proc!");
     viewportSize = {width:0, height:0};
 		addChild(sceneRenderer = new SceneRenderBase(config));
 		sceneRenderer.setPostEffects(
 			[
-				new PostEffect("assets/crt.frag")
+				new ScreenNoisePostEffect("assets/crt.frag")
 			]
 		);
 		#end

@@ -56,7 +56,9 @@ class SceneRenderBase extends OpenGLView {
   private function renderView (rect:Rectangle):Void {
     if (effects.length == 0) return;
     for (p in effects){
-      p.render(prevDelta);
+      p.prerender();
+      p.update(prevDelta);
+      p.render();
     }
   }
   

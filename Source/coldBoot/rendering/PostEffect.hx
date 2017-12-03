@@ -31,12 +31,9 @@ class PostEffect
 	private var vertexSlot:Int;
 	private var texCoordSlot:Int;
 	private var imageUniform:GLUniformLocation;
-	private var screenNoiseUniform:GLUniformLocation;
 	private var resolutionUniform:GLUniformLocation;
 	private var timeUniform:GLUniformLocation;
 	private var uniforms:Map<String, Uniform>;
-
-	private var screenNoiseTex:GLTexture;
 
 	private static inline var fullscreenQuadFrag:String = "
 	#version 120
@@ -71,11 +68,6 @@ class PostEffect
 		imageUniform = shader.uniform("uImage0");
 		timeUniform = shader.uniform("uTime");
 		resolutionUniform = shader.uniform("uResolution");
-		screenNoiseUniform = shader.uniform("uImage1");
-
-		var bitmap = Assets.getBitmapData("assets/screen_noise.jpg");
-		screenNoiseTex = createTexture(bitmap.width, bitmap.height, true);
-		GL.texImage2D (GL.TEXTURE_2D, 0, GL.RGBA, bitmap.width, bitmap.height, 0, GL.RGBA, GL.UNSIGNED_BYTE, bitmap.image.data);
 
 		texCoordSlot = shader.attribute("aTexCoord");
 	}
@@ -185,37 +177,37 @@ class PostEffect
 	 * Renders to a framebuffer or the screen every frame
 	 */
   
-	public function render(dt:Float)
-	{
-		time += dt;
-		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
+  public function prerender(){
+    GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
 
 		GL.clearColor(0,0,0,1);
 		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
 
 		shader.bind();
+  }
+  
+  public function update(dt:Float){
+		time += dt;
+	
+		GL.uniform1i(imageUniform, 0);
+		GL.uniform1f(timeUniform, time);
+		GL.uniform2f(resolutionUniform, config.width, config.height);
 
+		for (u in uniforms) 
+			GL.uniform1f(u.id, u.value);
+  }
+  
+	public function render()
+	{
 		GL.enableVertexAttribArray(vertexSlot);
 		GL.enableVertexAttribArray(texCoordSlot);
 
 		GL.activeTexture(GL.TEXTURE0);
 		GL.bindTexture(GL.TEXTURE_2D, texture);
 
-		GL.activeTexture(GL.TEXTURE1);
-		GL.bindTexture(GL.TEXTURE_2D, screenNoiseTex);
-
 		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
 		GL.vertexAttribPointer(vertexSlot, 2, GL.FLOAT, false, 16, 0);
 		GL.vertexAttribPointer(texCoordSlot, 2, GL.FLOAT, false, 16, 8);
-
-	
-		GL.uniform1i(imageUniform, 0);
-		GL.uniform1f(timeUniform, time);
-		GL.uniform2f(resolutionUniform, config.width, config.height);
-		GL.uniform1i(screenNoiseUniform, 1);
-
-		for (u in uniforms) 
-			GL.uniform1f(u.id, u.value);
 	
 		GL.drawArrays(GL.TRIANGLE_STRIP, 0, 4);
 
