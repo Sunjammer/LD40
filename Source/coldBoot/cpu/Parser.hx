@@ -80,9 +80,9 @@ private class InstructionParser
 			case "add": {
 				var operands = parseOperands(2);
 				var lhs = operands[0];
-				if(!lhs.match(Operand.Register(_)))
-					throw "Left-hand side of an addition must be a register";
 				var rhs = operands[1];
+				if(!rhs.match(Operand.Register(_)))
+					throw "Right-hand side of an addition must be a register";
 				return Operator.Add(lhs, rhs);
 			}
 

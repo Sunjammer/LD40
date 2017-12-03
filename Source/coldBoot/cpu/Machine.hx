@@ -114,9 +114,9 @@ class Machine
 					nextPc = getPcForLabel(target);
 				}
 			}
-			case Operator.Add(Operand.Register(ri), rhs): {
+			case Operator.Add(lhs, Operand.Register(ri)): {
 				var reg = register(ri);
-				reg.write(reg.read() + readOperand(rhs));
+				reg.write(reg.read() + readOperand(lhs));
 			}
 
 			case _: throw "Unimplemented operator " + instr.op.getName();
