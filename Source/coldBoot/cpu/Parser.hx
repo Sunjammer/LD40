@@ -107,12 +107,9 @@ private class InstructionParser
 
 	static function parseOperand(operand: String): Operand
 	{
-		if (operand.startsWith("$")) {
-			var regIndex = operand.substring(1).parseInt();
-			if (regIndex == null)
-				throw "Invalid register operand";
-			return Operand.Register(regIndex);
-		}
+		if (operand.startsWith("#"))
+			return Operand.Register(operand.substring(1));
+		
 		if (operand.startsWith("@"))
 			return Operand.Label(operand.substring(1));
 		
