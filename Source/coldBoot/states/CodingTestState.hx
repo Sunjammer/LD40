@@ -14,7 +14,8 @@ class CodingTestState extends Sprite implements IGameState {
 
   public function new() {
     super();
-    addChild(new CodingHell());
+    var terminal = new CodingHell(300);
+    addChild(terminal);
   }
   
   
