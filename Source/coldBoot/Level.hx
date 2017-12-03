@@ -1,13 +1,16 @@
 package coldBoot;
+import coldBoot.TileType;
 import coldBoot.states.GamePlayState;
 
 
 class Level extends Entity
 {
-	public var levelData: Array<Wall> = [];
+	public var tiles: Array<TileType> = [];
 	public var tileSize = 60;
+	public var width: Int;
+	public var height: Int;
 	
-	public function new() 
+	public function new()
 	{
 		super();
 		var ld = [
@@ -24,12 +27,17 @@ class Level extends Entity
 			[0, 0, 0, 0, 0, 0, 0, 0, 0]
 		];
 		
+		width = ld[0].length;
+		height = ld.length;
+		
 		for (y in 0...ld.length)
 		{
 			for (x in 0...ld[y].length)
 			{
 				if (ld[y][x] == 1)
-					levelData.push(new Wall(x * tileSize, y * tileSize, tileSize, tileSize));
+					tiles.push(TileType.Wall);
+				else
+					tiles.push(TileType.Air);
 			}
 		}
 	}
@@ -39,8 +47,9 @@ class Level extends Entity
 		super.render(state);
 		Main.debugDraw.graphics.beginFill(0x00ff00);
 		
-		for (w in levelData)
-			w.render();
+		for (w in tiles) {
+			//w.render();
+		}
 		
 	}
 }

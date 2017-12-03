@@ -47,13 +47,4 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	{
 		g.removeChild(this);
 	}
-	
-	public function pulse(pos: Vec2)
-	{
-		trace("We are pulsing");
-		var pulse = new Pulse(level);
-		pulse.position = pos;
-		rootEntity.add(pulse);
-	}
-	
 }
