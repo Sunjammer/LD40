@@ -77,6 +77,7 @@ class PulseRay
 		this.ray = r;
 		this.speed = speed;
 		this.rayStartOffset = startOffet;
+		pulseProgress = 0;
 	}
 	
 	public function getClosesCollisionPoint(): Vec2
