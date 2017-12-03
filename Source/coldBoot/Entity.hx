@@ -54,5 +54,18 @@ class Entity
 		for (c in children)
 			c.render(info);
 	}
+	
+	public function getChildEntitiesByTag(tag: String): Array<Entity>
+	{
+		var ret = [];
+		for (c in children)
+		{
+			if (c.tags.indexOf(tag) != -1)
+			{
+				ret.push(c);
+			}
+		}
+		return ret;
+	}
 
 }

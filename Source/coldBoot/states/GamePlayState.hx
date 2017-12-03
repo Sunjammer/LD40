@@ -42,10 +42,12 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		var turret = new Turret();
 		turret.position = new Vec2(200, 200);
 
-		rootEntity.add(turret);		
+		rootEntity.add(turret);
 		
-		for(i in 0...50) {
-			rootEntity.add(new Enemy(level, enemySpawnPoint * (level.pixelSize * 3) - (level.pixelSize * 3) / 2 + 1));
+		for (i in 0...50) {
+			var enemy = new Enemy(level, enemySpawnPoint * (level.pixelSize * 3) - (level.pixelSize * 3) / 2 + 1);
+			enemy.addTag("enemy");
+			rootEntity.add(enemy);
 		}
 	   
 		g.spriteContainer.addChild(this);

@@ -33,6 +33,8 @@ class Missile extends Entity
 		}
 		
 		position += direction * info.deltaTime * speed;
+		
+		var enemies = info.game.getCurrentState().getRootEntity().getChildEntitiesByTag("enemy");
 	}
 	
 	override public function render(info:RenderInfo) 
