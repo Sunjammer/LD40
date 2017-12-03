@@ -32,9 +32,7 @@ class InitialState extends Shape implements IGameState
 	{
 		if (initialized) 
 		{
-			var gamePlayState = new GamePlayState();
-			info.game.setState(gamePlayState);
-			return gamePlayState;
+			return info.game.setState(new CodingTestState());
 		}
 		return this;
 	}

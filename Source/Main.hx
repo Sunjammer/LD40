@@ -17,17 +17,12 @@ class Main extends Sprite
 	var input: Input;
 	public static var debugDraw: Sprite;
 
-	public function test(): Void
-	{
-		trace("somethign");
-	}
-
 	var prevTime: Float;
 	public function new ()
 	{
 		super();
     
-    #if debug
+    #if debug && boof
     new debugger.Local(true);
     #end
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
