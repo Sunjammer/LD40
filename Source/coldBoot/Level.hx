@@ -22,8 +22,6 @@ class Level extends Entity
 	{
 		super();
 		
-		renderer = new LevelRenderer();
-		
 		var mapGenerator = MapGenerator.recursiveBacktracking(1, enemySpawnPoint, 16, 16);
 		map = new coldBoot.ai.PathFinding.GameMap(
 			mapGenerator.getWidth()*3,
@@ -35,14 +33,13 @@ class Level extends Entity
 		
 		width = mapGenerator.getWidth() * 3;
 		height = mapGenerator.getHeight() * 3;
-
-		var bitmap = mapGenerator.getBitmap();
-		bitmap.width *= pixelSize;
-		bitmap.height *= pixelSize;
-		container.addChild(bitmap);
 		
 		var tileMap = mapGenerator.getMap();
+		
+		#if ogl
+		renderer = new LevelRenderer();
 		renderer.init(this, tileMap);
+		#end
 		
 		for (y in 0...height)
 		{
@@ -65,7 +62,9 @@ class Level extends Entity
 	override public function render(info:RenderInfo) 
 	{
 		super.render(info);
+		#if ogl
 		renderer.render(info);
+		#end
 		
 		/*for (x in 0...width)
 		{

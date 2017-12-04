@@ -26,7 +26,7 @@ float shape(float v, float drive){
 void main(void){
     vTileInfo = aVertex.zw; 
 
-    gl_PointSize = aVertex.z + aVertex.z * 1.5;
+    gl_PointSize = aVertex.z;
 
     vec2 local = aVertex.xy / uResolution.zw;
     vUv = local;
@@ -39,7 +39,7 @@ void main(void){
 
     vBrightness = 1.0;
 
-    gl_Position = uView * uMatrix * (vec4(local, z, 1.0) * vec4(1,-1, -1, 1));
+    gl_Position = uView * uMatrix * (vec4(local, z, 1.0) * vec4(1,-1, 1, 1));
 
 
 

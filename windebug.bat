@@ -1,0 +1,1 @@
+ openfl build windows -debug -verbose -Ddebug && cd Export/windows/bin/ && LD40

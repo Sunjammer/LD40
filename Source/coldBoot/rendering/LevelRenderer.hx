@@ -100,7 +100,7 @@ class LevelRenderer
 
 		var transform = new Mat4();
 		Mat4.identity(transform);
-		transform *= GLM.translate(new Vec3(0, 0, -1), new Mat4());
+		transform *= GLM.translate(new Vec3(0, 0, -2), new Mat4());
 		var t = info.time * 0.05;
 		transform *= GLM.rotate(Quat.fromEuler(degRad( -40) + Math.sin(t) * 0.1, 0, t, new Quat()), new Mat4());
 
@@ -134,7 +134,11 @@ class LevelRenderer
 		{
 			trace("GL error: " + error);
 		}
-
+		
+		
+		GL.disableVertexAttribArray(vertexAttrib);
+		GL.bindBuffer(GL.ARRAY_BUFFER, null);
+		GL.useProgram(null);
 		GL.disable(GL.VERTEX_PROGRAM_POINT_SIZE);
 		GL.disable(GL.POINT_SPRITE);
 		GL.disable(GL.DEPTH_TEST);

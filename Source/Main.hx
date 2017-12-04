@@ -1,8 +1,6 @@
 package;
 import coldBoot.Game;
-import coldBoot.rendering.Shader;
 import haxe.Timer;
-import lime.ui.KeyCode;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
@@ -22,6 +20,16 @@ class Main extends Sprite
 	public function new ()
 	{
 		super();
+
+		#if debug
+			new debugger.Local(true);
+		#end
+		
+		#if AudioJank
+		AudioJank.createContext();
+		AudioJank.playBootSequence(0.3);
+		#end
+		
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
@@ -37,7 +45,6 @@ class Main extends Sprite
 		addChild(game);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
-
 	}
 
 	function onStageResize(e:Event):Void
@@ -47,12 +54,6 @@ class Main extends Sprite
 
 	function keyDown(e:KeyboardEvent):Void
 	{
-		//Broken shader live reload
-		#if (debug && ogl)
-		if (e.keyCode == KeyCode.SPACE && e.shiftKey)
-		  for (s in Shader.allShaders)
-			s.rebuild();
-		#end
 	}
 
 

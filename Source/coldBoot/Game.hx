@@ -1,7 +1,9 @@
 package coldBoot;
 import coldBoot.IGameState;
+import coldBoot.rendering.PostEffect;
 import coldBoot.states.CodingTestState;
 import coldBoot.states.GamePlayState;
+import coldBoot.states.InitialState;
 import fsignal.Signal2;
 import lime.graphics.opengl.GL;
 import openfl.display.OpenGLView;
@@ -38,23 +40,22 @@ class Game extends Sprite
 	public function new(config: {width:Int, height:Int})
 	{
 		super();
-		#if AudioJank
-		AudioJank.createContext();
-		AudioJank.playSampleInSpace(SampleId.EnemyDialogueHigh3, 0.0, 0.0);
-		#end
-
-		glView = new OpenGLView();
+		
+		trace("Initializing game");
+		viewportChanged = new Signal2<Int,Int>();
+		viewportSize = {width:800, height:600, aspect:1};
+		
+		trace("Initializing rendering");
+		
 		backgroundShape = new Shape();
 		stateSpriteContainer = new Sprite();
 		debugContainer = new Sprite();
-
-		viewportChanged = new Signal2<Int,Int>();
-
-		addChild(glView);
+		
 		addChild(stateSpriteContainer);
 		addChild(debugContainer);
+		
 		#if ogl
-		viewportSize = {width:0, height:0, aspect:1};
+		
 		addChild(sceneRenderer = new SceneRenderBase(config));
 		sceneRenderer.setPostEffects(
 			[
@@ -62,19 +63,26 @@ class Game extends Sprite
 			]
 		);
 		#end
-		setState(new GamePlayState());
+		
+		trace("Starting");
+		
+		setState(new InitialState());
 	}
 
 	public function resize(dims: {width:Int, height:Int})
 	{
+		
+		trace("Stage resize");
 		viewportSize.width = dims.width;
 		viewportSize.height = dims.height;
 		viewportSize.aspect = dims.width / dims.height;
+		
 		#if ogl
 		sceneRenderer.setWindowSize(viewportSize);
 		#end
 
 		viewportChanged.dispatch(viewportSize.width, viewportSize.height);
+		trace("Stage resized");
 	}
 
 	public function getCurrentState():IGameState
@@ -107,7 +115,7 @@ class Game extends Sprite
 	#if !ogl
 	public function render(dt:Float)
 	{
-		currentState.render({game:this});
+		currentState.render({game:this, time:globalTime});
 	}
 	#end
 

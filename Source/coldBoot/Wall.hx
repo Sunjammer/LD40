@@ -21,13 +21,13 @@ class Wall
 		pos = new Vec2(x, y);
 	}
 	
-	public function getPolygon(): Shape
+	public inline function getPolygon(): Shape
 	{
 		return Polygon.rectangle(x, y, w, h, false);
 	}
 	
-	public function render()
+	public inline function render()
 	{
-		Main.debugDraw.graphics.drawRect(x, y, w, h);
+		//Main.debugDraw.graphics.drawRect(x, y, w, h);
 	}
 }

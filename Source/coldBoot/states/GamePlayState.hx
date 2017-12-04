@@ -106,7 +106,6 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		rootEntity = new Entity();
 
         terminal = new Terminal(g, 200);
-        addChild(terminal);
     
 		var enemySpawnPoint = new glm.Vec2(1,1);
 		level = new Level(this, enemySpawnPoint);
@@ -127,6 +126,8 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		rootEntity.add(base);
 		rootEntity.add(turret);
 
+        addChild(terminal);
+		
         waveState.enter(g);
 		g.stateSpriteContainer.addChild(this);
 		g.viewportChanged.add(onViewportChanged);
@@ -134,9 +135,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
   
 	function onViewportChanged(w:Int, h:Int):Void {
 		trace("Viewport changed");
-		terminal.x = w - 400;
-	
-
+		terminal.x = w - 200;
 	}
 	
 	public function render(info:RenderInfo):Void
@@ -147,7 +146,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	var timer = 0.0;
 	public function update(info:UpdateInfo): IGameState
 	{
-		rootEntity.update(info);
+		/*rootEntity.update(info);
 		waveState.update(info);
 
 		
@@ -159,7 +158,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 			pulseMap.startPulse(10, 1, 40, 0);
 			timer = 0;
 		}
-		
+		*/
 		return this;
 	}
 	

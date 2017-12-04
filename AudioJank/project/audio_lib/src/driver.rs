@@ -9,6 +9,7 @@ use ring_buffer::*;
 use std::borrow::Cow;
 use std::sync::{Arc, Mutex};
 use std::iter::Iterator;
+use std::sync::mpsc::channel;
 use std::thread::{self, JoinHandle};
 
 pub type Error = Cow<'static, str>;
@@ -26,92 +27,114 @@ impl Executor for DriverExecutor {
 pub struct Driver {
     pub state: Arc<Mutex<(RingBuffer, Engine)>>,
 
-    _voice: Voice,
     _render_thread_join_handle: JoinHandle<()>,
 }
 
 impl Driver {
     pub fn new(sample_rate: u32, desired_latency_ms: u32) -> Result<Driver, Error> {
-        if desired_latency_ms == 0 {
-            return Err(format!("desired_latency_ms must be greater than 0").into());
-        }
-
-        let endpoint = default_endpoint().ok_or(format!("Failed to get audio endpoint"))?;
-
-        let format = endpoint.supported_formats()
-            .map_err(|e| format!("Failed to get supported format list for endpoint: {}", e))?
-            .find(|format| format.channels.len() == 2)
-            .ok_or("Failed to find format with 2 channels")?;
-
-        let buffer_frames = sample_rate * desired_latency_ms / 1000 * 2;
-        let ring_buffer = RingBuffer {
-            inner: vec![0; buffer_frames as usize].into_boxed_slice(),
-
-            write_pos: 0,
-            read_pos: 0,
-
-            samples_written: 0,
-            samples_read: 0,
-        };
-
-        let engine = Engine::new()?;
-
-        let state = Arc::new(Mutex::new((ring_buffer, engine)));
-
-        let event_loop = EventLoop::new();
-
-        let (mut voice, stream) = Voice::new(&endpoint, &format, &event_loop).map_err(|e| format!("Failed to create voice: {}", e))?;
-        voice.play();
-
-        let mut resampler = LinearResampler::new(sample_rate as _, format.samples_rate.0 as _);
-
-        let render_thread_state = state.clone();
-        task::spawn(stream.for_each(move |output_buffer| {
-            let mut render_thread_state = render_thread_state.lock().unwrap();
-            let (ref mut ring_buffer, ref mut engine) = *render_thread_state;
-
-            if ring_buffer.samples_read > ring_buffer.samples_written {
-                let samples_to_render = ring_buffer.samples_read - ring_buffer.samples_written;
-                let frames_to_render = samples_to_render / 2;
-
-                engine.render(ring_buffer, frames_to_render as _);
-            }
-
-            match output_buffer {
-                UnknownTypeBuffer::I16(mut buffer) => {
-                    for sample in buffer.chunks_mut(format.channels.len()) {
-                        for out in sample.iter_mut() {
-                            *out = resampler.next(ring_buffer);
-                        }
-                    }
-                }
-                UnknownTypeBuffer::U16(mut buffer) => {
-                    for sample in buffer.chunks_mut(format.channels.len()) {
-                        for out in sample.iter_mut() {
-                            *out = ((resampler.next(ring_buffer) as i32) + 32768) as u16;
-                        }
-                    }
-                }
-                UnknownTypeBuffer::F32(mut buffer) => {
-                    for sample in buffer.chunks_mut(format.channels.len()) {
-                        for out in sample.iter_mut() {
-                            *out = (resampler.next(ring_buffer) as f32) / 32768.0;
-                        }
-                    }
-                }
-            }
-
-            Ok(())
-        })).execute(Arc::new(DriverExecutor));
+        // This somewhat complex init setup is due to the fact that cpal is really sloppy with COM init, and this
+        //  lib needs to be usable in contexts where COM is already initialized on the main thread. The main jist
+        //  though is that since we're starting an audio rendering thread anyways, why not do initialization there
+        //  too (thus avoiding possible COM init conflicts altogether since we know the thread is "clean") and have
+        //  it send us the init result in a channel before moving on. This is where rust _really_ shines; this code
+        //  is bulletproof and wasn't terrible to write either :)
+        let (init_channel_tx, init_channel_rx) = channel();
 
         let render_thread_join_handle = thread::spawn(move || {
-            event_loop.run();
+            fn init_state(sample_rate: u32, desired_latency_ms: u32) -> Result<(Arc<Mutex<(RingBuffer, Engine)>>, Voice, EventLoop), Error> {
+                if desired_latency_ms == 0 {
+                    return Err(format!("desired_latency_ms must be greater than 0").into());
+                }
+
+                let endpoint = default_endpoint().ok_or(format!("Failed to get audio endpoint"))?;
+
+                let format = endpoint.supported_formats()
+                    .map_err(|e| format!("Failed to get supported format list for endpoint: {}", e))?
+                    .find(|format| format.channels.len() == 2)
+                    .ok_or("Failed to find format with 2 channels")?;
+
+                let buffer_frames = sample_rate * desired_latency_ms / 1000 * 2;
+                let ring_buffer = RingBuffer {
+                    inner: vec![0; buffer_frames as usize].into_boxed_slice(),
+
+                    write_pos: 0,
+                    read_pos: 0,
+
+                    samples_written: 0,
+                    samples_read: 0,
+                };
+
+                let engine = Engine::new()?;
+
+                let state = Arc::new(Mutex::new((ring_buffer, engine)));
+
+                let event_loop = EventLoop::new();
+
+                let (mut voice, stream) = Voice::new(&endpoint, &format, &event_loop).map_err(|e| format!("Failed to create voice: {}", e))?;
+                voice.play();
+
+                let mut resampler = LinearResampler::new(sample_rate as _, format.samples_rate.0 as _);
+
+                let render_thread_state = state.clone();
+                task::spawn(stream.for_each(move |output_buffer| {
+                    let mut render_thread_state = render_thread_state.lock().unwrap();
+                    let (ref mut ring_buffer, ref mut engine) = *render_thread_state;
+
+                    if ring_buffer.samples_read > ring_buffer.samples_written {
+                        let samples_to_render = ring_buffer.samples_read - ring_buffer.samples_written;
+                        let frames_to_render = samples_to_render / 2;
+
+                        engine.render(ring_buffer, frames_to_render as _);
+                    }
+
+                    match output_buffer {
+                        UnknownTypeBuffer::I16(mut buffer) => {
+                            for sample in buffer.chunks_mut(format.channels.len()) {
+                                for out in sample.iter_mut() {
+                                    *out = resampler.next(ring_buffer);
+                                }
+                            }
+                        }
+                        UnknownTypeBuffer::U16(mut buffer) => {
+                            for sample in buffer.chunks_mut(format.channels.len()) {
+                                for out in sample.iter_mut() {
+                                    *out = ((resampler.next(ring_buffer) as i32) + 32768) as u16;
+                                }
+                            }
+                        }
+                        UnknownTypeBuffer::F32(mut buffer) => {
+                            for sample in buffer.chunks_mut(format.channels.len()) {
+                                for out in sample.iter_mut() {
+                                    *out = (resampler.next(ring_buffer) as f32) / 32768.0;
+                                }
+                            }
+                        }
+                    }
+
+                    Ok(())
+                })).execute(Arc::new(DriverExecutor));
+
+                Ok((state, voice, event_loop))
+            }
+
+            match init_state(sample_rate, desired_latency_ms) {
+                Ok((state, _voice, event_loop)) => {
+                    init_channel_tx.send(Ok(state)).unwrap();
+
+                    event_loop.run();
+                }
+                Err(e) => {
+                    init_channel_tx.send(Err(e)).unwrap();
+                }
+            }
         });
+
+        let init_res = init_channel_rx.recv().map_err(|e| format!("Audio thread locked up on init: {}", e))?;
+        let state = init_res?;
 
         Ok(Driver {
             state: state,
 
-            _voice: voice,
             _render_thread_join_handle: render_thread_join_handle,
         })
     }

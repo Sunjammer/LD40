@@ -31,8 +31,8 @@ class Enemy extends Entity implements EnemyAI.EnemyController {
 	public override function render(info:RenderInfo) {
 		brain.performAction();
 
-		Main.debugDraw.graphics.beginFill(0x00ffff);
-		Main.debugDraw.graphics.drawRect(position.x-5, position.y-5, 10, 10);
+		/*Main.debugDraw.graphics.beginFill(0x00ffff);
+		Main.debugDraw.graphics.drawRect(position.x-5, position.y-5, 10, 10);*/
 	}
 	
 	var pulseTimer = (Math.random() + 1) * 2;

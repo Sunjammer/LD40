@@ -25,14 +25,14 @@ float shape(float v, float drive){
 
 void main(void){
     vec2 uv = fract(vec2(0.5, 0.5) + vec2(cos(uTime*0.2), sin(uTime*0.2)) * vec2(0.5,0.5));
-    vec4 outCol = texture2D(uNoiseTexture, (vUv + uv) * 4) * 0.5 + texture2D(uDataTexture, vUv) * abs(vZoffset);
+    vec4 outCol = vec4(1) - texture2D(uNoiseTexture, (vUv + uv) * 4) * 0.5 + texture2D(uDataTexture, vUv) * abs(vZoffset);
 
     if(vTileInfo.y > 0.5){
         outCol.r = 1.0;
         outCol.gb *= 0.5;
     }
 
-    gl_FragColor = vec4(outCol.rgb, 1.0);
+    gl_FragColor = vec4(outCol.rgb, 0.5 + abs(vZoffset) * 0.5);
 
 
 }

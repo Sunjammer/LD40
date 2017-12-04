@@ -22,8 +22,15 @@ class InitialState extends Sprite implements IGameState
 	{
 		g.stateSpriteContainer.addChild(this);
 		alpha = 0;
-		Delta.tween(this).prop("alpha", 1, 1).wait(2).prop("alpha", 0, 1).onComplete(doneInitializing);
+		Delta.tween(this).prop("alpha", 1, 1).onComplete(beep).wait(2).prop("alpha", 0, 1).onComplete(doneInitializing);
 		trace("Entering initial state");
+	}
+	
+	function beep():Void
+	{
+		#if AudioJank
+		AudioJank.playSampleInSpace(AudioJank.SampleId.EnemyDialogueHigh3, 0.0, 0.0);
+		#end
 	}
 	
 	function doneInitializing() 
