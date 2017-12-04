@@ -1,7 +1,8 @@
 package;
 import coldBoot.Game;
-import glm.Vec2;
+import coldBoot.rendering.Shader;
 import haxe.Timer;
+import lime.ui.KeyCode;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
@@ -32,27 +33,15 @@ class Main extends Sprite
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		stage.addEventListener(Event.RESIZE, onStageResize);
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
 
 		debugDraw = new Sprite();
 		game = new Game({width:stage.stageWidth, height:stage.stageHeight});
-		game.debugContainer.addChild(debugDraw);
+		//game.debugContainer.addChild(debugDraw);
 		addChild(game);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
-		addEventListener(Event.ADDED_TO_STAGE, addedToStage);
-		addEventListener(MouseEvent.MOUSE_UP, mouseUp);
-		addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
-		addEventListener(KeyboardEvent.KEY_UP, keyUp);
 
-	}
-	
-	function addedToStage(e:Event):Void 
-	{
-		stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
-	
-		
-		removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
-		
 	}
 
 	function onStageResize(e:Event):Void
@@ -60,25 +49,13 @@ class Main extends Sprite
 		game.resize({width:stage.stageWidth, height:stage.stageHeight});
 	}
 
-	function keyUp(e:KeyboardEvent):Void
-	{
-
-	}
-
 	function keyDown(e:KeyboardEvent):Void
 	{
-
+    if (e.keyCode == KeyCode.SPACE && e.shiftKey)
+      for (s in Shader.allShaders)
+        s.rebuild();
 	}
 
-	function mouseUp(e:MouseEvent):Void
-	{
-	
-	}
-
-	function mouseDown(e:MouseEvent):Void
-	{
-
-	}
 
 	function onEnterFrame(e:Event):Void
 	{

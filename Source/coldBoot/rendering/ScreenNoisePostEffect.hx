@@ -16,10 +16,7 @@ class ScreenNoisePostEffect extends PostEffect {
   public function new(frag:String) {
     super(frag);
 		screenNoiseUniform = shader.uniform("uImage1");
-
-		var bitmap = Assets.getBitmapData("assets/screen_noise.jpg");
-		screenNoiseTex = createTexture(bitmap.width, bitmap.height, true);
-		GL.texImage2D (GL.TEXTURE_2D, 0, GL.RGBA, bitmap.width, bitmap.height, 0, GL.RGBA, GL.UNSIGNED_BYTE, bitmap.image.data);
+		screenNoiseTex = Utils.createTextureFromBitmap("assets/screen_noise.jpg");
   }
   
   override public function update(dt:Float) {

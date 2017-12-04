@@ -4,14 +4,12 @@ import coldBoot.Entity;
 import coldBoot.RenderInfo;
 import coldBoot.Level;
 import coldBoot.UpdateInfo;
-import coldBoot.entities.ActiveSonar;
 import coldBoot.entities.Base;
 import coldBoot.entities.Enemy;
-import coldBoot.entities.Pulse;
 import coldBoot.entities.Turret;
-import glm.Vec2;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.OpenGLView;
+import glm.Vec2;
 
 class GamePlayState extends DisplayObjectContainer implements IGameState
 {
@@ -25,8 +23,6 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	public function new()
 	{
 		super();
-    glView = new OpenGLView();
-    glView.render = onGLRender;
 	}
   
 
@@ -35,12 +31,12 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
     playerInfo = new PlayerInfo(100, 100);
 		rootEntity = new Entity();
     terminal = new Terminal(g, 400);
-    addChild(glView);
     addChild(terminal);
     
 		var enemySpawnPoint = new glm.Vec2(1,1);
 		level = new Level(enemySpawnPoint);
 		rootEntity.add(level);
+    /*
 		
 		var base = new Base(100);
 		base.position = new Vec2(150, 150);
@@ -55,7 +51,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 			var enemy = new Enemy(level, enemySpawnPoint * (level.pixelSize * 3) - (level.pixelSize * 3) / 2 + 1);
 			enemy.addTag("enemy");
 			rootEntity.add(enemy);
-		}
+		}*/
 	   
 		g.stateSpriteContainer.addChild(this);
 		g.viewportChanged.add(onViewportChanged);
@@ -63,15 +59,12 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
   
 	function onViewportChanged(w:Int, h:Int):Void {
 		trace("Viewport changed");
-		terminal.x = w - 400;
+    terminal.updateUi();
 	}
-	
-  function onGLRender(){
-    rootEntity.render(null);
-  }
   
 	public function render(info:RenderInfo):Void
 	{
+    rootEntity.render(null);
 	}
 
 	public function update(info:UpdateInfo): IGameState

@@ -13,6 +13,16 @@ uniform float uTime;
 const float BARREL_DISTORTION = 0.1;
 const float rescale = 1.0 - (0.25 * BARREL_DISTORTION);
 
+vec3 shape(vec3 v, vec3 drive){
+	vec3 k = 2.0 * drive / (1.0 - drive);
+	return (1.0 + k) * v / (1.0 + k * abs(v));
+}
+
+float shape(float v, float drive){
+	float k = 2.0 * drive / (1.0 - drive);
+	return (1.0 + k) * v / (1.0 + k * abs(v));
+}
+
 void main() {
     vec2 uv = vTexCoord - .5;
     float rsq = dot(uv,uv);
@@ -23,12 +33,12 @@ void main() {
         //gl_FragColor = vec4(0,0,0,1);
         discard;
     }
-
+    vec2 stepSize = 1.0 / uResolution;
     vec4 color = texture2D(uImage0, vTexCoord);
+    float sourceAlpha = shape(color.a, 0.9);
     float intensity = 1.0;
     uv += .5;
     if(color.rgb != vec3(1.0, 0.0, 0.0)){
-        vec2 stepSize = 1.0 / uResolution;
         float x = stepSize.x;
         float y = stepSize.y;
         vec4 horizEdge = vec4( 0.0 );
@@ -57,5 +67,5 @@ void main() {
     grain = 1.0 - grain;
     color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * intensity * vec4(0.31,.83,1,1);
 
-    gl_FragColor = vec4(color.rgb,1.0);
+    gl_FragColor = vec4(shape(color.rgb, vec3(-0.4)), sourceAlpha);
 }

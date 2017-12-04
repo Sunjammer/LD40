@@ -1,6 +1,7 @@
 package coldBoot.rendering;
 import coldBoot.Game;
 import coldBoot.rendering.PostEffect;
+import lime.graphics.opengl.GL;
 import openfl.display.OpenGLView;
 import openfl.geom.Rectangle;
 
@@ -55,6 +56,8 @@ class SceneRenderBase extends OpenGLView {
   
   private function renderView (rect:Rectangle):Void {
     if (effects.length == 0) return;
+    GL.enable(GL.BLEND);
+    GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
     for (p in effects){
       p.prerender();
       p.update(prevDelta);

@@ -120,7 +120,7 @@ class PostEffect
 		if (texture != null) GL.deleteTexture(texture);
 		if (renderbuffer != null) GL.deleteRenderbuffer(renderbuffer);
 
-		texture = createTexture(config.width, config.height);
+		texture = Utils.createTexture(config.width, config.height);
 		bindTextureToFramebuffer();
 		createRenderbuffer(config.width, config.height);
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
@@ -135,19 +135,6 @@ class PostEffect
 
 		// Specify renderbuffer as depth attachement
 		GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.RENDERBUFFER, renderbuffer);
-	}
-
-	private inline function createTexture(width:Int, height:Int, repeat:Bool = false)
-	{
-		var tex = GL.createTexture();
-		GL.bindTexture(GL.TEXTURE_2D, tex);
-		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB,  width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE, 0);
-
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, repeat ? GL.REPEAT : GL.CLAMP_TO_EDGE);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, repeat ? GL.REPEAT : GL.CLAMP_TO_EDGE);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER , GL.LINEAR);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
-		return tex;
 	}
 
 	function bindTextureToFramebuffer() {

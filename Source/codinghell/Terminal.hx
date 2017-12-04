@@ -100,7 +100,7 @@ class Terminal extends Sprite{
     updateUi();
   }
   
-  function updateUi() {
+  public function updateUi() {
     x = game.viewportSize.width - terminalWidth;
     
     statusText.text = ("mode:" + state).toUpperCase();

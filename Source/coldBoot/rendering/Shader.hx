@@ -16,15 +16,24 @@ typedef ShaderSource = {
 class Shader
 {
 
+  public static var allShaders(default,never):Array<Shader> = [];
 	/**
 	 * Creates a new Shader
 	 * @param sources  A list of glsl shader sources to compile and link into a program
 	 */
 	public function new(sources:Array<ShaderSource>)
 	{
-		program = GL.createProgram();
+    allShaders.push(this);
+		this.sources = sources;
 
-		for (source in sources)
+    rebuild();
+	}
+  
+  public function rebuild(){
+    if (program != null)
+      GL.deleteProgram(program);
+    program = GL.createProgram();
+    for (source in sources)
 		{
 			var shader = compile(source.src, source.fragment ? GL.FRAGMENT_SHADER : GL.VERTEX_SHADER);
 			if (shader == null) return;
@@ -40,8 +49,10 @@ class Shader
 			trace("VALIDATE_STATUS: " + GL.getProgramParameter(program, GL.VALIDATE_STATUS));
 			trace("ERROR: " + GL.getError());
 			return;
-		}
-	}
+		}else{
+      trace("Successfully linked shader");
+    }
+  }
 
 	/**
 	 * Compiles the shader source into a GlShader object and prints any errors
@@ -84,11 +95,12 @@ class Shader
 	/**
 	 * Bind the program for rendering
 	 */
-	public inline function bind()
+	public function bind()
 	{
 		GL.useProgram(program);
 	}
 
+var sources:Array<ShaderSource>;
 	private var program:GLProgram;
 
 }
