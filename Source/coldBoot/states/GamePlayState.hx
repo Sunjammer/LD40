@@ -101,7 +101,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
         addChild(terminal);
     
 		var enemySpawnPoint = new glm.Vec2(1,1);
-		level = new Level(enemySpawnPoint);
+		level = new Level(this, enemySpawnPoint);
 		rootEntity.add(level);
 		
 		waveState = new WaveState(level, enemySpawnPoint, 5);

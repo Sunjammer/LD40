@@ -1,4 +1,5 @@
 package coldBoot;
+import openfl.display.DisplayObjectContainer;
 import coldBoot.TileType;
 import coldBoot.entities.*;
 import coldBoot.map.*;
@@ -14,7 +15,7 @@ class Level extends Entity
 	
 	public var map: GameMap;
 
-	public function new(enemySpawnPoint: Vec2) 
+	public function new(container:DisplayObjectContainer, enemySpawnPoint: Vec2) 
 	{
 		super();
 
@@ -29,6 +30,11 @@ class Level extends Entity
 		
 		width = mapGenerator.getWidth() * 3;
 		height = mapGenerator.getHeight() * 3;
+
+		var bitmap = mapGenerator.getBitmap();
+		bitmap.width *= pixelSize;
+		bitmap.height *= pixelSize;
+		container.addChild(bitmap);
 		
 		var tileMap = mapGenerator.getMap();
 		
@@ -54,7 +60,7 @@ class Level extends Entity
 	{
 		super.render(info);
 		
-		for (x in 0...width)
+		/*for (x in 0...width)
 		{
 			for (y in 0...height)
 			{
@@ -71,6 +77,6 @@ class Level extends Entity
 					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 				}
 			}
-		}
+		}*/
 	}
 }
