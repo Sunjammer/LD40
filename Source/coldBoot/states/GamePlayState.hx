@@ -16,7 +16,8 @@ import coldBoot.entities.Turret;
 import coldBoot.states.GamePlayState.WaveState;
 import glm.Vec2;
 import openfl.display.DisplayObjectContainer;
-
+import openfl.utils.Timer;
+//import haxe.Timer;
 
 class WaveCompletedState implements IState
 {
@@ -44,29 +45,38 @@ class WaveState implements IState
 	var difficulty: Float;
 	var enemySpawnPoint:Vec2;
 	var level:Level;
+	var pulseMap:PulseMap;
+	var container:DisplayObjectContainer;
+	var enemiesSpawned:Int;
+	var timer:Timer;
 	
-	public function new(level: Level, enemySpawnPoint: Vec2, nEnemies: Int)
+	public function new(pulseMap:PulseMap, container: DisplayObjectContainer, level: Level, enemySpawnPoint: Vec2, nEnemies: Int)
 	{
 		this.nEnemies = nEnemies;
+		this.pulseMap = pulseMap;
 		this.level = level;
 		this.enemySpawnPoint = enemySpawnPoint;
+		this.container = container;
+		timer = new Timer(1000, nEnemies);
 	}
 	
 	public function enter(g:Game):Void 
 	{
 		var root = g.getCurrentState().getRootEntity();
-		
-		for (i in 0...nEnemies) {
-			var enemy = new Enemy(level, enemySpawnPoint * (level.pixelSize * 3) - (level.pixelSize * 3) / 2 + 1);
+		//Timer.delay(container.dispatchEvent() ;	
+		timer.addEventListener("timer", function(data:Dynamic) {
+			var enemy = new Enemy(pulseMap, level, enemySpawnPoint * (level.pixelSize * 3) - (level.pixelSize * 3) / 2 + 1);
 			enemy.addTag("enemy");
 			root.add(enemy);
-		}
+			++enemiesSpawned;
+		});
+		timer.start();
 	}
 	
 	public function update(info:UpdateInfo):IState 
 	{
 		var enemies = info.game.getCurrentState().getRootEntity().getChildEntitiesByTag("enemy");
-		if (enemies.length == 0)
+		if (enemies.length == 0 && enemiesSpawned == nEnemies)
 		{
 			trace("Wave completed");
 			return new WaveCompletedState();
@@ -76,7 +86,7 @@ class WaveState implements IState
 	
 	public function exit(g:Game):Void 
 	{
-		
+		timer.stop();
 	}
 }
 
@@ -104,12 +114,11 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		level = new Level(this, enemySpawnPoint);
 		rootEntity.add(level);
 		
-		waveState = new WaveState(level, enemySpawnPoint, 5);
 		var pulseMap = new PulseMap(level);
 		pulseMap.addTag("pulseMap");
 		rootEntity.add(pulseMap);
-		
-		waveState = new WaveState(level, enemySpawnPoint, 5);
+
+		waveState = new WaveState(pulseMap, this, level, enemySpawnPoint, 5);
 		
 		var base = new Base(100);
 		base.position = new Vec2(150, 150);
