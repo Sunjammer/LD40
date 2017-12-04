@@ -121,10 +121,10 @@ class Level extends Entity {
     GLM.perspective(degRad(60), info.game.viewportSize.aspect, 0.1, 300, view)  ;
     
     GL.vertexAttribPointer(vertexAttrib, 4, GL.FLOAT, false, 0, 0);
+	
     GL.enable(GL.VERTEX_PROGRAM_POINT_SIZE);
     GL.enable(GL.POINT_SPRITE);
     GL.enable(GL.DEPTH_TEST);
-    GL.enable(GL.BLEND);
     GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
     GL.depthFunc(GL.LESS);
     
@@ -148,5 +148,9 @@ class Level extends Entity {
     while ((error = GL.getError()) != 0){
       trace("GL error: " + error);
     }
+	
+	GL.disable(GL.VERTEX_PROGRAM_POINT_SIZE);
+    GL.disable(GL.POINT_SPRITE);
+    GL.disable(GL.DEPTH_TEST);
   }
 }

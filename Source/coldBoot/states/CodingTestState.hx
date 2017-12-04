@@ -12,6 +12,7 @@ import openfl.display.Sprite;
  * @author Andreas Kennedy
  */
 class CodingTestState extends Sprite implements IGameState {
+	var terminal:codinghell.Terminal;
 
   public function new() {
     super();
@@ -26,9 +27,17 @@ class CodingTestState extends Sprite implements IGameState {
   
   public function enter(g:Game):Void {
     g.stateSpriteContainer.addChild(this);
-    var terminal = new Terminal(g, 300);
+    terminal = new Terminal(g, 300);
     addChild(terminal);
+	g.viewportChanged.add(onViewportChanged);
+	terminal.updateUi();
   }
+
+function onViewportChanged(w:Int, h:Int):Void
+{
+	trace("Viewport changed");
+	terminal.updateUi();
+}
   
   public function update(info:UpdateInfo):IGameState {
     return this;
@@ -50,6 +59,14 @@ class CodingTestState extends Sprite implements IGameState {
   public function removeChildEntity(e:Entity):Void 
   {
 	  
+  }
+  
+  
+  /* INTERFACE coldBoot.IGameState */
+  
+  public function getRootEntity():Entity 
+  {
+	return null;
   }
   
 }

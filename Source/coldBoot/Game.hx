@@ -1,7 +1,7 @@
 package coldBoot;
 import coldBoot.IGameState;
+import coldBoot.states.CodingTestState;
 import coldBoot.states.GamePlayState;
-import coldBoot.states.RenderTestState;
 import fsignal.Signal2;
 import lime.graphics.opengl.GL;
 import openfl.display.OpenGLView;
@@ -58,11 +58,11 @@ class Game extends Sprite
 		addChild(sceneRenderer = new SceneRenderBase(config));
 		sceneRenderer.setPostEffects(
 			[
-				//new ScreenNoisePostEffect("assets/crt.frag")
+				new ScreenNoisePostEffect("assets/crt.frag")
 			]
 		);
 		#end
-		setState(new RenderTestState());
+		setState(new GamePlayState());
 	}
 
 	public function resize(dims: {width:Int, height:Int})

@@ -22,9 +22,6 @@ class Main extends Sprite
 	public function new ()
 	{
 		super();
-		#if (debug && cpp)
-			//new debugger.HaxeRemote(false, "localhost");
-		#end
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
@@ -36,7 +33,7 @@ class Main extends Sprite
 
 		debugDraw = new Sprite();
 		game = new Game({width:stage.stageWidth, height:stage.stageHeight});
-		//game.debugContainer.addChild(debugDraw);
+		game.debugContainer.addChild(debugDraw);
 		addChild(game);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -50,9 +47,12 @@ class Main extends Sprite
 
 	function keyDown(e:KeyboardEvent):Void
 	{
-    if (e.keyCode == KeyCode.SPACE && e.shiftKey)
-      for (s in Shader.allShaders)
-        s.rebuild();
+		//Broken shader live reload
+		#if (debug && ogl)
+		if (e.keyCode == KeyCode.SPACE && e.shiftKey)
+		  for (s in Shader.allShaders)
+			s.rebuild();
+		#end
 	}
 
 
