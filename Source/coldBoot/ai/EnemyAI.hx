@@ -59,6 +59,8 @@ class SquadController {
 	}*/
 }
 
+typedef TargetMove = { index : Int, dir : Vec2 }
+
 class EnemyAI {
 	var pathMemory:PathMemory;
 	var controller:EnemyController;
@@ -72,11 +74,13 @@ class EnemyAI {
 	var isLeader:Bool;
 	var squadController:SquadController;
 	var pulseMap:PulseMap;
+	var isAttacking:Bool;
 
 	public function new(pulseMap:PulseMap, isLeader:Bool, squadController:SquadController, map:PathFinding.GameMap, controller:EnemyController) {
 		this.controller = controller;
 		this.isLeader = isLeader;
 		this.pulseMap = pulseMap;
+		this.isAttacking = false;
 		this.squadController = squadController;
 		pathMemory = new PathMemory();
 		this.map = map;
@@ -94,20 +98,30 @@ class EnemyAI {
 	}
 
 	public function performAction() {
-		if(currentPath.length == 0 && nearTarget())
+		var currentIdx = map.toNodeIdx(controller.position);
+		var currentPos = map.toCoordinate(currentIdx);
+		var sound = pulseMap.checkTile(currentPos.x, currentPos.y, 1);
+		var soundBiasedSearch = null;
+		if(sound != null && !this.isAttacking) {
+			soundBiasedSearch = sound.direction;
+		}
+
+		if((currentPath.length == 0 && nearTarget()) || soundBiasedSearch != null)
 		{
-			controller.position = currentTarget;
+			if(nearTarget())
+				controller.position = currentTarget;
+			
 			var currentIdx = map.toNodeIdx(controller.position);
 			var currentPos = map.toCoordinate(currentIdx);
 
-			var newStackItems = new Array<Int>();
+			var newStackItems = new Array<TargetMove>();
 
 			if(currentPos.y + 1 < map.rows)
 			{
 				var forwardIdx = map.posToNodeIdx(currentPos.x, currentPos.y + 1);
 				if(map.isWalkableByIdx(forwardIdx) && !knownWalkablePlaces[forwardIdx])
 				{
-					newStackItems.push(forwardIdx);
+					newStackItems.push({ index: forwardIdx, dir: new Vec2(0,1)});
 					knownWalkablePlaces[forwardIdx] = true;
 				}
 			}
@@ -117,7 +131,7 @@ class EnemyAI {
 				var backwardIdx = map.posToNodeIdx(currentPos.x, currentPos.y - 1);
 				if(map.isWalkableByIdx(backwardIdx) && !knownWalkablePlaces[backwardIdx])
 				{
-					newStackItems.push(backwardIdx);
+					newStackItems.push({ index: backwardIdx, dir: new Vec2(0,-1)});
 					knownWalkablePlaces[backwardIdx] = true;
 				}
 			}
@@ -127,7 +141,7 @@ class EnemyAI {
 				var rightIdx = map.posToNodeIdx(currentPos.x + 1, currentPos.y);
 				if(map.isWalkableByIdx(rightIdx) && !knownWalkablePlaces[rightIdx])
 				{
-					newStackItems.push(rightIdx);
+					newStackItems.push({ index: rightIdx, dir: new Vec2(1,0)});
 					knownWalkablePlaces[rightIdx] = true;
 				}
 			}
@@ -137,18 +151,28 @@ class EnemyAI {
 				var leftIdx = map.posToNodeIdx(currentPos.x - 1, currentPos.y);
 				if(map.isWalkableByIdx(leftIdx) && !knownWalkablePlaces[leftIdx])
 				{
-					newStackItems.push(leftIdx);
+					newStackItems.push({ index: leftIdx, dir: new Vec2(-1,0)});
 					knownWalkablePlaces[leftIdx] = true;
 				}
 			}
 
-			/*var msg = squadController.pullMessage(controller.position);
-			if(msg != null && msg.type == "followMe" && !isLeader) {
-				msg.location
+			var foundInSoundDir = false;
+			if(soundBiasedSearch != null)
+			{
+				var first = newStackItems.filter(function(t) {
+					return t.dir.x == soundBiasedSearch.x 
+						|| t.dir.y == soundBiasedSearch.y;
+				});
+				for(x in first) {
+					currentPathStack.add(x.index);
+					foundInSoundDir = true;
+				}
 			}
-			else*/ {
+			
+			if(!foundInSoundDir)
+			{
 				for(i in Random.shuffle(newStackItems)) {
-					currentPathStack.add(i);
+					currentPathStack.add(i.index);
 				}
 			}
 

@@ -118,7 +118,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		pulseMap.addTag("pulseMap");
 		rootEntity.add(pulseMap);
 
-		waveState = new WaveState(pulseMap, this, level, enemySpawnPoint, 5);
+		waveState = new WaveState(pulseMap, this, level, enemySpawnPoint, 40);
 		
 		var base = new Base(100);
 		base.position = new Vec2(150, 150);
