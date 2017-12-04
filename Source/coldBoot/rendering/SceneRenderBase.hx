@@ -25,7 +25,12 @@ class SceneRenderBase extends OpenGLView
 	public function setPostEffects(inEffects:Array<PostEffect>)
 	{
 		effects = inEffects;
+		chainEffects();
 
+	}
+	
+	function chainEffects() 
+	{
 		switch (effects.length)
 		{
 			case 0:
@@ -46,16 +51,12 @@ class SceneRenderBase extends OpenGLView
 					}
 				}
 		}
-
 	}
 
 	public function setWindowSize(config: {width:Int, height:Int})
 	{
 		this.config = config;
-		for (p in effects)
-		{
-			p.bind(config);
-		}
+		chainEffects();
 	}
 
 	public function preRender()

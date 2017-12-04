@@ -59,7 +59,8 @@ class Game extends Sprite
 		addChild(sceneRenderer = new SceneRenderBase(config));
 		sceneRenderer.setPostEffects(
 			[
-				new ScreenNoisePostEffect("assets/crt.frag")
+				new ScreenNoisePostEffect("assets/crt.frag"),
+				new PostEffect("assets/scanline.frag")
 			]
 		);
 		#end

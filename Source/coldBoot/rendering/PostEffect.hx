@@ -146,12 +146,7 @@ class PostEffect
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
 		GL.viewport(0, 0, config.width, config.height);
-		GL.clear(GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
 	}
-
-	/**
-	 * Renders to a framebuffer or the screen every frame
-	 */
 
 	public function prerender()
 	{
@@ -177,13 +172,11 @@ class PostEffect
 
 	public function render()
 	{
+		GL.enable(GL.TEXTURE_2D);
 		GL.activeTexture(GL.TEXTURE0);
 		GL.bindTexture(GL.TEXTURE_2D, texture);
 
 		GL.drawArrays(GL.TRIANGLE_STRIP, 0, 4);
-
-		GL.disable(GL.TEXTURE_2D);
-		GL.bindTexture(GL.TEXTURE_2D, null);
 		GL.useProgram(null);
 
 		// check gl error
