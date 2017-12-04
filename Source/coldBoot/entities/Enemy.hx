@@ -16,12 +16,12 @@ class Enemy extends Entity implements EnemyAI.EnemyController {
 	var hp: Float = 20;
 	var level: Level;
 
-	public function new(level: Level, position:Vec2)
+	public function new(pulseMap:PulseMap, level: Level, position:Vec2)
 	{
 		super();
 		this.level = level;
 		this.position = position;
-		brain = new EnemyAI(false, new EnemyAI.SquadController(), level.map, this);
+		brain = new EnemyAI(pulseMap, false, new EnemyAI.SquadController(), level.map, this);
 	}
 
 	public function move(dir:Vec2) {

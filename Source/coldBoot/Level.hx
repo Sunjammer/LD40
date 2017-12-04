@@ -1,65 +1,89 @@
 package coldBoot;
-import coldBoot.TileType;
-import coldBoot.ai.PathFinding.GameMap;
-import coldBoot.map.*;
 import coldBoot.rendering.LevelRenderer;
+import openfl.display.DisplayObjectContainer;
+import coldBoot.TileType;
+import coldBoot.entities.*;
+import coldBoot.map.*;
+import coldBoot.ai.PathFinding.GameMap;
 import glm.Vec2;
 
 class Level extends Entity
 {
-	var renderer:LevelRenderer;
 	public var tiles: Array<TileType> = [];
-	public var pixelSize = 10;
+	public var pixelSize = 20;
 	public var width: Int;
 	public var height: Int;
-
+	
+	var renderer:LevelRenderer;
+	
 	public var map: GameMap;
 
-	public function new(enemySpawnPoint: Vec2)
+	public function new(container:DisplayObjectContainer, enemySpawnPoint: Vec2) 
 	{
 		super();
-
+		
 		renderer = new LevelRenderer();
-
+		
 		var mapGenerator = MapGenerator.recursiveBacktracking(1, enemySpawnPoint, 16, 16);
 		map = new coldBoot.ai.PathFinding.GameMap(
 			mapGenerator.getWidth()*3,
 			mapGenerator.getHeight()*3,
 			pixelSize,
-			function(idx)
-		{
-			return mapGenerator.getMap()[idx] == 0;
-		});
-
+			function(idx) {
+				return mapGenerator.getMap()[idx] == 0;
+			});
+		
 		width = mapGenerator.getWidth() * 3;
 		height = mapGenerator.getHeight() * 3;
 
+		var bitmap = mapGenerator.getBitmap();
+		bitmap.width *= pixelSize;
+		bitmap.height *= pixelSize;
+		container.addChild(bitmap);
+		
 		var tileMap = mapGenerator.getMap();
-
 		renderer.init(this, tileMap);
-
+		
 		for (y in 0...height)
 		{
 			for (x in 0...width)
 			{
-
-				var coord = x + (y * width);
-				var tile = tileMap[coord];
+			
+				var tile = tileMap[x + (y * width)];
 				if (tile == 0)
 				{
-					tiles.push(Air);
+					tiles.push(TileType.Air);
 				}
 				else
 				{
-					tiles.push(Wall);
+					tiles.push(TileType.Wall);				
 				}
 			}
 		}
-
 	}
-
-	override public function render(info:RenderInfo)
+	
+	override public function render(info:RenderInfo) 
 	{
+		super.render(info);
 		renderer.render(info);
+		
+		/*for (x in 0...width)
+		{
+			for (y in 0...height)
+			{
+				var tile = tiles[x + (y * width)];
+				if (tile == Wall)
+				{
+					Main.debugDraw.graphics.beginFill(0x000000);
+					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+
+				}
+				else 
+				{
+					Main.debugDraw.graphics.beginFill(0xffffff);
+					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+				}
+			}
+		}*/
 	}
 }

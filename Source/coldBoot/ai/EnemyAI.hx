@@ -1,5 +1,7 @@
 package coldBoot.ai;
 
+import coldBoot.entities.*;
+import coldBoot.entities.PulseMap.*;
 import glm.Vec2;
 import haxe.ds.GenericStack;
 import Random;
@@ -69,10 +71,12 @@ class EnemyAI {
 	var knownWalkablePlaces:Array<Bool>;
 	var isLeader:Bool;
 	var squadController:SquadController;
+	var pulseMap:PulseMap;
 
-	public function new(isLeader:Bool, squadController:SquadController, map:PathFinding.GameMap, controller:EnemyController) {
+	public function new(pulseMap:PulseMap, isLeader:Bool, squadController:SquadController, map:PathFinding.GameMap, controller:EnemyController) {
 		this.controller = controller;
 		this.isLeader = isLeader;
+		this.pulseMap = pulseMap;
 		this.squadController = squadController;
 		pathMemory = new PathMemory();
 		this.map = map;

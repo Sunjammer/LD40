@@ -1,6 +1,7 @@
 package coldBoot.entities;
 import coldBoot.Level;
 import coldBoot.entities.PulseMap.Intensity;
+import glm.Vec2;
 
 class Index 
 {
@@ -17,11 +18,13 @@ class Intensity
 {
 	public var type: Int;
 	public var intensity: Float;
+	public var direction: Vec2;
 	
-	public function new(type: Int, intensity: Float)
+	public function new(type: Int, intensity: Float, direction: glm.Vec2)
 	{
 		this.type = type;
 		this.intensity = intensity;
+		this.direction = direction;
 	}
 }
 
@@ -79,7 +82,7 @@ class PulseTileBuffer
 	{
 		var pt = pulseTiles[x + (y * width)];
 		var id = pulsesIdCounter;
-		pt.setPulse(id, new Intensity(type, intensity));
+		pt.setPulse(id, new Intensity(type, intensity, new Vec2(0,0)));
 		pulsesIdCounter++;
 		pulsesTimers.set(id, 1.0);
 		return id;
@@ -136,7 +139,7 @@ class PulseTileBuffer
 								var ni = neighbor.getPulse(k);
 								if (ni == null)
 								{
-									ni = new Intensity(ptPulse.type, 0);
+									ni = new Intensity(ptPulse.type, 0, new Vec2(nx - 1, ny - 1));
 									neighbor.setPulse(k, ni);
 								}
 								

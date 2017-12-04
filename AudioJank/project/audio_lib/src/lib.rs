@@ -60,7 +60,15 @@ impl Context {
             8 => engine.enemy_dialog_low_ids[2],
             9 => engine.enemy_dialog_low_ids[3],
             10 => engine.enemy_dialog_low_ids[4],
-            _ => engine.enemy_dialog_low_ids[5],
+            11 => engine.enemy_dialog_low_ids[5],
+
+            12 => engine.explosion_ids[0],
+            13 => engine.explosion_ids[1],
+            14 => engine.explosion_ids[2],
+
+            15 => engine.sonar_id,
+            16 => engine.sonar_echo_id,
+            _ => engine.turret_fire_id,
         };
 
         engine.play_sample_in_space(sample_id, relative_x, relative_y);

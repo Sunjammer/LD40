@@ -73,6 +73,10 @@ pub struct Engine {
 
     pub enemy_dialog_high_ids: [SampleId; 6],
     pub enemy_dialog_low_ids: [SampleId; 6],
+    pub explosion_ids: [SampleId; 3],
+    pub sonar_id: SampleId,
+    pub sonar_echo_id: SampleId,
+    pub turret_fire_id: SampleId,
 }
 
 impl Engine {
@@ -90,6 +94,10 @@ impl Engine {
             boot_sample_id: 0,
             enemy_dialog_high_ids: [0; 6],
             enemy_dialog_low_ids: [0; 6],
+            explosion_ids: [0; 3],
+            sonar_id: 0,
+            sonar_echo_id: 0,
+            turret_fire_id: 0,
         };
 
         // TODO: Look into streaming these!!
@@ -122,6 +130,14 @@ impl Engine {
             ret.load_sample(include_bytes!("assets/enemy_dialogue_low_5.flac"))?,
             ret.load_sample(include_bytes!("assets/enemy_dialogue_low_6.flac"))?,
         ];
+        ret.explosion_ids = [
+            ret.load_sample(include_bytes!("assets/explosion_1.flac"))?,
+            ret.load_sample(include_bytes!("assets/explosion_2.flac"))?,
+            ret.load_sample(include_bytes!("assets/explosion_3.flac"))?,
+        ];
+        ret.sonar_id = ret.load_sample(include_bytes!("assets/sonar.flac"))?;
+        ret.sonar_echo_id = ret.load_sample(include_bytes!("assets/sonar_echo.flac"))?;
+        ret.turret_fire_id = ret.load_sample(include_bytes!("assets/turret_fire.flac"))?;
 
         Ok(ret)
     }

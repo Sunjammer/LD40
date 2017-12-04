@@ -18,7 +18,7 @@
 	<haxelib name="random" />
 	<haxelib name="fsignal"/>
 	
-	<!-- haxelib name="AudioJank"/ --> <!-- uncomment this to crash -->
+	<!--haxelib name="AudioJank"/--> <!-- uncomment this to crash -->
 	
 	<haxedef name="ogl" unless="flash" />
   
