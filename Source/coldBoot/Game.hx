@@ -8,6 +8,8 @@ import openfl.display.OpenGLView;
 import openfl.display.Shape;
 import openfl.display.Sprite;
 import tween.Delta;
+import AudioJank.AudioJank;
+import AudioJank.SampleId;
 
 #if ogl
 	import coldBoot.rendering.SceneRenderBase;
@@ -34,6 +36,9 @@ class Game extends Sprite
 	public function new(config: {width:Int, height:Int})
 	{
 		super();
+
+                AudioJank.createContext();
+                AudioJank.playSampleInSpace(SampleId.EnemyDialogueHigh3, 0.0, 0.0);
     
     glView = new OpenGLView();
     backgroundShape = new Shape();

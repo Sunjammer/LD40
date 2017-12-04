@@ -1,34 +1,39 @@
 <xml>
-	
+
 	<include name="${HXCPP}/build-tool/BuildCommon.xml"/>
-	
+
 	<files id="common">
-		
-		<compilerflag value="-Iinclude"/>
-		
+
+	  <compilerflag value="-Iinclude"/>
+
 		<file name="common/ExternalInterface.cpp"/>
 		<file name="common/AudioJank.cpp"/>
-		
+
 	</files>
-	
+
 	<set name="SLIBEXT" value=".lib" if="windows"/>
 	<set name="SLIBEXT" value=".a" unless="windows"/>
 	<set name="SLIBEXT" value=".so" if="webos"/>
-	
+
 	<set name="DEBUGEXTRA" value="-debug" if="fulldebug" />
-	
+
 	<target id="NDLL" output="audiojank" tool="linker" toolid="${STD_MODULE_LINK}">
-		
+
 		<outdir name="../ndll/${BINDIR}"/>
 		<ext value=".ndll" if="windows || mac || linux"/>
 		<files id="common"/>
-		
+
+
+          <lib name="audio_lib/target/release/libaudio_lib.a" if="macos HXCPP_M64" />
+          <lib name="-lresolv" if="macos" />
+          <vflag name="-framework" value="AudioUnit" if="macos" />
+
 	</target>
-	
+
 	<target id="default">
-		
+
 		<target id="NDLL"/>
-		
+
 	</target>
-	
+
 </xml>
