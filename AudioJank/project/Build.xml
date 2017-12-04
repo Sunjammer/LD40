@@ -2,14 +2,23 @@
 
 	<include name="${HXCPP}/build-tool/BuildCommon.xml"/>
 
+	<section if="windows">
+		<include name="${HXCPP}/toolchain/msvc-toolchain.xml"/>
+	</section>
+
 	<files id="common">
 
-	  <compilerflag value="-Iinclude"/>
+		<compilerflag value="-Iinclude"/>
 
 		<file name="common/ExternalInterface.cpp"/>
 		<file name="common/AudioJank.cpp"/>
 
 	</files>
+
+	<compiler id="default">
+		<objdir value="../obj/32" if="HXCPP_M32"/>
+		<objdir value="../obj/64" if="HXCPP_M64"/>
+	</compiler>
 
 	<set name="SLIBEXT" value=".lib" if="windows"/>
 	<set name="SLIBEXT" value=".a" unless="windows"/>
@@ -20,20 +29,18 @@
 	<target id="NDLL" output="audiojank" tool="linker" toolid="${STD_MODULE_LINK}">
 
 		<outdir name="../ndll/${BINDIR}"/>
-		<ext value=".ndll" if="windows || mac || linux"/>
+		<ext value=".ndll" if="windows || mac || linux || neko"/>
 		<files id="common"/>
 
-
-          <lib name="audio_lib/target/release/libaudio_lib.a" if="macos HXCPP_M64" />
-          <lib name="-lresolv" if="macos" />
-          <vflag name="-framework" value="AudioUnit" if="macos" />
+		<lib name="audio_lib/target/release/libaudio_lib.a" if="macos HXCPP_M64" />
+		<lib name="audio_lib/target/release/audio_lib.lib" if="windows || neko" />
+		<lib name="-lresolv" if="macos" />
+		<vflag name="-framework" value="AudioUnit" if="macos" />
 
 	</target>
 
 	<target id="default">
-
 		<target id="NDLL"/>
-
 	</target>
 
 </xml>
