@@ -32,6 +32,17 @@
 		<ext value=".ndll" if="windows || mac || linux || neko"/>
 		<files id="common"/>
 
+		<section if="windows">
+			<lib name="ws2_32.lib" if="windows" />
+			<lib name="Advapi32.lib" if="windows" />
+			<lib name="Userenv.lib" if="windows" />
+			<lib name="Shell32.lib" if="windows" />
+			<lib name="Ole32.lib" if="windows" />
+			<lib name="kernel32.lib" if="windows" />
+			<lib name="shell32.lib" if="windows" />
+			<lib name="msvcrt.lib" if="windows" />
+		</section>
+
 		<lib name="audio_lib/target/release/libaudio_lib.a" if="macos HXCPP_M64" />
 		<lib name="audio_lib/target/release/audio_lib.lib" if="windows || neko" />
 		<lib name="-lresolv" if="macos" />

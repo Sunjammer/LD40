@@ -1,7 +1,6 @@
 package;
 
 import lime.system.CFFI;
-import lime.system.JNI;
 
 @:enum
 abstract SampleId(Int) {
@@ -21,16 +20,12 @@ abstract SampleId(Int) {
 
 class AudioJank {
     public static function createContext() {
-        if(audiojank_create_context==null)
-             audiojank_create_context = CFFI.load("audiojank", "audiojank_create_context", 0);
-        trace("Create audio contexttttt");
         audiojank_create_context();
     }
-    static var audiojank_create_context;
+    static var audiojank_create_context = CFFI.load("audiojank", "audiojank_create_context", 0);
 
     public static function playSampleInSpace(sampleId: SampleId, relativeX: Float, relativeY: Float) {
-        trace("Play sample");
-        //audiojank_play_sample_in_space(sampleId, relativeX, relativeY);
+        audiojank_play_sample_in_space(sampleId, relativeX, relativeY);
     }
-    //static var audiojank_play_sample_in_space = CFFI.load("audiojank", "audiojank_play_sample_in_space", 3);
+    static var audiojank_play_sample_in_space = CFFI.load("audiojank", "audiojank_play_sample_in_space", 3);
 }

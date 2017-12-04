@@ -6,7 +6,6 @@ import lime.ui.KeyCode;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
-import openfl.events.MouseEvent;
 
 class Input
 {
@@ -23,9 +22,9 @@ class Main extends Sprite
 	public function new ()
 	{
 		super();
-    #if boof
-    new debugger.Local(true);
-    #end
+		#if (debug && cpp)
+			//new debugger.HaxeRemote(false, "localhost");
+		#end
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 

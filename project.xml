@@ -8,19 +8,18 @@
 	
 	<source path="Source" />
 	
+	<haxelib name="hxcpp" />
 	<haxelib name="openfl" />
 	<haxelib name="delta" />
 	<haxelib name="hscript" />
 	<haxelib name="glm" />
 	<haxelib name="pathfinder" />
 	<haxelib name="differ" />
-	<haxelib name="AudioJank"/>
 	<haxelib name="random" />
-  <haxelib name="fsignal"/>
-  <haxelib name="hxcpp-debugger" if="debug cpp boof" />
-  <haxedef name="HXCPP_DEBUGGER" if="debug cpp boof" />
-  <haxedef name="HX_UTF8_STRINGS" if="debug cpp boof" />
-  
+	<haxelib name="fsignal"/>
+	
+	<!-- haxelib name="AudioJank"/ --> <!-- uncomment this to crash -->
+	
 	<haxedef name="ogl" unless="flash" />
   
 	<assets path="Assets" rename="assets" />
