@@ -67,7 +67,14 @@ class Game extends Sprite
 		
 		trace("Starting");
 		
-		setState(new InitialState());
+		setState(new InitialState(), [
+			"assets/c1.jpg",
+			"assets/c2.jpg",
+			"assets/c3.jpg",
+			"assets/c4.jpg",
+			"assets/c5.jpg",
+			"assets/c6.jpg"
+		]);
 	}
 
 	public function resize(dims: {width:Int, height:Int})
@@ -120,7 +127,7 @@ class Game extends Sprite
 	}
 	#end
 
-	public function setState(s:IGameState): IGameState
+	public function setState(s:IGameState, ?args:Dynamic): IGameState
 	{
 		globalTime = 0;
 		if (currentState != null)
@@ -128,7 +135,7 @@ class Game extends Sprite
 			currentState.exit(this);
 		}
 		currentState = s;
-		currentState.enter(this);
+		currentState.enter(this, args);
 		return currentState;
 	}
 }

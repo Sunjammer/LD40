@@ -25,7 +25,7 @@ class CodingTestState extends Sprite implements IGameState {
     
   }
   
-  public function enter(g:Game):Void {
+  public function enter(g:Game, ?args:Dynamic):Void {
     g.stateSpriteContainer.addChild(this);
     terminal = new Terminal(g, 300);
     addChild(terminal);

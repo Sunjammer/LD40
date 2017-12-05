@@ -20,7 +20,7 @@ class WaveCompletedState implements IState
 {
 	public function new () {}
 	
-	public function enter(g:Game):Void 
+	public function enter(g:Game, ?args:Dynamic):Void 
 	{
 		
 	}
@@ -58,7 +58,7 @@ class WaveState implements IState
 		timer = new Timer(1000, nEnemies);
 	}
 	
-	public function enter(g:Game):Void 
+	public function enter(g:Game, ?args:Dynamic):Void 
 	{
 		var root = g.getCurrentState().getRootEntity();
 		//Timer.delay(container.dispatchEvent() ;	
@@ -101,7 +101,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 		super();
 	}
 
-	public function enter(g:Game):Void
+	public function enter(g:Game, ?args:Dynamic):Void
 	{
 		rootEntity = new Entity();
 
