@@ -8,6 +8,7 @@ varying vec2 vTexCoord;
 uniform vec2 uResolution;
 uniform sampler2D uImage0;
 uniform sampler2D uImage1;
+uniform sampler2D uImage2;
 uniform float uTime;
 
 const float BARREL_DISTORTION = 0.2;
@@ -35,7 +36,6 @@ void main() {
     }
     vec2 stepSize = 1.0 / uResolution;
     vec4 color = texture2D(uImage0, uv);
-    float sourceAlpha = shape(color.a, 0.9);
     float intensity = 1.0;
     uv += .5;
     if(color.rgb != vec3(1.0, 0.0, 0.0)){
@@ -65,7 +65,7 @@ void main() {
     float foo = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (uTime * 10.0);
     vec4 grain = vec4(mod((mod(foo, 13.0) + 1.0) * (mod(foo, 123.0) + 1.0), 0.01)-0.005) * strength;
     grain = 1.0 - grain;
-    color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * intensity * vec4(0.31,.83,1,1);
+    color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * intensity * vec4(0.31,.83,1,1) + texture2D(uImage2, uv) * 0.2;
 
     gl_FragColor = vec4(color.rgb, 1.0);
 }

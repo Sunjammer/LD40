@@ -1,6 +1,7 @@
 package coldBoot;
 import coldBoot.IGameState;
 import coldBoot.rendering.PostEffect;
+import coldBoot.rendering.PostEffectTex2;
 import coldBoot.states.CodingTestState;
 import coldBoot.states.GamePlayState;
 import coldBoot.states.InitialState;
@@ -18,7 +19,7 @@ import AudioJank.SampleId;
 
 #if ogl
 	import coldBoot.rendering.SceneRenderBase;
-	import coldBoot.rendering.ScreenNoisePostEffect;
+	import coldBoot.rendering.PostEffectTex1;
 #end
 
 class Game extends Sprite
@@ -59,7 +60,7 @@ class Game extends Sprite
 		addChild(sceneRenderer = new SceneRenderBase(config));
 		sceneRenderer.setPostEffects(
 			[
-				new ScreenNoisePostEffect("assets/crt.frag"),
+				new PostEffectTex2("assets/crt.frag", "assets/screen_noise.jpg", "assets/dirt.jpg"),
 				new PostEffect("assets/scanline.frag")
 			]
 		);
