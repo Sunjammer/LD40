@@ -146,6 +146,8 @@ class PostEffect
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
 		GL.viewport(0, 0, config.width, config.height);
+		GL.clearColor(0,0,0,0);
+		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
 	}
 
 	public function prerender()

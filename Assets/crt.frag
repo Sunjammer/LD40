@@ -10,7 +10,7 @@ uniform sampler2D uImage0;
 uniform sampler2D uImage1;
 uniform float uTime;
 
-const float BARREL_DISTORTION = 0.1;
+const float BARREL_DISTORTION = 0.2;
 const float rescale = 1.0 - (0.25 * BARREL_DISTORTION);
 
 vec3 shape(vec3 v, vec3 drive){
@@ -34,7 +34,7 @@ void main() {
         discard;
     }
     vec2 stepSize = 1.0 / uResolution;
-    vec4 color = texture2D(uImage0, vTexCoord);
+    vec4 color = texture2D(uImage0, uv);
     float sourceAlpha = shape(color.a, 0.9);
     float intensity = 1.0;
     uv += .5;
@@ -67,5 +67,5 @@ void main() {
     grain = 1.0 - grain;
     color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * intensity * vec4(0.31,.83,1,1);
 
-    gl_FragColor = vec4(shape(color.rgb, vec3(-0.4)), sourceAlpha);
+    gl_FragColor = vec4(color.rgb, 1.0);
 }

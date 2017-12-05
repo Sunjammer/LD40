@@ -134,7 +134,6 @@ class GamePlayState extends DisplayObjectContainer implements IGameState
 	}
   
 	function onViewportChanged(w:Int, h:Int):Void {
-		trace("Viewport changed");
 		terminal.x = w - 200;
 	}
 	
