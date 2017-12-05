@@ -15,7 +15,7 @@
 
 	</files>
 
-	<compiler id="default">
+	<compiler id="default" if="windows">
 		<objdir value="../obj/32" if="HXCPP_M32"/>
 		<objdir value="../obj/64" if="HXCPP_M64"/>
 	</compiler>
