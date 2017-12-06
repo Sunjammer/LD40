@@ -44,8 +44,8 @@ class PostEffect
 		
 		if (shader != null) shader.destroy();
 		shader = new Shader([
-		{ src: Assets.getText("assets/fullscreenquad.vert"), fragment: false },
-		{ src: Assets.getText(fragShaderPath), fragment: true }
+		{ src: Assets.getText("assets/fullscreenquad.vert"), type: GL.VERTEX_SHADER },
+		{ src: Assets.getText(fragShaderPath), type: GL.FRAGMENT_SHADER }
 		], fragShaderPath );
 
 		uniforms = new Map<String, Uniform>();

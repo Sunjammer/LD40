@@ -37,21 +37,12 @@ class InitialState extends Sprite implements IGameState
 			Delta.tween(img)
 				.wait(cnt*6)
 				.prop("alpha", 1, 2)
-				.onComplete(beep)
 				.wait(3)
 				.prop("alpha", 0, 2);
 			cnt++;
 		}
 		Delta.delayCall(doneInitializing, cnt * 6 + 1);
 		trace("Entering initial state");
-	}
-	
-	function beep():Void
-	{
-		trace("Bleep");
-		#if AudioJank
-		AudioJank.playSampleInSpace(AudioJank.SampleId.EnemyDialogueHigh3, 0.0, 0.0);
-		#end
 	}
 	
 	function doneInitializing() 
@@ -62,7 +53,7 @@ class InitialState extends Sprite implements IGameState
 
 	public function update(info:UpdateInfo): IGameState
 	{
-		if (initialized) 
+		if (info.game.audio.pollStatus() == Ready) 
 		{
 			return info.game.setState(new GamePlayState());
 		}

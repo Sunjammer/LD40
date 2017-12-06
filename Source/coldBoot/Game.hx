@@ -2,7 +2,6 @@ package coldBoot;
 import coldBoot.IGameState;
 import coldBoot.rendering.PostEffect;
 import coldBoot.rendering.PostEffectTex2;
-import coldBoot.states.CodingTestState;
 import coldBoot.states.GamePlayState;
 import coldBoot.states.InitialState;
 import fsignal.Signal2;
@@ -12,14 +11,8 @@ import openfl.display.Shape;
 import openfl.display.Sprite;
 import tween.Delta;
 
-#if AudioJank
-import AudioJank.AudioJank;
-import AudioJank.SampleId;
-#end
-
 #if ogl
 	import coldBoot.rendering.SceneRenderBase;
-	import coldBoot.rendering.PostEffectTex1;
 #end
 
 class Game extends Sprite
@@ -37,6 +30,7 @@ class Game extends Sprite
 	public var viewportSize: {width:Int, height:Int, aspect:Float};
 	public var viewportChanged:Signal2<Int,Int>;
 	var globalTime:Float;
+  public var audio:Audio;
 
 	public function new(config: {width:Int, height:Int})
 	{
@@ -45,6 +39,10 @@ class Game extends Sprite
 		trace("Initializing game");
 		viewportChanged = new Signal2<Int,Int>();
 		viewportSize = {width:800, height:600, aspect:1};
+    
+    trace("Initializing audio");
+    audio = Audio.getInstance();
+    audio.init();
 		
 		trace("Initializing rendering");
 		
@@ -139,4 +137,8 @@ class Game extends Sprite
 		currentState.enter(this, args);
 		return currentState;
 	}
+  
+  public function onExit() {
+    audio.exec(ShutDown);
+  }
 }

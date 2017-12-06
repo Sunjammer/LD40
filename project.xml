@@ -18,12 +18,9 @@
 	<haxelib name="random" />
 	<haxelib name="fsignal"/>
 	
-	<haxelib name="AudioJank" if="neko" /> 
+	<haxelib name="AudioJank"/> 
 	
 	<haxedef name="ogl" unless="flash" />
-	
-	<haxelib name="hxcpp-debugger" if="debug debugger" />
-	<haxedef name="HXCPP_DEBUGGER" if="debug debugger" />
   
 	<assets path="Assets" rename="assets" />
 	

@@ -19,8 +19,8 @@ class LevelEntityShader extends Shader
 	public function new()
 	{
 		super([
-			{src:Assets.getText("assets/level_entity.vert"), fragment:false},
-			{src:Assets.getText("assets/level_entity.frag"), fragment:true}
+			{src:Assets.getText("assets/level_entity.vert"), type:GL.VERTEX_SHADER},
+			{src:Assets.getText("assets/level_entity.frag"), type:GL.FRAGMENT_SHADER}
 		]);
 
 		dataTextureUniform = uniform("uDataTexture");

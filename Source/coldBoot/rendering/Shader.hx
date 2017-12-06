@@ -4,11 +4,12 @@ import lime.graphics.opengl.GLProgram;
 import lime.graphics.opengl.GLShader;
 import lime.graphics.opengl.GLUniformLocation;
 import openfl.gl.*;
+import coldBoot.rendering.GLExtra;
 
 typedef ShaderSource =
 {
 	var src:String;
-	var fragment:Bool;
+	var type:Int;
 }
 
 /**
@@ -37,7 +38,7 @@ class Shader
 		program = GL.createProgram();
 		for (source in sources)
 		{
-			var shader = compile(source.src, source.fragment ? GL.FRAGMENT_SHADER : GL.VERTEX_SHADER);
+			var shader = compile(source.src, source.type);
 			if (shader == null) return;
 			GL.attachShader(program, shader);
 			GL.deleteShader(shader);

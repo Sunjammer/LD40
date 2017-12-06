@@ -45,20 +45,24 @@ class LevelRenderer
 	{
 		this.level = level;
 		vertices = [];
+      
+    inline function emitVertex(target:Array<Float>, offset:Int, x, y, a, b){
+      target[offset] = x;
+      target[offset+1] = y;
+      target[offset+2] = a;
+      target[offset+3] = b;
+    }
 
 		function addVertAt(x:Int, y:Int, type:TileType)
 		{
 			var coord = (x + (y * level.width)) * 4;
-			vertices[coord] = x;
-			vertices[coord + 1] = y;
-			vertices[coord + 2] = level.pixelSize;
-			vertices[coord + 3] = switch (type)
+      emitVertex(vertices, coord, x, y, level.pixelSize, switch (type)
 			{
 				case Air:
 					0.0;
 				case Wall:
 					1.0;
-			}
+			});
 		}
 		
 		for (y in 0...level.height)

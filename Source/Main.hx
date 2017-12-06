@@ -1,4 +1,5 @@
 package;
+import coldBoot.Audio;
 import coldBoot.Game;
 import haxe.Timer;
 import openfl.display.Sprite;
@@ -21,15 +22,10 @@ class Main extends Sprite
 	{
 		super();
 
-		#if debug
+		#if debugger
 			new debugger.Local(true);
 		#end
-		
-		#if AudioJank
-		AudioJank.createContext();
-		AudioJank.playBootSequence(0.3);
-		#end
-		
+    
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
@@ -45,7 +41,8 @@ class Main extends Sprite
 		addChild(game);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
-	}
+    stage.application.onExit.add(function(code) { game.onExit(); } );
+  }
 
 	function onStageResize(e:Event):Void
 	{

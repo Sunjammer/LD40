@@ -1,2 +1,3 @@
-cd AudioJank/project/audio_lib && cargo build --release && cd ../../..
-cd AudioJank && haxelib dev AudioJank . && openfl rebuild AudioJank windows && cd ..
+cd AudioJank/project/audio_lib && cargo build release && cd ../../..
+openfl rebuild hxcpp windows
+openfl rebuild AudioJank windows

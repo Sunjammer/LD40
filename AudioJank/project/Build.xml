@@ -33,6 +33,7 @@
 		<files id="common"/>
 
 		<section if="windows">
+			<flag value="-NODEFAULTLIB:LIBCMT"/>
 			<lib name="ws2_32.lib" if="windows" />
 			<lib name="Advapi32.lib" if="windows" />
 			<lib name="Userenv.lib" if="windows" />
