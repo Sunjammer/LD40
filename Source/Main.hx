@@ -1,6 +1,6 @@
 package;
-import coldBoot.Audio;
-import coldBoot.Game;
+import coldboot.Audio;
+import coldboot.Game;
 import haxe.Timer;
 import openfl.display.Sprite;
 import openfl.events.Event;

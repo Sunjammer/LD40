@@ -1,6 +1,6 @@
-package coldBoot.entities;
-import coldBoot.RenderInfo;
-import coldBoot.UpdateInfo;
+package coldboot.entities;
+import coldboot.RenderInfo;
+import coldboot.UpdateInfo;
 import differ.Collision;
 import differ.shapes.Polygon;
 import differ.shapes.Shape;

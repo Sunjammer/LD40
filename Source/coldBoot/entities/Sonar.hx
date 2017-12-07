@@ -1,8 +1,8 @@
-package coldBoot.entities;
-import Source.coldBoot.IReactToSonarSignals;
-import coldBoot.Entity;
-import coldBoot.UpdateInfo;
-import coldBoot.states.GamePlayState;
+package coldboot.entities;
+import Source.coldboot.IReactToSonarSignals;
+import coldboot.Entity;
+import coldboot.UpdateInfo;
+import coldboot.states.GamePlayState;
 
 class Sonar extends ScriptableEntity implements IReactToSonarSignals
 {
@@ -19,7 +19,7 @@ class Sonar extends ScriptableEntity implements IReactToSonarSignals
 	} 
 	
 	
-	/* INTERFACE Source.coldBoot.IReactToSonarSignals */
+	/* INTERFACE Source.coldboot.IReactToSonarSignals */
 	
 	public function signal(pulseType:Int):Void 
 	{

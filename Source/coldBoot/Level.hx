@@ -1,10 +1,10 @@
-package coldBoot;
-import coldBoot.rendering.LevelRenderer;
+package coldboot;
+import coldboot.rendering.LevelRenderer;
 import openfl.display.DisplayObjectContainer;
-import coldBoot.TileType;
-import coldBoot.entities.*;
-import coldBoot.map.*;
-import coldBoot.ai.PathFinding.GameMap;
+import coldboot.TileType;
+import coldboot.entities.*;
+import coldboot.map.*;
+import coldboot.ai.PathFinding.GameMap;
 import glm.Vec2;
 
 class Level extends Entity
@@ -23,7 +23,7 @@ class Level extends Entity
 		super();
 		
 		var mapGenerator = MapGenerator.recursiveBacktracking(1, enemySpawnPoint, 16, 16);
-		map = new coldBoot.ai.PathFinding.GameMap(
+		map = new coldboot.ai.PathFinding.GameMap(
 			mapGenerator.getWidth()*3,
 			mapGenerator.getHeight()*3,
 			pixelSize,

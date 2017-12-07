@@ -1,4 +1,4 @@
-package coldBoot;
+package coldboot;
 
 interface IReactToSonarSignals 
 {

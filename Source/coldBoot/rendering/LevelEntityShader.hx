@@ -1,5 +1,6 @@
-package coldBoot.rendering;
-import coldBoot.rendering.Shader;
+package coldboot.rendering;
+import coldboot.rendering.opengl.Shader;
+import coldboot.rendering.opengl.TextureUtils;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLTexture;
 import lime.graphics.opengl.GLUniformLocation;
@@ -19,14 +20,14 @@ class LevelEntityShader extends Shader
 	public function new()
 	{
 		super([
-			{src:Assets.getText("assets/level_entity.vert"), type:GL.VERTEX_SHADER},
-			{src:Assets.getText("assets/level_entity.frag"), type:GL.FRAGMENT_SHADER}
+			Vertex(Assets.getText("assets/level_entity.vert")),
+			Fragment(Assets.getText("assets/level_entity.frag"))
 		]);
 
-		dataTextureUniform = uniform("uDataTexture");
-		dataTexture = Utils.createTextureFromBitmap("assets/testpattern.jpg", true);
-		screenNoiseUniform = uniform("uNoiseTexture");
-		screenNoiseTex = Utils.createTextureFromBitmap("assets/perlin_noise.png", true);
+		dataTextureUniform = getUniform("uDataTexture");
+		dataTexture = TextureUtils.createTextureFromBitmap("assets/testpattern.jpg", true);
+		screenNoiseUniform = getUniform("uNoiseTexture");
+		screenNoiseTex = TextureUtils.createTextureFromBitmap("assets/perlin_noise.png", true);
 	}
 	override public function bind()
 	{

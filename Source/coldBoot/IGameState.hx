@@ -1,6 +1,6 @@
-package coldBoot;
-import coldBoot.IState;
-import coldBoot.RenderInfo;
+package coldboot;
+import coldboot.IState;
+import coldboot.RenderInfo;
 
 interface IGameState extends IState
 {

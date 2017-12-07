@@ -1,4 +1,4 @@
-package coldBoot.ai;
+package coldboot.ai;
 
 import pathfinder.*;
 import glm.Vec2;

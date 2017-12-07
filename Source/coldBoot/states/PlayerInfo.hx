@@ -1,4 +1,4 @@
-package coldBoot.states;
+package coldboot.states;
 
 /**
  * ...

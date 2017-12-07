@@ -1,7 +1,7 @@
-package coldBoot.states;
-import coldBoot.Entity;
-import coldBoot.Game;
-import coldBoot.UpdateInfo;
+package coldboot.states;
+import coldboot.Entity;
+import coldboot.Game;
+import coldboot.UpdateInfo;
 import openfl.Assets;
 import openfl.display.Bitmap;
 import openfl.display.Shape;
@@ -55,7 +55,7 @@ class InitialState extends Sprite implements IGameState
 	{
 		if (info.game.audio.pollStatus() == Ready) 
 		{
-			return info.game.setState(new GamePlayState());
+			//return info.game.setState(new GamePlayState());
 		}
 		return this;
 	}
@@ -73,7 +73,7 @@ class InitialState extends Sprite implements IGameState
 	}
 	
 	
-	/* INTERFACE coldBoot.IGameState */
+	/* INTERFACE coldboot.IGameState */
 	
 	public function getRootEntity():Entity 
 	{

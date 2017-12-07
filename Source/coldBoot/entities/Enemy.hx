@@ -1,11 +1,11 @@
-package coldBoot.entities;
+package coldboot.entities;
 
-import coldBoot.Level;
-import coldBoot.RenderInfo;
-import coldBoot.UpdateInfo;
-import coldBoot.ai.*;
-import coldBoot.states.*;
-import coldBoot.entities.PulseMap.PulseTileBuffer;
+import coldboot.Level;
+import coldboot.RenderInfo;
+import coldboot.UpdateInfo;
+import coldboot.ai.*;
+import coldboot.states.*;
+import coldboot.entities.PulseMap.PulseTileBuffer;
 import differ.shapes.Polygon;
 import differ.shapes.Shape;
 import glm.Vec2;

@@ -1,4 +1,4 @@
-package coldBoot;
+package coldboot;
 import hscript.Expr;
 import hscript.Interp;
 import hscript.Parser;

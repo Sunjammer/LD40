@@ -1,4 +1,4 @@
-package coldBoot.rendering;
+package coldboot.rendering;
 import glm.GLM;
 import glm.Mat4;
 import glm.Quat;
@@ -32,12 +32,12 @@ class LevelRenderer
 		if (shader==null)
 			shader = new LevelEntityShader();
 
-		vertexAttrib = shader.attribute("aVertex");
-		resolutionUniform = shader.uniform("uResolution");
-		matrixUniform = shader.uniform("uMatrix");
-		viewMatrixUniform = shader.uniform("uView");
-		timeUniform = shader.uniform("uTime");
-		lightsUniform = shader.uniform("uLight0");
+		vertexAttrib = shader.getAttribute("aVertex");
+		resolutionUniform = shader.getUniform("uResolution");
+		matrixUniform = shader.getUniform("uMatrix");
+		viewMatrixUniform = shader.getUniform("uView");
+		timeUniform = shader.getUniform("uTime");
+		lightsUniform = shader.getUniform("uLight0");
 
 	}
 

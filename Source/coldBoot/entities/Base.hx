@@ -1,7 +1,7 @@
-package coldBoot.entities;
-import coldBoot.Entity;
-import coldBoot.RenderInfo;
-import coldBoot.UpdateInfo;
+package coldboot.entities;
+import coldboot.Entity;
+import coldboot.RenderInfo;
+import coldboot.UpdateInfo;
 
 class Base extends Entity
 {

@@ -1,7 +1,7 @@
-package coldBoot.ai;
+package coldboot.ai;
 
-import coldBoot.entities.*;
-import coldBoot.entities.PulseMap.*;
+import coldboot.entities.*;
+import coldboot.entities.PulseMap.*;
 import glm.Vec2;
 import haxe.ds.GenericStack;
 import Random;

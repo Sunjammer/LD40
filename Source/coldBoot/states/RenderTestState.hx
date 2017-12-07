@@ -1,10 +1,10 @@
-package coldBoot.states;
-import coldBoot.UpdateInfo;
-import coldBoot.IState;
-import coldBoot.Game;
-import coldBoot.Entity;
-import coldBoot.IGameState;
-import coldBoot.RenderInfo;
+package coldboot.states;
+import coldboot.UpdateInfo;
+import coldboot.IState;
+import coldboot.Game;
+import coldboot.Entity;
+import coldboot.IGameState;
+import coldboot.RenderInfo;
 import glm.Vec2;
 
 /**
@@ -12,14 +12,14 @@ import glm.Vec2;
  * @author Andreas Kennedy
  */
 class RenderTestState implements IGameState {
-  var level:coldBoot.Level;
+  var level:coldboot.Level;
 
   public function new() {
     level = new Level(new Vec2(2,2));
   }
   
   
-  /* INTERFACE coldBoot.IGameState */
+  /* INTERFACE coldboot.IGameState */
   
   public function render(info:RenderInfo):Void {
      level.render(info);

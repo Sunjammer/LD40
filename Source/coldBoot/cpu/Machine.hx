@@ -1,6 +1,6 @@
-package coldBoot.cpu;
+package coldboot.cpu;
 
-import coldBoot.cpu.Bytecode;
+import coldboot.cpu.Bytecode;
 
 using Lambda;
 

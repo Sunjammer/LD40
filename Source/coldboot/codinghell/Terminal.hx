@@ -1,6 +1,6 @@
-package codinghell;
-import coldBoot.Game;
-import coldBoot.cpu.*;
+package coldboot.codinghell;
+import coldboot.Game;
+import coldboot.cpu.*;
 import flash.display.Sprite;
 import flash.text.TextFormat;
 import lime.ui.KeyCode;

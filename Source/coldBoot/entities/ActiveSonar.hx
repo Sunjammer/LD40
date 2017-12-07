@@ -1,8 +1,8 @@
-package coldBoot.entities;
-import coldBoot.Level;
-import coldBoot.RenderInfo;
-import coldBoot.entities.Sonar;
-import coldBoot.states.GamePlayState;
+package coldboot.entities;
+import coldboot.Level;
+import coldboot.RenderInfo;
+import coldboot.entities.Sonar;
+import coldboot.states.GamePlayState;
 
 class ActiveSonar extends Sonar
 {

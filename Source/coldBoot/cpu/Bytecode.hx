@@ -1,4 +1,4 @@
-package coldBoot.cpu;
+package coldboot.cpu;
 
 enum Comparison
 {

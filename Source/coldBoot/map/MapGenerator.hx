@@ -1,4 +1,4 @@
-package coldBoot.map;
+package coldboot.map;
 
 import openfl.display.Sprite;
 import openfl.display.BitmapData;

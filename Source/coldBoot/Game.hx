@@ -1,19 +1,15 @@
-package coldBoot;
-import coldBoot.IGameState;
-import coldBoot.rendering.PostEffect;
-import coldBoot.rendering.PostEffectTex2;
-import coldBoot.states.GamePlayState;
-import coldBoot.states.InitialState;
+package coldboot;
+import coldboot.IGameState;
+import coldboot.rendering.opengl.posteffects.*;
+import coldboot.states.GamePlayState;
+import coldboot.states.InitialState;
 import fsignal.Signal2;
 import lime.graphics.opengl.GL;
+import openfl.Assets;
 import openfl.display.OpenGLView;
 import openfl.display.Shape;
 import openfl.display.Sprite;
 import tween.Delta;
-
-#if ogl
-	import coldBoot.rendering.SceneRenderBase;
-#end
 
 class Game extends Sprite
 {
@@ -24,7 +20,7 @@ class Game extends Sprite
 	var backgroundShape:Shape;
 
 	#if ogl
-	var sceneRenderer:SceneRenderBase;
+	var sceneRenderer:PostProcessing;
 	#end
 
 	public var viewportSize: {width:Int, height:Int, aspect:Float};
@@ -55,11 +51,12 @@ class Game extends Sprite
 		
 		#if ogl
 		
-		addChild(sceneRenderer = new SceneRenderBase(config));
-		sceneRenderer.setPostEffects(
+		addChild(sceneRenderer = new PostProcessing());
+		sceneRenderer.setWindowSize({width:800, height:600});
+		sceneRenderer.setEffects(
 			[
-				new PostEffectTex2("assets/crt.frag", "assets/screen_noise.jpg", "assets/dirt.jpg"),
-				new PostEffect("assets/scanline.frag")
+				new PostEffect(Assets.getText("assets/crt.frag"), "CRT", ["assets/screen_noise.jpg", "assets/dirt.jpg"]),
+				new PostEffect(Assets.getText("assets/scanline.frag"), "Scanline")
 			]
 		);
 		#end
@@ -102,9 +99,6 @@ class Game extends Sprite
 		globalTime += dt;
 		var info = {game:this, deltaTime:dt, time:0.0};
 		Delta.step(info.deltaTime);
-		#if ogl
-		sceneRenderer.update(this, info.deltaTime);
-		#end
 		if (currentState != null)
 			currentState.update(info);
 	}
@@ -113,7 +107,7 @@ class Game extends Sprite
 	override function __renderGL(renderSession):Void
 	{
 		GL.viewport (Std.int (0), Std.int (0), Std.int (viewportSize.width), Std.int (viewportSize.height));
-		sceneRenderer.preRender();
+		sceneRenderer.beginFrame(globalTime);
 		currentState.render({game:this, time:globalTime});
 		super.__renderGL(renderSession);
 	}

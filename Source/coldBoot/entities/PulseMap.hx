@@ -1,6 +1,6 @@
-package coldBoot.entities;
-import coldBoot.Level;
-import coldBoot.entities.PulseMap.Intensity;
+package coldboot.entities;
+import coldboot.Level;
+import coldboot.entities.PulseMap.Intensity;
 import glm.Vec2;
 
 class Index 

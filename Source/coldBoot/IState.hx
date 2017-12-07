@@ -1,7 +1,7 @@
-package coldBoot;
-import coldBoot.Game;
-import coldBoot.IGameState;
-import coldBoot.UpdateInfo;
+package coldboot;
+import coldboot.Game;
+import coldboot.IGameState;
+import coldboot.UpdateInfo;
 
 interface IState
 {

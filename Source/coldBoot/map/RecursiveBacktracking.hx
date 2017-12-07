@@ -1,4 +1,4 @@
-package coldBoot.map;
+package coldboot.map;
 
 import openfl.display.Sprite;
 import openfl.display.BitmapData;
@@ -6,9 +6,9 @@ import openfl.display.Bitmap;
 import openfl.geom.Rectangle;
 import openfl.geom.Point;
 import glm.Vec2;
-import coldBoot.map.MapGenerator.Direction;
-import coldBoot.map.MapGenerator.Tile;
-import coldBoot.map.MapGenerator.TileMap;
+import coldboot.map.MapGenerator.Direction;
+import coldboot.map.MapGenerator.Tile;
+import coldboot.map.MapGenerator.TileMap;
 
 private class DirectionHelper {
     public static function toPoint(direction: Direction):Point {

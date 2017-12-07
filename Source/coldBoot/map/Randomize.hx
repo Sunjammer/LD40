@@ -1,4 +1,4 @@
-package coldBoot.map;
+package coldboot.map;
 
 class Randomize {
 

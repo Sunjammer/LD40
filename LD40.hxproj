@@ -29,7 +29,7 @@
     <class path="Source" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\6,5,2\externs\core\openfl" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\6,5,2\externs\extras" />
-    <class path="Export\windows\haxe" />
+    <class path="Export\neko\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>

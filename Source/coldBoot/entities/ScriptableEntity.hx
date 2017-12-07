@@ -1,7 +1,7 @@
-package coldBoot.entities;
-import coldBoot.Entity;
-import coldBoot.UpdateInfo;
-import coldBoot.Script;
+package coldboot.entities;
+import coldboot.Entity;
+import coldboot.UpdateInfo;
+import coldboot.Script;
 
 class ScriptableEntity extends Entity
 {

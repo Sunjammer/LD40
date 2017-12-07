@@ -1,10 +1,10 @@
-package coldBoot.states;
-import codinghell.Terminal;
-import coldBoot.Entity;
-import coldBoot.UpdateInfo;
-import coldBoot.Game;
-import coldBoot.IGameState;
-import coldBoot.RenderInfo;
+package coldboot.states;
+import coldboot.codinghell.Terminal;
+import coldboot.Entity;
+import coldboot.UpdateInfo;
+import coldboot.Game;
+import coldboot.IGameState;
+import coldboot.RenderInfo;
 import openfl.display.Sprite;
 
 /**
@@ -12,14 +12,14 @@ import openfl.display.Sprite;
  * @author Andreas Kennedy
  */
 class CodingTestState extends Sprite implements IGameState {
-	var terminal:codinghell.Terminal;
+	var terminal:coldboot.codinghell.Terminal;
 
   public function new() {
     super();
   }
   
   
-  /* INTERFACE coldBoot.IGameState */
+  /* INTERFACE coldboot.IGameState */
   
   public function render(info:RenderInfo):Void {
     
@@ -49,7 +49,7 @@ function onViewportChanged(w:Int, h:Int):Void
   }
   
   
-  /* INTERFACE coldBoot.IGameState */
+  /* INTERFACE coldboot.IGameState */
   
   public function addChildEntity(e:Entity):Void 
   {
@@ -62,7 +62,7 @@ function onViewportChanged(w:Int, h:Int):Void
   }
   
   
-  /* INTERFACE coldBoot.IGameState */
+  /* INTERFACE coldboot.IGameState */
   
   public function getRootEntity():Entity 
   {

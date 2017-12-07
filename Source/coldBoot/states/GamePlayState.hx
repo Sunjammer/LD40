@@ -1,17 +1,17 @@
-package coldBoot.states;
-import codinghell.Terminal;
-import coldBoot.Audio.AudioCommand;
-import coldBoot.Entity;
-import coldBoot.Game;
-import coldBoot.IState;
-import coldBoot.IGameState;
-import coldBoot.Level;
-import coldBoot.RenderInfo;
-import coldBoot.UpdateInfo;
-import coldBoot.entities.Base;
-import coldBoot.entities.Enemy;
-import coldBoot.entities.PulseMap;
-import coldBoot.entities.Turret;
+package coldboot.states;
+import coldboot.codinghell.Terminal;
+import coldboot.Audio.AudioCommand;
+import coldboot.Entity;
+import coldboot.Game;
+import coldboot.IState;
+import coldboot.IGameState;
+import coldboot.Level;
+import coldboot.RenderInfo;
+import coldboot.UpdateInfo;
+import coldboot.entities.Base;
+import coldboot.entities.Enemy;
+import coldboot.entities.PulseMap;
+import coldboot.entities.Turret;
 import glm.Vec2;
 import openfl.display.DisplayObjectContainer;
 import openfl.events.MouseEvent;
@@ -163,7 +163,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
     waveState.exit(g);
   }
 
-  /* INTERFACE coldBoot.IGameState */
+  /* INTERFACE coldboot.IGameState */
 
   public function getRootEntity():Entity {
     return this.rootEntity;

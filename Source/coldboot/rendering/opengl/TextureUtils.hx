@@ -1,12 +1,9 @@
-package coldBoot.rendering;
-import lime.graphics.opengl.GL;
-import openfl.utils.Assets;
+package coldboot.rendering.opengl;
 
-/**
- * ...
- * @author Andreas Kennedy
- */
-class Utils {
+import lime.graphics.opengl.*;
+import openfl.Assets;
+
+class TextureUtils{
 
 	static public inline function createTexture(width:Int, height:Int, repeat:Bool = false)
 	{
@@ -21,12 +18,11 @@ class Utils {
 		return tex;
 	}
   
-  static public inline function createTextureFromBitmap(path:String, repeat:Bool = false){
+ 	static public inline function createTextureFromBitmap(path:String, repeat:Bool = false){
 		var bitmap = Assets.getBitmapData(path);
-		var tex = Utils.createTexture(bitmap.width, bitmap.height, repeat);
+		var tex = createTexture(bitmap.width, bitmap.height, repeat);
 		GL.texImage2D (GL.TEXTURE_2D, 0, GL.RGBA, bitmap.width, bitmap.height, 0, GL.RGBA, GL.UNSIGNED_BYTE, bitmap.image.data);
-    return tex;
-    
-  }
+		return tex;
+	}
   
 }

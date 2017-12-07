@@ -1,7 +1,7 @@
-package coldBoot.entities;
-import coldBoot.IReactToSonarSignals;
-import coldBoot.IGameState;
-import coldBoot.UpdateInfo;
+package coldboot.entities;
+import coldboot.IReactToSonarSignals;
+import coldboot.IGameState;
+import coldboot.UpdateInfo;
 import glm.Vec2;
 
 class Turret extends ScriptableEntity implements IReactToSonarSignals

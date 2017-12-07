@@ -1,4 +1,4 @@
-package coldBoot;
+package coldboot;
 import differ.shapes.Polygon;
 import differ.shapes.Shape;
 import glm.Vec2;

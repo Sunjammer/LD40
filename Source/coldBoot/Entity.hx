@@ -1,6 +1,6 @@
-package coldBoot;
-import coldBoot.RenderInfo;
-import coldBoot.UpdateInfo;
+package coldboot;
+import coldboot.RenderInfo;
+import coldboot.UpdateInfo;
 import glm.Vec2;
 
 class Entity
