@@ -96,7 +96,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
 
     rootEntity = new Entity();
 
-    terminal = new Terminal(g, 200);
+    terminal = new Terminal(g, 300);
 
     var enemySpawnPoint = new glm.Vec2(1,1);
     level = new Level(this, enemySpawnPoint);
@@ -133,7 +133,8 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
   }
 
   function onViewportChanged(w:Int, h:Int):Void {
-    terminal.x = w - 200;
+    terminal.x = w - 300;
+	terminal.updateUi();
   }
 
   public function render(info:RenderInfo):Void {

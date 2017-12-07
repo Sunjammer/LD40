@@ -25,7 +25,7 @@ class Terminal extends Sprite{
   var outputTextBfr:String;
   var state:TerminalState;
   var statusText:openfl.text.TextField;
-  static inline var COLOR:Int = 0xFF0000;
+  static inline var COLOR:Int = 0xFFFFFF;
   static inline var CARETCHAR:String = "//";
   var terminalWidth:Int;
   var game:Game;
@@ -132,6 +132,8 @@ class Terminal extends Sprite{
     graphics.drawRect(0, statusText.y, terminalWidth, 3);
     graphics.beginFill(COLOR);
     graphics.drawRect(0, 0, 2, game.viewportSize.height);
+    graphics.beginFill(COLOR);
+    graphics.drawRect(0, terminalWidth, 2, game.viewportSize.height);
     
   }
     

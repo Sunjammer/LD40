@@ -10,7 +10,7 @@ import openfl.Assets;
  * ...
  * @author Andreas Kennedy
  */
-class LevelEntityShader extends Shader
+class LevelShader extends Shader
 {
 	public var dataTextureUniform:GLUniformLocation;
 	public var screenNoiseUniform:GLUniformLocation;

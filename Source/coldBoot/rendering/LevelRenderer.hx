@@ -15,7 +15,7 @@ import lime.utils.Float32Array;
 class LevelRenderer
 {
 
-	static var shader:LevelEntityShader;
+	static var shader:LevelShader;
 
 	var buffer:GLBuffer;
 	var vertexAttrib:Int;
@@ -30,7 +30,7 @@ class LevelRenderer
 	public function new()
 	{
 		if (shader==null)
-			shader = new LevelEntityShader();
+			shader = new LevelShader();
 
 		vertexAttrib = shader.getAttribute("aVertex");
 		resolutionUniform = shader.getUniform("uResolution");

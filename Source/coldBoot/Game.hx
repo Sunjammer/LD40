@@ -55,8 +55,7 @@ class Game extends Sprite
 		sceneRenderer.setWindowSize({width:800, height:600});
 		sceneRenderer.setEffects(
 			[
-				new PostEffect(Assets.getText("assets/crt.frag"), "CRT", ["assets/screen_noise.jpg", "assets/dirt.jpg"]),
-				new PostEffect(Assets.getText("assets/scanline.frag"), "Scanline")
+				new PostEffect(Assets.getText("assets/crt.frag"), "CRT", ["assets/screen_noise.jpg", "assets/dirt.jpg"])
 			]
 		);
 		#end
@@ -75,18 +74,11 @@ class Game extends Sprite
 
 	public function resize(dims: {width:Int, height:Int})
 	{
-		
-		trace("Stage resize");
 		viewportSize.width = dims.width;
 		viewportSize.height = dims.height;
 		viewportSize.aspect = dims.width / dims.height;
-		
-		#if ogl
 		sceneRenderer.setWindowSize(viewportSize);
-		#end
-
 		viewportChanged.dispatch(viewportSize.width, viewportSize.height);
-		trace("Stage resized");
 	}
 
 	public function getCurrentState():IGameState

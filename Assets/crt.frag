@@ -11,7 +11,7 @@ uniform sampler2D uImage1;
 uniform sampler2D uImage2;
 uniform float uTime;
 
-const float BARREL_DISTORTION = 0.2;
+const float BARREL_DISTORTION = 0.1;
 const float rescale = 1.0 - (0.25 * BARREL_DISTORTION);
 
 vec3 shape(vec3 v, vec3 drive){
@@ -25,47 +25,28 @@ float shape(float v, float drive){
 }
 
 void main() {
+	//Barrel distortion
     vec2 uv = vTexCoord - .5;
     float rsq = dot(uv,uv);
     uv += (uv * (BARREL_DISTORTION * rsq));
     uv *= rescale;
+	//End barrel nonsense
 
     if (abs(uv.x) > 0.5 || abs(uv.y) > 0.5) {
         //gl_FragColor = vec4(0,0,0,1);
         discard;
     }
-    vec2 stepSize = 1.0 / uResolution;
-    vec4 color = texture2D(uImage0, uv);
-    float intensity = 1.0;
-    uv += .5;
-    if(color.rgb != vec3(1.0, 0.0, 0.0)){
-        float x = stepSize.x;
-        float y = stepSize.y;
-        vec4 horizEdge = vec4( 0.0 );
-        horizEdge -= texture2D( uImage0, vec2( uv.x - x, uv.y - y ) ) * 1.0;
-        horizEdge -= texture2D( uImage0, vec2( uv.x - x, uv.y     ) ) * 2.0;
-        horizEdge -= texture2D( uImage0, vec2( uv.x - x, uv.y + y ) ) * 1.0;
-        horizEdge += texture2D( uImage0, vec2( uv.x + x, uv.y - y ) ) * 1.0;
-        horizEdge += texture2D( uImage0, vec2( uv.x + x, uv.y     ) ) * 2.0;
-        horizEdge += texture2D( uImage0, vec2( uv.x + x, uv.y + y ) ) * 1.0;
-        vec4 vertEdge = vec4( 0.0 );
-        
-        vertEdge -= texture2D( uImage0, vec2( uv.x - x, uv.y - y ) ) * 1.0;
-        vertEdge -= texture2D( uImage0, vec2( uv.x    , uv.y - y ) ) * 2.0;
-        vertEdge -= texture2D( uImage0, vec2( uv.x + x, uv.y - y ) ) * 1.0;
-        vertEdge += texture2D( uImage0, vec2( uv.x - x, uv.y + y ) ) * 1.0;
-        vertEdge += texture2D( uImage0, vec2( uv.x    , uv.y + y ) ) * 2.0;
-        vertEdge += texture2D( uImage0, vec2( uv.x + x, uv.y + y ) ) * 1.0;
-        vec3 edge = smoothstep(vec3(0.), vec3(1), sqrt((horizEdge.rgb * horizEdge.rgb) + (vertEdge.rgb * vertEdge.rgb)));
-        edge += texture2D(uImage0,uv).rgb*.5;
-        intensity = 0.2126 * edge.r + 0.7152 * edge.g + 0.0722 * edge.b;
-    }
+	
+    vec4 color = texture2D(uImage0, uv+0.5);
+
+	float intensity = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
 
     float strength = 30.0;
     float foo = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (uTime * 10.0);
     vec4 grain = vec4(mod((mod(foo, 13.0) + 1.0) * (mod(foo, 123.0) + 1.0), 0.01)-0.005) * strength;
     grain = 1.0 - grain;
-    color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * intensity * vec4(0.31,.83,1,1) + texture2D(uImage2, uv) * 0.2;
-
-    gl_FragColor = vec4(color.rgb, 1.0);
+	
+	color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * intensity + texture2D(uImage2, uv) * 0.2;
+    
+	gl_FragColor = vec4(color.rgb, 1.0);
 }
