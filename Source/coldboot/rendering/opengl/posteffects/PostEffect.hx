@@ -55,6 +55,7 @@ class PostEffect {
 				GL.deleteTexture(i.texture);
 			i.texture = TextureUtils.createTextureFromBitmap(i.path, true);
 			i.uniform = shader.getUniform("uImage" + idx);
+			idx++;
 		}
 	}
 

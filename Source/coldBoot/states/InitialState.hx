@@ -55,7 +55,7 @@ class InitialState extends Sprite implements IGameState
 	{
 		if (info.game.audio.pollStatus() == Ready) 
 		{
-			//return info.game.setState(new GamePlayState());
+			return info.game.setState(new GamePlayState());
 		}
 		return this;
 	}
