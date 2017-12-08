@@ -5,6 +5,7 @@ import lime.graphics.opengl.*;
 import openfl.Assets;
 import coldboot.rendering.opengl.TextureUtils;
 
+
 typedef TextureInput = {uniform:GLUniformLocation, texture:GLTexture, path:String}
 
 class PostEffect {
@@ -37,7 +38,7 @@ class PostEffect {
 		imageUniform = shader.getUniform("uImage0");
 
 		if (textures == null) textures = [];
-		textureInputs = [for (t in textures) {texture:null, uniform:null, path:t } ];
+		textureInputs = [for (t in textures) {texture:0, uniform:0, path:t } ];
 	}
 
 	public function setRenderTarget(?effect:PostEffect) {

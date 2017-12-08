@@ -1,5 +1,6 @@
 package coldboot;
 import coldboot.IGameState;
+import coldboot.rendering.opengl.Cube;
 import coldboot.rendering.opengl.posteffects.*;
 import coldboot.states.GamePlayState;
 import coldboot.states.InitialState;
@@ -49,16 +50,13 @@ class Game extends Sprite
 		addChild(stateSpriteContainer);
 		addChild(debugContainer);
 		
-		#if ogl
-		
 		addChild(sceneRenderer = new PostProcessing());
 		sceneRenderer.setWindowSize({width:800, height:600});
 		sceneRenderer.setEffects(
 			[
-				new PostEffect(Assets.getText("assets/crt.frag"), "CRT", ["assets/screen_noise.jpg", "assets/dirt.jpg"])
+				//new PostEffect(Assets.getText("assets/crt.frag"), "CRT", ["assets/screen_noise.jpg", "assets/dirt.jpg"])
 			]
 		);
-		#end
 		
 		trace("Starting");
 		
