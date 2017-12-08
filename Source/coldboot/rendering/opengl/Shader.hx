@@ -8,6 +8,7 @@ enum ShaderSource{
 	Other(source:String, type:Int);
 }
 
+ @:build(coldboot.rendering.opengl.GLDebug.build())
 class Shader {
 	
 	public var name:String;
@@ -25,6 +26,8 @@ class Shader {
 		return linked;
 	}
 
+
+	@gldebug
 	public function build()
 	{
 		linked = false;
@@ -32,16 +35,14 @@ class Shader {
 		program = GL.createProgram();
 		for (source in sources)
 		{
-			var shader:GLShader;
-			switch(source){
+			var shader:GLShader = switch(source){
 				case Fragment(src):
-					shader = compile(src, GL.FRAGMENT_SHADER);
+					compile(src, GL.FRAGMENT_SHADER);
 				case Vertex(src):
-					shader = compile(src, GL.VERTEX_SHADER);
+					compile(src, GL.VERTEX_SHADER);
 				case Other(src, type):
-					shader = compile(src, type);
+					compile(src, type);
 			}
-			if (shader == null) return;
 			GL.attachShader(program, shader);
 			GL.deleteShader(shader);
 		}

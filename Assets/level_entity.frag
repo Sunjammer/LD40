@@ -6,6 +6,7 @@
 
 varying float vTileInfo;
 varying vec2 vUv;
+varying vec3 vNormal;
 varying float vBrightness;
 uniform vec4 uResolution;
 uniform float uTime;
@@ -24,7 +25,7 @@ float shape(float v, float drive){
 }
 
 void main(void){
-    gl_FragColor = vec4(vec3(vBrightness), 1.0);
+    gl_FragColor = vec4(vBrightness,vBrightness,vBrightness,1);
 
 
 }

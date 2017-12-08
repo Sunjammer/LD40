@@ -134,7 +134,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
 
   function onViewportChanged(w:Int, h:Int):Void {
     terminal.x = w - 300;
-	terminal.updateUi();
+	  terminal.updateUi();
   }
 
   public function render(info:RenderInfo):Void {

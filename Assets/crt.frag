@@ -46,7 +46,7 @@ void main() {
     vec4 grain = vec4(mod((mod(foo, 13.0) + 1.0) * (mod(foo, 123.0) + 1.0), 0.01)-0.005) * strength;
     grain = 1.0 - grain;
 	
-	color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * intensity + texture2D(uImage2, uv) * 0.2;
+	color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * intensity + texture2D(uImage2, uv+0.5) * 0.2;
     
 	gl_FragColor = vec4(color.rgb, 1.0);
 }

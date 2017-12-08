@@ -41,8 +41,8 @@ class Main extends Sprite
 		addChild(game);
 		prevTime = Timer.stamp();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
-    stage.application.onExit.add(function(code) { game.onExit(); } );
-  }
+		stage.application.onExit.add(function(code) { game.onExit(); } );
+	}
 
 	function onStageResize(e:Event):Void
 	{

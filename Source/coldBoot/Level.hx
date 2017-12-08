@@ -36,10 +36,8 @@ class Level extends Entity
 		
 		var tileMap = mapGenerator.getMap();
 		
-		#if ogl
 		renderer = new LevelRenderer();
 		renderer.init(this, tileMap);
-		#end
 		
 		for (y in 0...height)
 		{
@@ -62,27 +60,6 @@ class Level extends Entity
 	override public function render(info:RenderInfo) 
 	{
 		super.render(info);
-		#if ogl
 		renderer.render(info);
-		#end
-		
-		/*for (x in 0...width)
-		{
-			for (y in 0...height)
-			{
-				var tile = tiles[x + (y * width)];
-				if (tile == Wall)
-				{
-					Main.debugDraw.graphics.beginFill(0x000000);
-					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-
-				}
-				else 
-				{
-					Main.debugDraw.graphics.beginFill(0xffffff);
-					Main.debugDraw.graphics.drawRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-				}
-			}
-		}*/
 	}
 }

@@ -12,6 +12,7 @@ import openfl.display.Shape;
 import openfl.display.Sprite;
 import tween.Delta;
 
+ @:build(coldboot.rendering.opengl.GLDebug.build())
 class Game extends Sprite
 {
 	var currentState: IGameState;
@@ -20,14 +21,12 @@ class Game extends Sprite
 	var glView:OpenGLView;
 	var backgroundShape:Shape;
 
-	#if ogl
 	var sceneRenderer:PostProcessing;
-	#end
 
 	public var viewportSize: {width:Int, height:Int, aspect:Float};
 	public var viewportChanged:Signal2<Int,Int>;
+  	public var audio:Audio;
 	var globalTime:Float;
-  public var audio:Audio;
 
 	public function new(config: {width:Int, height:Int})
 	{
@@ -37,9 +36,9 @@ class Game extends Sprite
 		viewportChanged = new Signal2<Int,Int>();
 		viewportSize = {width:800, height:600, aspect:1};
     
-    trace("Initializing audio");
-    audio = Audio.getInstance();
-    audio.init();
+		trace("Initializing audio");
+		audio = Audio.getInstance();
+		audio.init();
 		
 		trace("Initializing rendering");
 		
@@ -54,7 +53,7 @@ class Game extends Sprite
 		sceneRenderer.setWindowSize({width:800, height:600});
 		sceneRenderer.setEffects(
 			[
-				//new PostEffect(Assets.getText("assets/crt.frag"), "CRT", ["assets/screen_noise.jpg", "assets/dirt.jpg"])
+				new PostEffect(Assets.getText("assets/crt.frag"), "CRT", ["assets/screen_noise.jpg", "assets/dirt.jpg"])
 			]
 		);
 		
@@ -97,6 +96,8 @@ class Game extends Sprite
 	override function __renderGL(renderSession):Void
 	{
 		GL.viewport (Std.int (0), Std.int (0), Std.int (viewportSize.width), Std.int (viewportSize.height));
+		GL.clearColor(0,0,0,1);
+		GL.clear(GL.COLOR_BUFFER_BIT|GL.DEPTH_BUFFER_BIT);
 		sceneRenderer.beginFrame(globalTime);
 		currentState.render({game:this, time:globalTime});
 		super.__renderGL(renderSession);

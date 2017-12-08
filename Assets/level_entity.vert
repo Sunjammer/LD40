@@ -1,4 +1,4 @@
-#version 420
+#version 120
 
 #ifdef GL_ES
     precision mediump float;
@@ -7,8 +7,8 @@
 
 attribute vec4 aPosition;
 attribute vec4 aNormal;
+attribute vec4 aOffset;
 
-varying float vTileInfo;
 varying vec2 vUv;
 varying float vBrightness;
 varying float vZoffset;
@@ -28,14 +28,15 @@ float shape(float v, float drive){
 }
 
 void main(void){
-    vTileInfo = aPosition.w;
 	vBrightness = 1.0;
+	vNormal = aNormal.xyz;
 	
-	mat4 normalMatrix = transpose(inverse(uModelView));
-	vec3 transformedNormal = normalize(normalMatrix * normalize(aNormal)).xyz;
-	vBrightness = max(dot(transformedNormal, normalize(vec3(0,1,0))), 0.1);
+	vec3 transformedNormal = normalize(uNormal * aNormal.xyz);
+	vBrightness = max(dot(transformedNormal, normalize(vec3(0,0.5,1))), 0.1);
 	
-    gl_Position = uMvp * vec4(aPosition.xyz, 1.0);
+	vec3 pos = aPosition.xyz + aOffset.xyz;
+
+    gl_Position = uMvp * vec4(pos, 1.0);
 
 
 

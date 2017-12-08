@@ -10,6 +10,7 @@ import openfl.Assets;
  * ...
  * @author Andreas Kennedy
  */
+ @:build(coldboot.rendering.opengl.GLDebug.build())
 class LevelShader extends Shader
 {
 	public var dataTextureUniform:GLUniformLocation;
@@ -23,20 +24,10 @@ class LevelShader extends Shader
 			Vertex(Assets.getText("assets/level_entity.vert")),
 			Fragment(Assets.getText("assets/level_entity.frag"))
 		]);
-
-		dataTextureUniform = getUniform("uDataTexture");
-		dataTexture = TextureUtils.createTextureFromBitmap("assets/testpattern.jpg", true);
-		screenNoiseUniform = getUniform("uNoiseTexture");
-		screenNoiseTex = TextureUtils.createTextureFromBitmap("assets/perlin_noise.png", true);
 	}
+
 	override public function bind()
 	{
 		super.bind();
-		GL.activeTexture(GL.TEXTURE0);
-		GL.bindTexture(GL.TEXTURE_2D, screenNoiseTex);
-		GL.uniform1i(screenNoiseUniform, 0);
-		GL.activeTexture(GL.TEXTURE1);
-		GL.bindTexture(GL.TEXTURE_2D, dataTexture);
-		GL.uniform1i(dataTextureUniform, 1);
 	}
 }
