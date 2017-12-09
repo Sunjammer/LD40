@@ -53,7 +53,12 @@ class Game extends Sprite
 		sceneRenderer.setWindowSize({width:800, height:600});
 		sceneRenderer.setEffects(
 			[
-				new PostEffect(Assets.getText("assets/crt.frag"), "CRT", ["assets/screen_noise.jpg", "assets/dirt.jpg"])
+				new PostEffect(Assets.getText("assets/crt.frag"), "CRT", 
+					[
+						"assets/screen_noise.jpg", 
+						"assets/dirt.jpg", 
+						"assets/distpattern.jpg"
+					])
 			]
 		);
 		
@@ -95,7 +100,7 @@ class Game extends Sprite
 	#if (!display && ogl)
 	override function __renderGL(renderSession):Void
 	{
-		GL.viewport (Std.int (0), Std.int (0), Std.int (viewportSize.width), Std.int (viewportSize.height));
+		GL.viewport (0, 0, viewportSize.width, viewportSize.height);
 		GL.clearColor(0,0,0,1);
 		GL.clear(GL.COLOR_BUFFER_BIT|GL.DEPTH_BUFFER_BIT);
 		sceneRenderer.beginFrame(globalTime);

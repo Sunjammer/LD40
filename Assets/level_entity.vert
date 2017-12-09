@@ -28,12 +28,11 @@ float shape(float v, float drive){
 }
 
 void main(void){
-	vBrightness = 1.0;
 	vNormal = aNormal.xyz;
-	
-	vec3 transformedNormal = normalize(uNormal * aNormal.xyz);
-	vBrightness = max(dot(transformedNormal, normalize(vec3(0,0.5,1))), 0.1);
-	
+
+	vec3 transformedNormal = normalize(uNormal * vNormal);
+	vBrightness = max(dot(transformedNormal, normalize(vec3(0.5,0.5,0.5))), 0.1);
+
 	vec3 pos = aPosition.xyz + aOffset.xyz;
 
     gl_Position = uMvp * vec4(pos, 1.0);

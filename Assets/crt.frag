@@ -7,12 +7,19 @@
 varying vec2 vTexCoord;
 uniform vec2 uResolution;
 uniform sampler2D uImage0;
-uniform sampler2D uImage1;
+uniform sampler2D uImage1;  
 uniform sampler2D uImage2;
+uniform sampler2D uImage3;
+uniform sampler2D uImage4;
 uniform float uTime;
 
 const float BARREL_DISTORTION = 0.1;
 const float rescale = 1.0 - (0.25 * BARREL_DISTORTION);
+
+vec4 shape(vec4 v, vec4 drive){
+	vec4 k = 2.0 * drive / (1.0 - drive);
+	return (1.0 + k) * v / (1.0 + k * abs(v));
+}
 
 vec3 shape(vec3 v, vec3 drive){
 	vec3 k = 2.0 * drive / (1.0 - drive);
@@ -22,6 +29,31 @@ vec3 shape(vec3 v, vec3 drive){
 float shape(float v, float drive){
 	float k = 2.0 * drive / (1.0 - drive);
 	return (1.0 + k) * v / (1.0 + k * abs(v));
+}
+
+vec4 chroma(sampler2D src, float offset, float amount, vec2 texelSize, vec2 uv, vec2 power){
+    float y = uv.y;
+    float x = uv.x;
+    float value = 0.0;
+   
+    float mid = 1.0 - offset;
+    if(uv.y>=mid)
+    	value = 1.0 - log(cos((y - mid + 0.5 - 1.0) * 3.14) * x * power.x); //top
+    else if(uv.y<mid)
+    	value = 1.0 - log(cos((y - mid + 0.5) * 3.14) * x * power.y); //bot
+        
+    float intensity = max(0.0, value) * amount;
+    vec2 dispUv = vec2(intensity*0.005, 0.0);
+
+    float rValue = texture2D(src, uv + dispUv + texelSize * vec2(intensity, 0)).r;
+    float gValue = texture2D(src, uv + dispUv + texelSize * vec2(-intensity, intensity)).g;
+    float bValue = texture2D(src, uv + dispUv + texelSize * vec2(0,   -intensity)).b; 
+   
+    return vec4(rValue, gValue, bValue, 1.0);
+}
+
+float unipolarSin(float t){
+    return (sin(t)+1.0)*0.5;
 }
 
 void main() {
@@ -37,16 +69,18 @@ void main() {
         discard;
     }
 	
-    vec4 color = texture2D(uImage0, uv+0.5);
+    //vec4 color = texture2D(uImage0, uv+0.5);
+    vec4 color = chroma(uImage0, 0.0, unipolarSin(uTime) * 0.5 * cos(uv.x*1.57), 1.0/uResolution.xy, uv+0.5, vec2(80.0, 200.0));
 
-	float intensity = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+	//float intensity = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
 
     float strength = 30.0;
     float foo = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (uTime * 10.0);
     vec4 grain = vec4(mod((mod(foo, 13.0) + 1.0) * (mod(foo, 123.0) + 1.0), 0.01)-0.005) * strength;
     grain = 1.0 - grain;
-	
-	color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * intensity + texture2D(uImage2, uv+0.5) * 0.2;
+
+	color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * color; //noise * color
+    color = color + texture2D(uImage2, uv+0.5) * 0.2; //dirt
     
 	gl_FragColor = vec4(color.rgb, 1.0);
 }

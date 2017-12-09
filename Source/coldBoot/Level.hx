@@ -43,7 +43,6 @@ class Level extends Entity
 		{
 			for (x in 0...width)
 			{
-			
 				var tile = tileMap[x + (y * width)];
 				if (tile == 0)
 				{

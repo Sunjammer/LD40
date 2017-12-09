@@ -93,15 +93,18 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
 
   public function enter(g:Game, ?args:Dynamic):Void {
     g.audio.exec(AudioCommand.PlaySound(SampleId.SAMPLE_ID_SONAR_ECHO, 0, 0));
+    
+    g.stateSpriteContainer.addChild(this);
+    g.viewportChanged.add(onViewportChanged);
 
     rootEntity = new Entity();
 
-    terminal = new Terminal(g, 300);
+    terminal = new Terminal(g);
 
     var enemySpawnPoint = new glm.Vec2(1,1);
     level = new Level(this, enemySpawnPoint);
 
-    var pulseMap = new PulseMap(level);
+    /*var pulseMap = new PulseMap(level);
     pulseMap.addTag("pulseMap");
 
     waveState = new WaveState(pulseMap, this, level, enemySpawnPoint, 40);
@@ -112,16 +115,15 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
     var turret = new Turret();
     turret.position = new Vec2(200, 200);
 
-    rootEntity.add(level);
     rootEntity.add(pulseMap);
     rootEntity.add(base);
     rootEntity.add(turret);
+*/
+    rootEntity.add(level);
 
     addChild(terminal);
 
-    waveState.enter(g);
-    g.stateSpriteContainer.addChild(this);
-    g.viewportChanged.add(onViewportChanged);
+    //waveState.enter(g);
 
     stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
   }
@@ -133,8 +135,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
   }
 
   function onViewportChanged(w:Int, h:Int):Void {
-    terminal.x = w - 300;
-	  terminal.updateUi();
+	  terminal.updateUi(w,h,20);
   }
 
   public function render(info:RenderInfo):Void {

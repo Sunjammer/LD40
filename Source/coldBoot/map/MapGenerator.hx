@@ -13,7 +13,7 @@ enum Direction {
 }
 
 class DirectionExtensions {
-public static function toVec2(direction: Direction):Vec2 {
+    public static function toVec2(direction: Direction):Vec2 {
         switch (direction) {
             case Direction.North: return new Vec2(0, -1);
             case Direction.East: return new Vec2(1, 0);

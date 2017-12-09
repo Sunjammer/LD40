@@ -70,9 +70,9 @@ class LevelRenderer {
 		Cube.build();
 		
 		var primCount = 0;
-		inline function emitCube(x, y, z, a) {
-
+		inline function emitCube(x:Float, y:Float, z:Float, a:Float) {
 			var i = 0;
+			var k = offsets.length;
 			var j = vertices.length;
 			while (i < Cube.verts.length){
 				//use half-cubes to fit grid unit
@@ -84,28 +84,28 @@ class LevelRenderer {
 				vertices[j + 4] = Cube.vertexNormals[i];
 				vertices[j + 5] = Cube.vertexNormals[i + 1];
 				vertices[j + 6] = Cube.vertexNormals[i + 2];
-				vertices[j + 7] = a;
+				vertices[j + 7] = 0.0;
+
+				offsets[k++] = x;
+				offsets[k++] = y; 
+				offsets[k++] = z - a;
+				offsets[k++] = a;
 
 				i += 4;
 				j += 8;
 			}
 
-			var k = offsets.length;
-			offsets[k++] = x;
-			offsets[k++] = y; 
-			offsets[k++] = z;
-			offsets[k++] = a;
-
-			i = indices.length;
-			var offset = Std.int(i / Cube.indices.length);
+			i = 0;				
+			j = indices.length;
 			while (i < Cube.indices.length){
-				indices[offset + i] = Cube.indices[i] + offset;
+				indices[j + i] = Cube.indices[i] + primCount * 24;
 				i++;
 			}
+			primCount++;
 		}
 
-		inline function addCubeAt(x:Int, y:Int, type:TileType) {
-			emitCube(x, y, 0, switch (type) {
+		inline function addCubeAt(x:Float, y:Float, z:Float, type:TileType) {
+			emitCube(x, y, z, switch (type) {
 			case Air:
 				0.0;
 			case Wall:
@@ -113,24 +113,19 @@ class LevelRenderer {
 			});
 		}
 
-		/*for (y in 0...level.height) {
+		for (y in 0...level.height) {
 			for (x in 0...level.width) {
 				var coord = x + (y * level.width);
 				var tile = map[coord];
+				var hw = level.height>>1;
+				var hh = level.height>>1;
 				if (tile == 0) {
-					addCubeAt(x, y, Air);
+					addCubeAt(x-hw, y-hh, 0, Air);
 				} else {
-					addCubeAt(x, y, Wall);
+					addCubeAt(x-hw, y-hh, 0, Wall);
 				}
 			}
-		}*/
-
-		addCubeAt(0,0,Air);
-		addCubeAt(1,1,Wall);
-		addCubeAt(2,2,Air);
-		addCubeAt(3,3,Wall);
-
-		trace(offsets);
+		}
 		
 		indexVbo = GL.createBuffer();
 		GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, indexVbo);
@@ -150,6 +145,9 @@ class LevelRenderer {
 
 	@gldebug
 	public function render(info:RenderInfo) {
+		var w = info.game.viewportSize.width-220;
+		var h = info.game.viewportSize.height;
+		GL.viewport (0, 0, w,h);
 		GL.enable(GL.DEPTH_TEST);
 		GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
 		GL.depthFunc(GL.LEQUAL);
@@ -164,6 +162,7 @@ class LevelRenderer {
 		GL.enableVertexAttribArray(positionAttrib);
 		GL.vertexAttribPointer(normalAttrib, 4, GL.FLOAT, true, 32, 16);
 		GL.enableVertexAttribArray(normalAttrib);
+
 		GL.bindBuffer(GL.ARRAY_BUFFER, offsetVbo);
 		GL.vertexAttribPointer(offsetAttrib, 4, GL.FLOAT, false, 0, 0);
 		GL.enableVertexAttribArray(offsetAttrib);
@@ -174,19 +173,28 @@ class LevelRenderer {
 			return deg * 3.14 / 180;
 		}
 		
+		var vfov = degRad(45);
+
 		var model = new Mat4();
 		Mat4.identity(model);
 		var t = info.time * 0.05;
-		model *= GLM.rotate(Quat.fromEuler(degRad( -45), t*15, t*-16, new Quat()), new Mat4());
-		//model *= GLM.translate(new Vec3(( -level.width >> 1), ( -level.height >> 1), 0), new Mat4());
+		model *= GLM.rotate(Quat.fromEuler(degRad(-30)+Math.sin(t)*0.2, 0, t, new Quat()), new Mat4());
 
+		var hw = level.width>>1;
+		var hh = level.height>>1;
+		var r = Math.sqrt(hw*hw+hh*hh);
+		var z = 50;
+		var r_max = z * Math.sin(vfov / 2);
+		var scale = r_max/r;
+
+		model *= GLM.scale(new Vec3(scale,scale,scale), new Mat4());
 		
 		var view = new Mat4();
 		Mat4.identity(view);
-		GLM.translate(new Vec3(0, 0, -5), view);
+		GLM.translate(new Vec3(0, 0, -z), view);
 		
 		var projection = new Mat4();
-		GLM.perspective(degRad(90), info.game.viewportSize.aspect, 0.1, 300, projection);
+		GLM.perspective(vfov, w/h, 4, 100, projection);
 		
 		var mv:Mat4 = view * model;
 		var mvp = projection * mv;
@@ -202,7 +210,7 @@ class LevelRenderer {
 
 		GL.uniform1f(timeUniform, info.time);
 		GL.uniform4f(resolutionUniform,
-					 info.game.viewportSize.width, info.game.viewportSize.height,
+					 w, h,
 					 level.width, level.height
 					);
 
@@ -220,6 +228,8 @@ class LevelRenderer {
 		GL.disable(GL.CULL_FACE);
 
 		shader.release();
+
+		GL.viewport (0, 0, info.game.viewportSize.width, info.game.viewportSize.height);
 	}
 
 }

@@ -19,7 +19,7 @@
 	<haxelib name="fsignal"/>
 	
 	<haxelib name="AudioJank"/> 
-	<haxedef name="audio" if="cpp" />
+	<haxedef name="audio" if="cpp windows" />
 	
 	<haxedef name="ogl" unless="flash" />
   

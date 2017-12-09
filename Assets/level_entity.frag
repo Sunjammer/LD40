@@ -10,9 +10,7 @@ varying vec3 vNormal;
 varying float vBrightness;
 uniform vec4 uResolution;
 uniform float uTime;
-
-varying vec3 N;
-varying vec3 v;
+uniform mat3 uNormal;
 
 vec3 shape(vec3 v, vec3 drive){
 	vec3 k = 2.0 * drive / (1.0 - drive);
@@ -25,6 +23,7 @@ float shape(float v, float drive){
 }
 
 void main(void){
+	
     gl_FragColor = vec4(vBrightness,vBrightness,vBrightness,1);
 
 

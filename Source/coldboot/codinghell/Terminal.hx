@@ -30,10 +30,12 @@ class Terminal extends Sprite{
   var terminalWidth:Int;
   var game:Game;
 
-  public function new(game:Game, terminalWidth:Int) {
+  var dims:{width:Float, height:Float, margin:Float};
+
+  public function new(game:Game) {
     super();
     this.game = game;
-    this.terminalWidth = terminalWidth;
+    this.terminalWidth = 200;
     
     state = Status;
     
@@ -58,7 +60,7 @@ class Terminal extends Sprite{
     
     addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
    
-    updateUi();
+    updateUi(game.viewportSize.width, game.viewportSize.height, 20);
   }
   
   public function setOutputText(string:String) {
@@ -97,11 +99,14 @@ class Terminal extends Sprite{
   
   function setState(state:TerminalState){
     this.state = state;
-    updateUi();
+    updateUi(dims.width, dims.height, dims.margin);
   }
   
-  public function updateUi() {
-    x = game.viewportSize.width - terminalWidth;
+  public function updateUi(inWidth:Float, inHeight:Float, margin:Float) {
+    dims = {width:inWidth, height:inHeight, margin:margin};
+    var dh = dims.height - dims.margin * 2;
+    this.x = dims.width - terminalWidth - dims.margin;
+    this.y = dims.margin;
     
     statusText.text = ("mode:" + state).toUpperCase();
     input.width = output.width = statusText.width = terminalWidth;
@@ -112,28 +117,28 @@ class Terminal extends Sprite{
     switch(state){
       case Edit:
         input.y = statusText.height;
-        input.height = game.viewportSize.height - input.y;
+        input.height = dh - input.y;
       case Status:
         addChild(output);
         input.height = 20;
         output.y = statusText.height;
-        output.height = game.viewportSize.height - input.height - statusText.height;
-        input.y = game.viewportSize.height - input.height;
+        output.height = dh - input.height - statusText.height;
+        input.y = dh - input.height;
     }
     
     
     graphics.clear();
     graphics.beginFill(0);
-    graphics.drawRect(0, 0, terminalWidth, game.viewportSize.height);
+    graphics.drawRect(0, 0, terminalWidth, dh);
     
     graphics.beginFill(COLOR);
     graphics.drawRect(0, input.y, terminalWidth, 3);
     graphics.beginFill(COLOR);
     graphics.drawRect(0, statusText.y, terminalWidth, 3);
     graphics.beginFill(COLOR);
-    graphics.drawRect(0, 0, 2, game.viewportSize.height);
+    graphics.drawRect(0, 0,3, dh);
     graphics.beginFill(COLOR);
-    graphics.drawRect(0, terminalWidth, 2, game.viewportSize.height);
+    graphics.drawRect(0, terminalWidth, 2, dh);
     
   }
     
