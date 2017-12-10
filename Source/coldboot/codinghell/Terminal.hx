@@ -35,7 +35,7 @@ class Terminal extends Sprite{
   public function new(game:Game) {
     super();
     this.game = game;
-    this.terminalWidth = 200;
+    this.terminalWidth = 250;
     
     state = Status;
     
@@ -131,14 +131,17 @@ class Terminal extends Sprite{
     graphics.beginFill(0);
     graphics.drawRect(0, 0, terminalWidth, dh);
     
+    var linew = 3;
     graphics.beginFill(COLOR);
-    graphics.drawRect(0, input.y, terminalWidth, 3);
+    graphics.drawRect(0, input.y, terminalWidth, linew);
     graphics.beginFill(COLOR);
-    graphics.drawRect(0, statusText.y, terminalWidth, 3);
+    graphics.drawRect(0, statusText.y, terminalWidth, linew);
     graphics.beginFill(COLOR);
-    graphics.drawRect(0, 0,3, dh);
+    graphics.drawRect(0, 0, linew, dh);
     graphics.beginFill(COLOR);
-    graphics.drawRect(0, terminalWidth, 2, dh);
+    graphics.drawRect(0, dh, terminalWidth, linew);
+    graphics.beginFill(COLOR);
+    graphics.drawRect(terminalWidth, 0, linew, dh+linew);
     
   }
     
