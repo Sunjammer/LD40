@@ -13,21 +13,26 @@ import openfl.Assets;
  @:build(coldboot.rendering.opengl.GLDebug.build())
 class LevelShader extends Shader
 {
-	public var dataTextureUniform:GLUniformLocation;
-	public var screenNoiseUniform:GLUniformLocation;
-	public var dataTexture:GLTexture;
-	public var screenNoiseTex:GLTexture;
+	var textureUniform:GLUniformLocation;
+	var texture:GLTexture;
 
-	public function new()
+	public function new(levelColorTexturePath:String)
 	{
 		super([
 			Vertex(Assets.getText("assets/level_entity.vert")),
 			Fragment(Assets.getText("assets/level_entity.frag"))
-		]);
+		], "Level");
+
+		textureUniform = getUniform("uColorTex");
+		texture = TextureUtils.createTextureFromBitmap(levelColorTexturePath, true);
+
 	}
 
-	override public function bind()
-	{
+	override public function bind(){
 		super.bind();
+
+		GL.uniform1i(textureUniform, 0);
+		GL.activeTexture(GL.TEXTURE0);
+		GL.bindTexture(GL.TEXTURE_2D, texture);
 	}
 }

@@ -10,8 +10,10 @@ attribute vec4 aNormal;
 attribute vec4 aOffset;
 
 varying vec2 vUv;
+varying vec2 vQuantizedUv;
 varying float vBrightness;
 varying float vZoffset;
+varying vec4 vOffset;
 
 varying vec3 vNormal;
 
@@ -29,11 +31,22 @@ float shape(float v, float drive){
 
 void main(void){
 	vNormal = aNormal.xyz;
+	vOffset = aOffset;
 
 	vec3 transformedNormal = normalize(uNormal * vNormal);
-	vBrightness = max(dot(transformedNormal, normalize(vec3(0.5,0.5,0.5))), 0.1);
 
 	vec3 pos = aPosition.xyz + aOffset.xyz;
+	pos.z += aOffset.w;
+	vQuantizedUv = aOffset.xy / uResolution.zw;
+	vUv = pos.xy / uResolution.zw;
+
+	vec2 pulsePos = vec2(0.5);
+	float t = length(vQuantizedUv - pulsePos)*3.14;
+	vZoffset = pow(cos(-1.0 * uTime+t) * 0.5 + 0.5, 200);
+	pos.z = pos.z - vZoffset;
+
+	float t2 = length(vUv - pulsePos)*3.14;
+	vBrightness = max(dot(transformedNormal, normalize(vec3(0.5,0.5,0.5))), 0.1);
 
     gl_Position = uMvp * vec4(pos, 1.0);
 

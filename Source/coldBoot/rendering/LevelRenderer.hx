@@ -45,7 +45,7 @@ class LevelRenderer {
 
 	public function new() {
 		if (shader==null)
-			shader = new LevelShader();
+			shader = new LevelShader("assets/distpattern.jpg");
 
 		positionAttrib = shader.getAttribute("aPosition");
 		normalAttrib = shader.getAttribute("aNormal");
@@ -74,6 +74,7 @@ class LevelRenderer {
 			var i = 0;
 			var k = offsets.length;
 			var j = vertices.length;
+			var rnd = Math.random() * 0.5;
 			while (i < Cube.verts.length){
 				//use half-cubes to fit grid unit
 				vertices[j] = Cube.verts[i] * 0.5;
@@ -88,7 +89,7 @@ class LevelRenderer {
 
 				offsets[k++] = x;
 				offsets[k++] = y; 
-				offsets[k++] = z - a;
+				offsets[k++] = z + rnd;
 				offsets[k++] = a;
 
 				i += 4;
@@ -117,12 +118,10 @@ class LevelRenderer {
 			for (x in 0...level.width) {
 				var coord = x + (y * level.width);
 				var tile = map[coord];
-				var hw = level.height>>1;
-				var hh = level.height>>1;
 				if (tile == 0) {
-					addCubeAt(x-hw, y-hh, 0, Air);
+					addCubeAt(x, y, 0, Air);
 				} else {
-					addCubeAt(x-hw, y-hh, 0, Wall);
+					addCubeAt(x, y, 0, Wall);
 				}
 			}
 		}
@@ -147,10 +146,10 @@ class LevelRenderer {
 	public function render(info:RenderInfo) {
 		var w = info.game.viewportSize.width-220;
 		var h = info.game.viewportSize.height;
-		GL.viewport (0, 0, w,h);
+		GL.viewport (0, 0, w, h);
 		GL.enable(GL.DEPTH_TEST);
 		GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
-		GL.depthFunc(GL.LEQUAL);
+		GL.depthFunc(GL.LESS);
 		
 		GL.enable(GL.CULL_FACE);
 		GL.cullFace(GL.BACK);
@@ -173,21 +172,22 @@ class LevelRenderer {
 			return deg * 3.14 / 180;
 		}
 		
-		var vfov = degRad(45);
+		var vfov = degRad(30);
 
 		var model = new Mat4();
 		Mat4.identity(model);
 		var t = info.time * 0.05;
-		model *= GLM.rotate(Quat.fromEuler(degRad(-30)+Math.sin(t)*0.2, 0, t, new Quat()), new Mat4());
 
-		var hw = level.width>>1;
-		var hh = level.height>>1;
+		var hw = level.width>>2;
+		var hh = level.height>>2;
 		var r = Math.sqrt(hw*hw+hh*hh);
 		var z = 50;
 		var r_max = z * Math.sin(vfov / 2);
 		var scale = r_max/r;
 
 		model *= GLM.scale(new Vec3(scale,scale,scale), new Mat4());
+		model *= GLM.rotate(Quat.fromEuler(degRad(-50)+Math.sin(t)*0.2, 0, t, new Quat()), new Mat4());
+		model *= GLM.translate(new Vec3(-level.width * 0.5, -level.height * 0.5), new Mat4());
 		
 		var view = new Mat4();
 		Mat4.identity(view);

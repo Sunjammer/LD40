@@ -47,13 +47,12 @@ class InitialState extends Sprite implements IGameState
 	
 	function doneInitializing() 
 	{
-		trace("Init");
 		initialized = true;
 	}
 
 	public function update(info:UpdateInfo): IGameState
 	{
-		if (info.game.audio.pollStatus() == Ready) 
+		if (info.game.audio.pollStatus() == Ready || initialized) 
 		{
 			return info.game.setState(new GamePlayState());
 		}

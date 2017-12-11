@@ -64,15 +64,11 @@ void main() {
     uv *= rescale;
 	//End barrel nonsense
 
-    if (abs(uv.x) > 0.5 || abs(uv.y) > 0.5) {
-        //gl_FragColor = vec4(0,0,0,1);
+    if (abs(uv.x) > 0.5 || abs(uv.y) > 0.5)
         discard;
-    }
 	
-    //vec4 color = texture2D(uImage0, uv+0.5);
-    vec4 color = chroma(uImage0, 0.0, unipolarSin(uTime) * 0.5 * cos(uv.x*1.57), 1.0/uResolution.xy, uv+0.5, vec2(80.0, 200.0));
-
-	//float intensity = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+    vec4 color = chroma(uImage0, 0.0, 2.0, 1.0/uResolution.xy, vTexCoord, vec2(400.0));
+    //vec4 color = chroma(uImage0, 0.0, unipolarSin(uTime) * 0.5 * cos(uv.x*1.57), 1.0/uResolution.xy, uv+0.5, vec2(200.0, 200.0));
 
     float strength = 30.0;
     float foo = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (uTime * 10.0);

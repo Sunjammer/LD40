@@ -14,8 +14,10 @@ import coldboot.entities.PulseMap;
 import coldboot.entities.Turret;
 import glm.Vec2;
 import openfl.display.DisplayObjectContainer;
+import openfl.display.Bitmap;
 import openfl.events.MouseEvent;
 import openfl.utils.Timer;
+import openfl.Assets;
 //import haxe.Timer;
 
 class WaveCompletedState implements IState {
@@ -120,6 +122,8 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
     rootEntity.add(turret);
 */
     rootEntity.add(level);
+
+    //addChild(new Bitmap(Assets.getBitmapData("assets/c1.jpg")));
 
     addChild(terminal);
 

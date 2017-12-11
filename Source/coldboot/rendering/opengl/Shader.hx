@@ -33,6 +33,7 @@ class Shader {
 		linked = false;
 		destroy();
 		program = GL.createProgram();
+		var error = false;
 		for (source in sources)
 		{
 			var shader:GLShader = switch(source){
@@ -43,8 +44,18 @@ class Shader {
 				case Other(src, type):
 					compile(src, type);
 			}
+			if(shader==null){
+				error = true;
+				break;
+			}
 			GL.attachShader(program, shader);
 			GL.deleteShader(shader);
+		}
+
+		if(error){
+			trace("Could not compile shaders for program "+name);
+			destroy();
+			return;
 		}
 
 		GL.linkProgram(program);
@@ -53,13 +64,13 @@ class Shader {
 		{
 			trace(GL.getProgramInfoLog(program));
 			trace("VALIDATE_STATUS: " + GL.getProgramParameter(program, GL.VALIDATE_STATUS));
-			trace("ERROR: " + GL.getError());
+			trace(this.name+" ERROR: " + GL.getError());
 			destroy();
 			return;
 		}
 
 		linked = true;
-		trace("Successfully linked shader "+name);
+		trace("Successfully linked program "+name);
 	}
 
 	private function compile(source:String, type:Int):GLShader
@@ -70,7 +81,7 @@ class Shader {
 
 		if (GL.getShaderParameter(shader, GL.COMPILE_STATUS) == 0)
 		{
-			trace(GL.getShaderInfoLog(shader));
+			trace(this.name+": "+GL.getShaderInfoLog(shader));
 			return null;
 		}
 
