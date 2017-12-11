@@ -1,11 +1,12 @@
 package coldboot.rendering.opengl;
 
 import lime.graphics.opengl.*;
+import openfl.Assets;
 
 enum ShaderSource{
-	Vertex(source:String);
-	Fragment(source:String);
-	Other(source:String, type:Int);
+	Vertex(sourcePath:String);
+	Fragment(sourcePath:String);
+	Other(sourcePath:String, type:Int);
 }
 
  @:build(coldboot.rendering.opengl.GLDebug.build())
@@ -16,9 +17,11 @@ class Shader {
 	var sources:Array<ShaderSource>;
 	var linked:Bool;
 	var isValid(get, never):Bool;
+	static var allShaders:Array<Shader> = [];
 	public function new(sources:Array<ShaderSource>, descriptiveName:String = "Shader"){
 		this.sources = sources;
 		this.name = descriptiveName;
+		allShaders.push(this);
 		build();
 	}
 
@@ -26,10 +29,18 @@ class Shader {
 		return linked;
 	}
 
+	public static function reloadAll(){
+		trace("Reload all");
+		for(s in allShaders){
+			s.build();
+		}
+	}
+
 
 	@gldebug
 	public function build()
 	{
+		trace("Building "+name+"...");
 		linked = false;
 		destroy();
 		program = GL.createProgram();
@@ -38,11 +49,11 @@ class Shader {
 		{
 			var shader:GLShader = switch(source){
 				case Fragment(src):
-					compile(src, GL.FRAGMENT_SHADER);
+					compile(Assets.getText(src), GL.FRAGMENT_SHADER);
 				case Vertex(src):
-					compile(src, GL.VERTEX_SHADER);
+					compile(Assets.getText(src), GL.VERTEX_SHADER);
 				case Other(src, type):
-					compile(src, type);
+					compile(Assets.getText(src), type);
 			}
 			if(shader==null){
 				error = true;

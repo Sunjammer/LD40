@@ -19,8 +19,8 @@ class LevelShader extends Shader
 	public function new(levelColorTexturePath:String)
 	{
 		super([
-			Vertex(Assets.getText("assets/level_entity.vert")),
-			Fragment(Assets.getText("assets/level_entity.frag"))
+			Vertex("assets/level_entity.vert"),
+			Fragment("assets/level_entity.frag")
 		], "Level");
 
 		textureUniform = getUniform("uColorTex");

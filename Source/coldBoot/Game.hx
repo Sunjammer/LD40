@@ -53,14 +53,13 @@ class Game extends Sprite
 		sceneRenderer.setWindowSize({width:800, height:600});
 		sceneRenderer.setEffects(
 			[
-				//new PostEffect(Assets.getText("assets/dither.frag"), "Dithering"),
-				/*new PostEffect(Assets.getText("assets/crt.frag"), "CRT",
+				new PostEffect("assets/dither.frag", "Dithering"),
+				new PostEffect("assets/crt.frag", "CRT",
 					[
 						"assets/screen_noise.jpg", 
 						"assets/dirt.jpg", 
 						"assets/distpattern.jpg"
 					])
-					*/
 			]
 		);
 		

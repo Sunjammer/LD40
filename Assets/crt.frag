@@ -67,7 +67,7 @@ void main() {
     if (abs(uv.x) > 0.5 || abs(uv.y) > 0.5)
         discard;
 	
-    vec4 color = chroma(uImage0, 0.0, 2.0, 1.0/uResolution.xy, vTexCoord, vec2(400.0));
+    vec4 color = chroma(uImage0, 0, 2.0, 1.0/uResolution.xy, vTexCoord, vec2(20, 500.0));
     //vec4 color = chroma(uImage0, 0.0, unipolarSin(uTime) * 0.5 * cos(uv.x*1.57), 1.0/uResolution.xy, uv+0.5, vec2(200.0, 200.0));
 
     float strength = 30.0;

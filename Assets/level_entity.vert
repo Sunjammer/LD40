@@ -15,6 +15,7 @@ varying float vBrightness;
 varying float vZoffset;
 varying vec4 vOffset;
 
+varying vec4 vVertex;
 varying vec3 vNormal;
 
 uniform vec4 uResolution;
@@ -23,6 +24,7 @@ uniform mat4 uView;
 uniform mat4 uModelView;
 uniform mat3 uNormal;
 uniform float uTime;
+uniform mat4 uModel;
 
 float shape(float v, float drive){
 	float k = 2.0 * drive / (1.0 - drive);
@@ -42,12 +44,13 @@ void main(void){
 
 	vec2 pulsePos = vec2(0.5);
 	float t = length(vQuantizedUv - pulsePos)*3.14;
-	vZoffset = pow(cos(-1.0 * uTime+t) * 0.5 + 0.5, 200);
+	vZoffset = pow(cos(-1.0 * uTime * 0.2 + t) * 0.5 + 0.5, 200);
 	pos.z = pos.z - vZoffset;
 
 	float t2 = length(vUv - pulsePos)*3.14;
-	vBrightness = max(dot(transformedNormal, normalize(vec3(0.5,0.5,0.5))), 0.1);
+	vBrightness = max(dot(transformedNormal, normalize(vec3(0.5))), 0.1);
 
+	vVertex = vec4(pos, 1.0);
     gl_Position = uMvp * vec4(pos, 1.0);
 
 

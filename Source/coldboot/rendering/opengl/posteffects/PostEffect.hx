@@ -27,9 +27,9 @@ class PostEffect {
 	public function new(fragmentShaderSrc:String, name:String = "Effect", ?textures:Array<String>, ?defaultFramebuffer:GLFramebuffer) {
 		if (shader != null) shader.destroy();
 		shader = new Shader([
-								Vertex(Assets.getText("assets/fullscreenquad.vert")),
-								Fragment(fragmentShaderSrc)
-							], name);
+				Vertex("assets/fullscreenquad.vert"),
+				Fragment(fragmentShaderSrc)
+			], name);
 
 		vertexAttribute = shader.getAttribute("aVertex");
 		resolutionUniform = shader.getUniform("uResolution");

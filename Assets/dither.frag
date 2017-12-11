@@ -168,11 +168,5 @@ vec3 shape(vec3 v, vec3 drive){
 
 void main(){
     vec4 texColor = texture2D(uImage0, vTexCoord);
-    float brightness = luma(texColor);
-    vec4 outColor;
-    outColor = dither2x2(gl_FragCoord.xy, texColor);
-    
-    
-    //gl_FragColor = vec4(shape(outColor.rgb, vec3(0.6)), outColor.a);
-    gl_FragColor = outColor;
+    gl_FragColor = dither4x4(gl_FragCoord.xy, texColor);
 }

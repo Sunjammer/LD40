@@ -8,6 +8,7 @@ import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.text.GridFitType;
 import openfl.text.TextField;
+import coldboot.rendering.opengl.Shader;
 /**
  * ...
  * @author Andreas Kennedy
@@ -76,6 +77,9 @@ class Terminal extends Sprite{
   
   function onKeyDown(e:KeyboardEvent):Void {
     switch(e.keyCode){ 
+      case KeyCode.SPACE:
+        if(e.ctrlKey)
+          Shader.reloadAll();
       case KeyCode.RETURN:
         onReturn();
       case KeyCode.ESCAPE:

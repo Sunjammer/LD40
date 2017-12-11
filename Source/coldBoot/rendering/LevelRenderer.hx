@@ -125,6 +125,8 @@ class LevelRenderer {
 				}
 			}
 		}
+
+		trace(level.width+", "+level.height);
 		
 		indexVbo = GL.createBuffer();
 		GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, indexVbo);
@@ -206,6 +208,7 @@ class LevelRenderer {
 		GL.uniformMatrix4fv(mvpMatrixUniform, 1, false, new Float32Array(mvp.toFloatArray()));
 		GL.uniformMatrix4fv(viewMatrixUniform, 1, false, new Float32Array(view.toFloatArray()));
 		GL.uniformMatrix4fv(modelViewMatrixUniform, 1, false, new Float32Array(mv.toFloatArray()));
+		GL.uniformMatrix4fv(modelMatrixUniform, 1, false, new Float32Array(model.toFloatArray()));
 		GL.uniformMatrix3fv(normalMatrixUniform, 1, true, new Float32Array(normalMatrix.toFloatArray()));
 
 		GL.uniform1f(timeUniform, info.time);
