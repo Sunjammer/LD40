@@ -1,11 +1,40 @@
 package coldboot.rendering.opengl;
+import lime.graphics.opengl.GL;
+import lime.utils.UInt16Array;
+import lime.utils.Float32Array;
+import lime.graphics.opengl.*;
 
 class Cube {
-
 	public static var verts:Array<Float>;
 	public static var vertexNormals:Array<Float>;
 	public static var indices:Array<Int>;
 
+	public var ibo:GLBuffer;
+	public var vbo:GLBuffer;
+	public var nbo:GLBuffer; // Yes i'm putting all normals in a buffer what of it WHAT OF IT
+	public function new(){
+		build();
+		ibo = GL.createBuffer();
+		GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, ibo);
+		GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, UInt16Array.BYTES_PER_ELEMENT * indices.length, new UInt16Array(indices), GL.STATIC_DRAW);
+		GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, null);
+
+		vbo = GL.createBuffer();
+		GL.bindBuffer(GL.ARRAY_BUFFER, vbo);
+		GL.bufferData(GL.ARRAY_BUFFER, Float32Array.BYTES_PER_ELEMENT * verts.length, new Float32Array(verts), GL.STATIC_DRAW);
+
+		nbo = GL.createBuffer();
+		GL.bindBuffer(GL.ARRAY_BUFFER, nbo);
+		GL.bufferData(GL.ARRAY_BUFFER, Float32Array.BYTES_PER_ELEMENT * vertexNormals.length, new Float32Array(vertexNormals), GL.STATIC_DRAW);
+		GL.bindBuffer(GL.ARRAY_BUFFER, null);
+	}
+
+	public function dispose(){
+		GL.deleteBuffer(ibo);
+		GL.deleteBuffer(vbo);
+		GL.deleteBuffer(nbo);
+	}
+	
 	public static function build() {
 		if (verts != null) return;
 		verts = [

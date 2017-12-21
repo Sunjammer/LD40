@@ -101,7 +101,12 @@ class Shader {
 
 	public inline function getAttribute(a:String):Int
 	{
-		return GL.getAttribLocation(program, a);
+
+		var pos =  GL.getAttribLocation(program, a);
+		#if debug
+			throw "Couldn't find attribute";
+		#end
+		return pos;
 	}
 
 	public inline function getUniform(u:String):GLUniformLocation

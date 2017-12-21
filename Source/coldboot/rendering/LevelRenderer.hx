@@ -149,8 +149,9 @@ class LevelRenderer {
 		var w = info.game.viewportSize.width-220;
 		var h = info.game.viewportSize.height;
 		GL.viewport (0, 0, w, h);
-		GL.enable(GL.DEPTH_TEST);
 		GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
+		
+		GL.enable(GL.DEPTH_TEST);
 		GL.depthFunc(GL.LESS);
 		
 		GL.enable(GL.CULL_FACE);
@@ -173,30 +174,22 @@ class LevelRenderer {
 		function degRad(deg:Float) {
 			return deg * 3.14 / 180;
 		}
-		
-		var vfov = degRad(30);
 
 		var model = new Mat4();
 		Mat4.identity(model);
 		var t = info.time * 0.05;
+		
+		var hh = level.height * 0.5;
+		var hw = level.width * 0.5;
 
-		var hw = level.width>>2;
-		var hh = level.height>>2;
-		var r = Math.sqrt(hw*hw+hh*hh);
-		var z = 50;
-		var r_max = z * Math.sin(vfov / 2);
-		var scale = r_max/r;
-
-		model *= GLM.scale(new Vec3(scale,scale,scale), new Mat4());
-		model *= GLM.rotate(Quat.fromEuler(degRad(-50)+Math.sin(t)*0.2, 0, t, new Quat()), new Mat4());
+		model *= GLM.rotate(Quat.fromEuler(degRad(-30), 0, t, new Quat()), new Mat4());
 		model *= GLM.translate(new Vec3(-level.width * 0.5, -level.height * 0.5), new Mat4());
 		
 		var view = new Mat4();
 		Mat4.identity(view);
-		GLM.translate(new Vec3(0, 0, -z), view);
+		view *= GLM.translate(new Vec3(0, 0, -level.height), new Mat4());
 		
-		var projection = new Mat4();
-		GLM.perspective(vfov, w/h, 4, 100, projection);
+    	var projection = GLM.orthographic(-hw, hw, -hh, hh, 0.05, level.height*level.width, new Mat4());
 		
 		var mv:Mat4 = view * model;
 		var mvp = projection * mv;
@@ -209,6 +202,7 @@ class LevelRenderer {
 		GL.uniformMatrix4fv(viewMatrixUniform, 1, false, new Float32Array(view.toFloatArray()));
 		GL.uniformMatrix4fv(modelViewMatrixUniform, 1, false, new Float32Array(mv.toFloatArray()));
 		GL.uniformMatrix4fv(modelMatrixUniform, 1, false, new Float32Array(model.toFloatArray()));
+
 		GL.uniformMatrix3fv(normalMatrixUniform, 1, true, new Float32Array(normalMatrix.toFloatArray()));
 
 		GL.uniform1f(timeUniform, info.time);

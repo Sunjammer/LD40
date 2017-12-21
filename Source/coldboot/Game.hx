@@ -2,8 +2,7 @@ package coldboot;
 import coldboot.IGameState;
 import coldboot.rendering.opengl.Cube;
 import coldboot.rendering.opengl.posteffects.*;
-import coldboot.states.GamePlayState;
-import coldboot.states.InitialState;
+import coldboot.states.*;
 import fsignal.Signal2;
 import lime.graphics.opengl.GL;
 import openfl.Assets;
@@ -65,14 +64,16 @@ class Game extends Sprite
 		
 		trace("Starting");
 		
-		setState(new InitialState(), [
+		/*setState(new InitialState(), [
 			"assets/c1.jpg",
 			"assets/c2.jpg",
 			"assets/c3.jpg",
 			"assets/c4.jpg",
 			"assets/c5.jpg",
 			"assets/c6.jpg"
-		]);
+		]);*/
+
+		setState(new RenderTestState());
 	}
 
 	public function resize(dims: {width:Int, height:Int})
@@ -92,7 +93,7 @@ class Game extends Sprite
 	public function update(dt:Float)
 	{
 		globalTime += dt;
-		var info = {game:this, deltaTime:dt, time:0.0};
+		var info = {game:this, deltaTime:dt, time:globalTime};
 		Delta.step(info.deltaTime);
 		if (currentState != null)
 			currentState.update(info);

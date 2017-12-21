@@ -18,6 +18,7 @@ import openfl.display.Bitmap;
 import openfl.events.MouseEvent;
 import openfl.utils.Timer;
 import openfl.Assets;
+import coldboot.rendering.opengl.Symbology;
 //import haxe.Timer;
 
 class WaveCompletedState implements IState {
@@ -144,10 +145,12 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
 
   public function render(info:RenderInfo):Void {
     rootEntity.render(info);
+    Symbology.endFrame();
   }
 
   var timer = 0.0;
   public function update(info:UpdateInfo): IGameState {
+    Symbology.beginFrame();
     /*rootEntity.update(info);
     waveState.update(info);
 

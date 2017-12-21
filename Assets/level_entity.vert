@@ -37,7 +37,10 @@ void main(void){
 
 	vec3 transformedNormal = normalize(uNormal * vNormal);
 
-	vec3 pos = aPosition.xyz + aOffset.xyz;
+	vec3 tempPos = aPosition.xyz;
+	if(tempPos.z < 0.0) tempPos.z = -1000;
+
+	vec3 pos = tempPos + aOffset.xyz;
 	pos.z += aOffset.w;
 	vQuantizedUv = aOffset.xy / uResolution.zw;
 	vUv = pos.xy / uResolution.zw;
@@ -51,6 +54,7 @@ void main(void){
 	vBrightness = max(dot(transformedNormal, normalize(vec3(0.5))), 0.1);
 
 	vVertex = vec4(pos, 1.0);
+
     gl_Position = uMvp * vec4(pos, 1.0);
 
 
