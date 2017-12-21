@@ -27,7 +27,7 @@ class PostEffect {
 	public function new(fragmentShaderSrc:String, name:String = "Effect", ?textures:Array<String>, ?defaultFramebuffer:GLFramebuffer) {
 		if (shader != null) shader.destroy();
 		shader = new Shader([
-				Vertex("assets/fullscreenquad.vert"),
+				Vertex("assets/shaders/fullscreenquad.vert"),
 				Fragment(fragmentShaderSrc)
 			], name);
 

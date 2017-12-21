@@ -31,7 +31,7 @@ class RenderTestState implements IGameState {
   var aPosition:Int;
   var aNormal:Int;
   public function new() {
-    testShader = new Shader([Vertex("assets/basic.vert"), Fragment("assets/basic.frag")], "Basic");
+    testShader = new Shader([Vertex("assets/shaders/basic.vert"), Fragment("assets/shaders/basic.frag")], "Basic");
 
     uModel = testShader.getUniform("uModel");
     uView = testShader.getUniform("uView");

@@ -24,7 +24,7 @@ class Symbology
 
     static function initialize(){
         vertBuffer = GL.createBuffer();
-        shader = new Shader([Vertex("assets/symbology.vert"), Fragment("assets/symbology.frag")], "Symbology");
+        shader = new Shader([Vertex("assets/shaders/symbology.vert"), Fragment("assets/shaders/symbology.frag")], "Symbology");
 
         uScreenSize = shader.getUniform("uScreenSize");
         aPosition = shader.getAttribute("aPosition");

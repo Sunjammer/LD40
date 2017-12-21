@@ -52,12 +52,12 @@ class Game extends Sprite
 		sceneRenderer.setWindowSize({width:800, height:600});
 		sceneRenderer.setEffects(
 			[
-				new PostEffect("assets/dither.frag", "Dithering"),
-				new PostEffect("assets/crt.frag", "CRT",
+				new PostEffect("assets/shaders/dither.frag", "Dithering"),
+				new PostEffect("assets/shaders/crt.frag", "CRT",
 					[
-						"assets/screen_noise.jpg", 
-						"assets/dirt.jpg", 
-						"assets/distpattern.jpg"
+						"assets/textures/screen_noise.jpg", 
+						"assets/textures/dirt.jpg", 
+						"assets/textures/distpattern.jpg"
 					])
 			]
 		);
@@ -65,12 +65,12 @@ class Game extends Sprite
 		trace("Starting");
 		
 		/*setState(new InitialState(), [
-			"assets/c1.jpg",
-			"assets/c2.jpg",
-			"assets/c3.jpg",
-			"assets/c4.jpg",
-			"assets/c5.jpg",
-			"assets/c6.jpg"
+			"assets/textures/c1.jpg",
+			"assets/textures/c2.jpg",
+			"assets/textures/c3.jpg",
+			"assets/textures/c4.jpg",
+			"assets/textures/c5.jpg",
+			"assets/textures/c6.jpg"
 		]);*/
 
 		setState(new RenderTestState());
