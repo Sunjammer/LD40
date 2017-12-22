@@ -49,7 +49,7 @@ class Game extends Sprite
 		addChild(debugContainer);
 		
 		addChild(sceneRenderer = new PostProcessing());
-		sceneRenderer.setWindowSize({width:800, height:600});
+		sceneRenderer.setWindowSize(viewportSize);
 		sceneRenderer.setEffects(
 			[
 				new PostEffect("assets/shaders/dither.frag", "Dithering"),
@@ -58,22 +58,21 @@ class Game extends Sprite
 						"assets/textures/screen_noise.jpg", 
 						"assets/textures/dirt.jpg", 
 						"assets/textures/distpattern.jpg"
-					])
+					]),
+				new PostEffect("assets/shaders/tonemapper.frag", "Tone mapping")
 			]
 		);
 		
 		trace("Starting");
 		
-		/*setState(new InitialState(), [
+		setState(new InitialState(), [
 			"assets/textures/c1.jpg",
 			"assets/textures/c2.jpg",
 			"assets/textures/c3.jpg",
 			"assets/textures/c4.jpg",
 			"assets/textures/c5.jpg",
 			"assets/textures/c6.jpg"
-		]);*/
-
-		setState(new RenderTestState());
+		]);
 	}
 
 	public function resize(dims: {width:Int, height:Int})

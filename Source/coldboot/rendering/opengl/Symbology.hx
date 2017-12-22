@@ -34,11 +34,14 @@ class Symbology
 
     public static function beginFrame()
     {
-        if(!initialized) initialize();
+        if(!initialized) 
+            initialize();
         cmds = [];
     }
 
-    public static function endFrame(width:Float, height:Float){
+    public static function draw(width:Float, height:Float){
+        if(cmds==null || cmds.length==0) 
+            return;
         shader.bind();
         GL.disable(GL.CULL_FACE);
         GL.disable(GL.DEPTH_TEST);
@@ -54,7 +57,6 @@ class Symbology
         for(c in cmds)
             exec(c);
 
-        cmds = null;
         shader.release();
         GL.disable(GL.VERTEX_PROGRAM_POINT_SIZE);
         GL.bindBuffer(GL.ARRAY_BUFFER, null);

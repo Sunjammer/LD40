@@ -45,7 +45,7 @@ class LevelRenderer {
 
 	public function new() {
 		if (shader==null)
-			shader = new LevelShader("assets/distpattern.jpg");
+			shader = new LevelShader("assets/textures/distpattern.jpg");
 
 		positionAttrib = shader.getAttribute("aPosition");
 		normalAttrib = shader.getAttribute("aNormal");

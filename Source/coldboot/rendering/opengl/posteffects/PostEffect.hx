@@ -68,7 +68,7 @@ class PostEffect {
 		framebuffer = GL.createFramebuffer();
 
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
-		texture = TextureUtils.createTexture(config.width, config.height);
+		texture = TextureUtils.createTexture(config.width, config.height, false, GL.RGBA16F);
 		bindTextureToFramebuffer(texture);
 		createRenderbuffer(config.width, config.height);
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
@@ -90,7 +90,8 @@ class PostEffect {
 	}
 
 	inline function createRenderbuffer(width:Int, height:Int) {
-		if (renderbuffer != null) GL.deleteRenderbuffer(renderbuffer);
+		if (renderbuffer != null) 
+			GL.deleteRenderbuffer(renderbuffer);
 		renderbuffer = GL.createRenderbuffer();
 		GL.bindRenderbuffer(GL.RENDERBUFFER, renderbuffer);
 		GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_COMPONENT16, width, height);

@@ -38,7 +38,7 @@ void main(void){
 	vec3 transformedNormal = normalize(uNormal * vNormal);
 
 	vec3 tempPos = aPosition.xyz;
-	if(tempPos.z < 0.0) tempPos.z = -1000;
+	if(tempPos.z < 0.0) tempPos.z = -10;
 
 	vec3 pos = tempPos + aOffset.xyz;
 	pos.z += aOffset.w;
@@ -50,8 +50,7 @@ void main(void){
 	vZoffset = pow(cos(-1.0 * uTime * 0.2 + t) * 0.5 + 0.5, 200);
 	pos.z = pos.z - vZoffset;
 
-	float t2 = length(vUv - pulsePos)*3.14;
-	vBrightness = max(dot(transformedNormal, normalize(vec3(0.5))), 0.1);
+	vBrightness = 1.0 + aOffset.w * 5.0;//max(dot(transformedNormal, normalize(vec3(0.5))), 0.1);
 
 	vVertex = vec4(pos, 1.0);
 

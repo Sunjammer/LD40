@@ -145,7 +145,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
 
   public function render(info:RenderInfo):Void {
     rootEntity.render(info);
-    Symbology.endFrame();
+    Symbology.draw(info.game.viewportSize.width, info.game.viewportSize.height);
   }
 
   var timer = 0.0;

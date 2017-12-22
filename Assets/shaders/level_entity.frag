@@ -31,20 +31,7 @@ float shape(float v, float drive){
 
 void main(void){
 	vec3 texColor = texture2D(uColorTex, vQuantizedUv).rgb;
-	vec3 color = vec3(vBrightness);
-
-	vec3 N = normalize(uNormal * vNormal);
-
-	vec3 lightPos = (uModel * vec4(24, 24, 15.0, 1.0)).xyz;
-	vec3 fragPos = (uModel * vVertex).xyz;
-	vec3 lightDir = normalize(lightPos-fragPos);
-	float radius = 48;
-	float dist = distance(lightPos, fragPos);
-	
-	float NdotL = max(0.0, (dot(N, lightDir)));
-	NdotL *= clamp(1.0-dist/radius, 0, 1);
-
-
-    gl_FragColor = vec4(vec3(NdotL+0.4), 1.0);
+	vec3 color = texColor * vBrightness;
+    gl_FragColor = vec4(color, 1.0);
 
 }
