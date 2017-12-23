@@ -1,4 +1,5 @@
 package coldboot.states;
+import coldboot.ai.PathFinding;
 import coldboot.UpdateInfo;
 import coldboot.IState;
 import coldboot.Game;
@@ -95,7 +96,7 @@ class RenderTestState implements IGameState {
 
     testShader.release();
 
-    Symbology.endFrame(info.game.viewportSize.width, info.game.viewportSize.height);
+    Symbology.draw(info.game.viewportSize.width, info.game.viewportSize.height);
 
   }
   
@@ -104,7 +105,10 @@ class RenderTestState implements IGameState {
   }
   
   public function enter(g:Game, ?info:Dynamic):Void {
-    
+    trace("Begin pathfinding test");
+    var req = PathFinding.ShortestPathAsync(0,0,null);
+    req.onComplete.addOnce(function(req) { trace("OnComplete"); });
+    req.onFail.addOnce(function(req) { trace("OnFail"); });
   }
   
   public function update(info:UpdateInfo):IState {

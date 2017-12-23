@@ -1,5 +1,6 @@
 package coldboot;
 import coldboot.IGameState;
+import coldboot.ai.PathFinding;
 import coldboot.rendering.opengl.Cube;
 import coldboot.rendering.opengl.posteffects.*;
 import coldboot.states.*;
@@ -63,8 +64,6 @@ class Game extends Sprite
 			]
 		);
 		
-		trace("Starting");
-		
 		setState(new InitialState(), [
 			"assets/textures/c1.jpg",
 			"assets/textures/c2.jpg",
@@ -91,6 +90,7 @@ class Game extends Sprite
 
 	public function update(dt:Float)
 	{
+		PathFinding.update();
 		globalTime += dt;
 		var info = {game:this, deltaTime:dt, time:globalTime};
 		Delta.step(info.deltaTime);

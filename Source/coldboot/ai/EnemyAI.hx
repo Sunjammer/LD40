@@ -178,7 +178,7 @@ class EnemyAI {
 
 			var nextPath = currentPathStack.pop();
 			if(nextPath != null) {
-				currentPath = new PathFinding().ShortestPath(currentIdx, nextPath, this.enemyMap);
+				currentPath = PathFinding.ShortestPath(currentIdx, nextPath, this.enemyMap);
 				currentPath.reverse();
 			}
 
