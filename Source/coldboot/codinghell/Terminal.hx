@@ -135,7 +135,7 @@ class Terminal extends Sprite{
     graphics.beginFill(0);
     graphics.drawRect(0, 0, terminalWidth, dh);
     
-    var linew = 3;
+    var linew = 2;
     graphics.beginFill(COLOR);
     graphics.drawRect(0, input.y, terminalWidth, linew);
     graphics.beginFill(COLOR);

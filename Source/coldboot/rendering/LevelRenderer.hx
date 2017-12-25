@@ -22,6 +22,8 @@ class LevelRenderer {
 
 	static var shader:LevelShader;
 
+	public var renderWidth = 220;
+
 	var vertices:Array<Float>;
 	var offsets:Array<Float>;
 	var indices:Array<Int>;
@@ -45,7 +47,7 @@ class LevelRenderer {
 
 	public function new() {
 		if (shader==null)
-			shader = new LevelShader("assets/textures/distpattern.jpg");
+			shader = new LevelShader("assets/textures/c3.jpg");
 
 		positionAttrib = shader.getAttribute("aPosition");
 		normalAttrib = shader.getAttribute("aNormal");
@@ -89,7 +91,7 @@ class LevelRenderer {
 
 				offsets[k++] = x;
 				offsets[k++] = y; 
-				offsets[k++] = z + rnd;
+				offsets[k++] = z;
 				offsets[k++] = a;
 
 				i += 4;
@@ -146,7 +148,7 @@ class LevelRenderer {
 
 	@gldebug
 	public function render(info:RenderInfo) {
-		var w = info.game.viewportSize.width-220;
+		var w = info.game.viewportSize.width-renderWidth;
 		var h = info.game.viewportSize.height;
 		GL.viewport (0, 0, w, h);
 		GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);

@@ -45,12 +45,19 @@ void main(void){
 	vQuantizedUv = aOffset.xy / uResolution.zw;
 	vUv = pos.xy / uResolution.zw;
 
+
+	// pulse
 	vec2 pulsePos = vec2(0.5);
 	float t = length(vQuantizedUv - pulsePos)*3.14;
 	vZoffset = pow(cos(-1.0 * uTime * 0.2 + t) * 0.5 + 0.5, 200);
 	pos.z = pos.z - vZoffset;
 
-	vBrightness = 1.0 + aOffset.w * 5.0;//max(dot(transformedNormal, normalize(vec3(0.5))), 0.1);
+	// "reveal"
+	t = min(0.0, pow(sin(uTime + length(vQuantizedUv)), 100)) * 100.0;
+	pos.z = pos.z + t;
+
+
+	vBrightness = 1.0 + aOffset.w; //max(dot(transformedNormal, normalize(vec3(0.5))), 0.1);
 
 	vVertex = vec4(pos, 1.0);
 

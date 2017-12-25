@@ -5,12 +5,20 @@ import coldboot.rendering.opengl.Cube;
 import coldboot.rendering.opengl.posteffects.*;
 import coldboot.states.*;
 import fsignal.Signal2;
+import glm.Vec2;
 import lime.graphics.opengl.GL;
 import openfl.Assets;
 import openfl.display.OpenGLView;
 import openfl.display.Shape;
 import openfl.display.Sprite;
 import tween.Delta;
+
+class Input{
+	public var mouse:Vec2;
+	public function new(){
+		mouse = new Vec2();
+	}
+}
 
  @:build(coldboot.rendering.opengl.GLDebug.build())
 class Game extends Sprite
@@ -26,11 +34,13 @@ class Game extends Sprite
 	public var viewportSize: {width:Int, height:Int, aspect:Float};
 	public var viewportChanged:Signal2<Int,Int>;
   	public var audio:Audio;
+	public var input:Input;
 	var globalTime:Float;
 
 	public function new(config: {width:Int, height:Int})
 	{
 		super();
+		input = new Input();
 		
 		trace("Initializing game");
 		viewportChanged = new Signal2<Int,Int>();
@@ -54,6 +64,7 @@ class Game extends Sprite
 		sceneRenderer.setEffects(
 			[
 				new PostEffect("assets/shaders/dither.frag", "Dithering"),
+				new HDRBloom(),
 				new PostEffect("assets/shaders/crt.frag", "CRT",
 					[
 						"assets/textures/screen_noise.jpg", 
@@ -90,6 +101,7 @@ class Game extends Sprite
 
 	public function update(dt:Float)
 	{
+		input.mouse = new Vec2(stage.mouseX, stage.mouseY);
 		PathFinding.update();
 		globalTime += dt;
 		var info = {game:this, deltaTime:dt, time:globalTime};

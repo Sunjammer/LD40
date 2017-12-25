@@ -13,7 +13,7 @@ uniform sampler2D uImage3;
 uniform sampler2D uImage4;
 uniform float uTime;
 
-const float BARREL_DISTORTION = 0.1;
+const float BARREL_DISTORTION = 0.15;
 const float rescale = 1.0 - (0.25 * BARREL_DISTORTION);
 
 vec4 shape(vec4 v, vec4 drive){
@@ -67,7 +67,9 @@ void main() {
     if (abs(uv.x) > 0.5 || abs(uv.y) > 0.5)
         discard;
 	
-    vec4 color = chroma(uImage0, 0, 2.0, 1.0/uResolution.xy, vTexCoord, vec2(20, 500.0));
+    vec2 correctedUv = uv+0.5;
+
+    vec4 color = chroma(uImage0, 0, 2.0, 1.0/uResolution.xy, correctedUv, vec2(20, 500.0));
     //vec4 color = chroma(uImage0, 0.0, unipolarSin(uTime) * 0.5 * cos(uv.x*1.57), 1.0/uResolution.xy, uv+0.5, vec2(200.0, 200.0));
 
     float strength = 30.0;
@@ -75,8 +77,8 @@ void main() {
     vec4 grain = vec4(mod((mod(foo, 13.0) + 1.0) * (mod(foo, 123.0) + 1.0), 0.01)-0.005) * strength;
     grain = 1.0 - grain;
 
-	color = 1.4 * grain * texture2D(uImage1, vTexCoord / 4.) * color; //noise * color
-    color = color + texture2D(uImage2, uv+0.5) * 0.2; //dirt
+	color = 1.4 * grain * texture2D(uImage1, correctedUv / 4.) * color; //noise * color
+    color = color + texture2D(uImage2, correctedUv) * 0.1; //dirt
     
 	gl_FragColor = vec4(color.rgb, 1.0);
 }

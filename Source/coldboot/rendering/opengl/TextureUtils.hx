@@ -9,10 +9,10 @@ class TextureUtils{
 	{
 		var tex = GL.createTexture();
 		GL.bindTexture(GL.TEXTURE_2D, tex);
-		GL.texImage2D(GL.TEXTURE_2D, 0, format,  width, height,  0,  GL.RGBA, GL.UNSIGNED_BYTE, 0);
+		GL.texImage2D(GL.TEXTURE_2D, 0, format,  width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE, 0);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, repeat ? GL.REPEAT : GL.CLAMP_TO_EDGE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, repeat ? GL.REPEAT : GL.CLAMP_TO_EDGE);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER , filter);
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, filter);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, filter);
 		GL.bindTexture(GL.TEXTURE_2D, null);
 		return tex;

@@ -151,6 +151,14 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
   var timer = 0.0;
   public function update(info:UpdateInfo): IGameState {
     Symbology.beginFrame();
+
+    var hw = (info.game.viewportSize.width - 220) / 2;
+    var hh = info.game.viewportSize.height / 2;
+
+    Symbology.point(hw, hh, 4);
+    Symbology.triangle(hw, hh, 100, 100, 0, true, 0.5);
+    Symbology.square(hw, hh, 200, 200, 0);
+    Symbology.circle(hw, hh, 300);
     /*rootEntity.update(info);
     waveState.update(info);
 

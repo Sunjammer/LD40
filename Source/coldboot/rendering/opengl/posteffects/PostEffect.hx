@@ -49,6 +49,10 @@ class PostEffect {
 		return "[Post effect: " + shader.name+"]";
 	}
 
+	public inline function drawQuad(){
+        GL.drawArrays(GL.TRIANGLE_FAN, 0, 4);
+	}
+
 	function buildTextures() {
 		var idx = 1;
 		for (i in textureInputs) {
@@ -68,7 +72,7 @@ class PostEffect {
 		framebuffer = GL.createFramebuffer();
 
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
-		texture = TextureUtils.createTexture(config.width, config.height, false, GL.RGBA16F);
+		texture = TextureUtils.createTexture(config.width, config.height, false, GL.RGB16F);
 		bindTextureToFramebuffer(texture);
 		createRenderbuffer(config.width, config.height);
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
@@ -117,7 +121,7 @@ class PostEffect {
 			var idx = i + 1;
 			if (textureInputs[i].uniform !=-1) {
 				GL.uniform1i(textureInputs[i].uniform, idx);
-				GL.activeTexture(GL.TEXTURE0+idx);
+				GL.activeTexture(GL.TEXTURE0 + idx);
 				GL.bindTexture(GL.TEXTURE_2D, textureInputs[i].texture);
 			}
 		}
