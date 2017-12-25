@@ -1,6 +1,5 @@
 package coldboot.rendering.opengl;
-import glm.Mat3;
-import glm.Mat4;
+import glm.*;
 
 /**
  * ...
@@ -21,5 +20,13 @@ class GLMExt {
 		out.r2c2 = from.r2c2;
 		return out;
 	}
+	
+    public static inline function rotate(vec:Vec2, angle:Float):Vec2{
+        var cs = Math.cos(angle);
+        var sn = Math.sin(angle);
+        var px = vec.x * cs - vec.y * sn; 
+        var py = vec.x * sn + vec.y * cs;
+        return new Vec2(px, py);
+    }
 	
 }

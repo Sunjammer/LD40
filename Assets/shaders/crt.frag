@@ -56,6 +56,12 @@ float unipolarSin(float t){
     return (sin(t)+1.0)*0.5;
 }
 
+float vignette(vec2 uv){
+    uv *=  1.0 - uv.yx;
+    float vig = uv.x*uv.y * 15.0;
+    return pow(vig, 0.2);
+}
+
 void main() {
 	//Barrel distortion
     vec2 uv = vTexCoord - .5;
@@ -78,7 +84,8 @@ void main() {
     grain = 1.0 - grain;
 
 	color = 1.4 * grain * texture2D(uImage1, correctedUv / 4.) * color; //noise * color
-    color = color + texture2D(uImage2, correctedUv) * 0.1; //dirt
+    color = color * vignette(correctedUv);
+    color = color + texture2D(uImage2, correctedUv) * 0.01; //dirt
     
 	gl_FragColor = vec4(color.rgb, 1.0);
 }

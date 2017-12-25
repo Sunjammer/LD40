@@ -156,8 +156,11 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
     var hh = info.game.viewportSize.height / 2;
 
     Symbology.point(hw, hh, 4);
-    Symbology.triangle(hw, hh, 100, 100, 0, true, 0.5);
-    Symbology.square(hw, hh, 200, 200, 0);
+    Symbology.triangle(hw, hh, 100, 75, 0, true, 0.5);
+    Symbology.square(hw, hh, 200, 200, Math.cos(info.time));
+    Symbology.square(hw, hh, 200, 200, Math.cos(info.time+0.1), 0.8);
+    Symbology.square(hw, hh, 200, 200, Math.cos(info.time+0.2), 0.6);
+    Symbology.square(hw, hh, 200, 200, Math.cos(info.time+0.3), 0.4);
     Symbology.circle(hw, hh, 300);
     /*rootEntity.update(info);
     waveState.update(info);

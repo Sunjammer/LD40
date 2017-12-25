@@ -2,6 +2,7 @@ package coldboot.rendering.opengl;
 import lime.graphics.opengl.*;
 import glm.*;
 import lime.utils.Float32Array;
+using coldboot.rendering.opengl.GLMExt;
 enum SymbologyCmd{
     Point(x:Float, y:Float, size:Float, opacity:Float);
     Circle(x:Float, y:Float, width:Float, height:Float, fill:Bool, opacity:Float);
@@ -66,6 +67,7 @@ class Symbology
     static inline function exec(cmd:SymbologyCmd){
         var verts:Array<Float>; //2 floats per vert, xy
         GL.lineWidth(DEFAULT_LINE_WIDTH);
+        var temp = new Vec2();
         switch(cmd){
             case Point(x,y,size,opacity):
                 verts = [x, y, size, opacity];
@@ -79,8 +81,10 @@ class Symbology
                 var offset = 0;
                 for(i in 0...resolution){
                     var t = i/resolution;
-                    verts[offset] = x + Math.cos(t * 6.28) * hw;
-                    verts[1+offset] = y + Math.sin(t * 6.28) * hh;
+                    temp.x = Math.cos(t * 6.28) * hw;
+                    temp.y = Math.sin(t * 6.28) * hh;
+                    verts[offset] = x + temp.x;
+                    verts[1+offset] = y + temp.y;
                     verts[2+offset] = 0.0;
                     verts[3+offset] = opacity;
                     offset += 4;
@@ -91,10 +95,35 @@ class Symbology
                 var hh = h * 0.5;
                 var hw = w * 0.5;
                 verts = [
-                    x, y - hh, 0, opacity,
-                    x + hw, y + hh, 0, opacity,
-                    x - hw, y + hh, 0, opacity
+                    0, -hh, 0, opacity,
+                    hw, hh, 0, opacity,
+                    -hw, hh, 0, opacity
                 ];
+                if(rot!=0){
+                    temp.x = verts[0];
+                    temp.y = verts[1];
+                    temp = temp.rotate(rot);
+                    verts[0] = temp.x;
+                    verts[1] = temp.y;
+
+                    temp.x = verts[4];
+                    temp.y = verts[5];
+                    temp = temp.rotate(rot);
+                    verts[4] = temp.x;
+                    verts[5] = temp.y;
+
+                    temp.x = verts[8];
+                    temp.y = verts[9];
+                    temp = temp.rotate(rot);
+                    verts[8] = temp.x;
+                    verts[9] = temp.y;
+                }
+                verts[0] += x;
+                verts[1] += y;
+                verts[4] += x;
+                verts[5] += y;
+                verts[8] += x;
+                verts[9] += y;
                 GL.lineWidth(4);
                 GL.bufferData(GL.ARRAY_BUFFER, Float32Array.BYTES_PER_ELEMENT * verts.length, new Float32Array(verts), GL.DYNAMIC_DRAW);
                 GL.drawArrays(fill?GL.TRIANGLE_FAN:GL.LINE_LOOP, 0, Std.int(verts.length / 4));
@@ -102,11 +131,46 @@ class Symbology
                 var hh = h * 0.5;
                 var hw = w * 0.5;
                 verts = [
-                    x-hw, y-hh, 0, opacity,
-                    x+hw, y-hh, 0, opacity,
-                    x+hw, y+hh, 0, opacity,
-                    x-hw, y+hh, 0, opacity
+                    -hw, -hh, 0, opacity,
+                    hw, -hh, 0, opacity,
+                    hw, hh, 0, opacity,
+                    -hw, hh, 0, opacity
                 ];
+
+                if(rot!=0){
+                    temp.x = verts[0];
+                    temp.y = verts[1];
+                    temp = temp.rotate(rot);
+                    verts[0] = temp.x;
+                    verts[1] = temp.y;
+
+                    temp.x = verts[4];
+                    temp.y = verts[5];
+                    temp = temp.rotate(rot);
+                    verts[4] = temp.x;
+                    verts[5] = temp.y;
+
+                    temp.x = verts[8];
+                    temp.y = verts[9];
+                    temp = temp.rotate(rot);
+                    verts[8] = temp.x;
+                    verts[9] = temp.y;
+
+                    temp.x = verts[12];
+                    temp.y = verts[13];
+                    temp = temp.rotate(rot);
+                    verts[12] = temp.x;
+                    verts[13] = temp.y;
+                }
+                verts[0] += x;
+                verts[1] += y;
+                verts[4] += x;
+                verts[5] += y;
+                verts[8] += x;
+                verts[9] += y;
+                verts[12] += x;
+                verts[13] += y;
+
                 GL.bufferData(GL.ARRAY_BUFFER, Float32Array.BYTES_PER_ELEMENT * verts.length, new Float32Array(verts), GL.DYNAMIC_DRAW);
                 GL.drawArrays(fill?GL.TRIANGLE_FAN:GL.LINE_LOOP, 0, Std.int(verts.length / 4));
         }

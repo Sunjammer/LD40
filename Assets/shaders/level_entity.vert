@@ -53,9 +53,8 @@ void main(void){
 	pos.z = pos.z - vZoffset;
 
 	// "reveal"
-	t = min(0.0, pow(sin(uTime + length(vQuantizedUv)), 100)) * 100.0;
-	pos.z = pos.z + t;
-
+	/*t = sin(length(vQuantizedUv - vec2(0.5)) * 6.28) * 5;
+	pos.z = pos.z + t;*/
 
 	vBrightness = 1.0 + aOffset.w; //max(dot(transformedNormal, normalize(vec3(0.5))), 0.1);
 

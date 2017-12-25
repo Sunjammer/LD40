@@ -13,5 +13,5 @@ vec3 map(vec3 inColor, float exposure){
 
 void main(){
     vec4 c = texture2D(uImage0, vTexCoord);
-    gl_FragColor = vec4(map(c.xyz, 1.1), c.a);
+    gl_FragColor = vec4(map(c.xyz, 2.0), c.a);
 }
