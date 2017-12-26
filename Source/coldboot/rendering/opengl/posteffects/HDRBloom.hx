@@ -61,7 +61,7 @@ class HDRBloom extends PostEffect{
         var tex = GL.createTexture();
         GL.bindFramebuffer(GL.FRAMEBUFFER, fbo);
         GL.bindTexture(GL.TEXTURE_2D, tex);
-        GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB16F, config.width, config.height, 0, GL.RGB, GL.UNSIGNED_BYTE, null);
+        GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB16F, config.width, config.height, 0, GL.RGB, GL.UNSIGNED_BYTE, 0);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
