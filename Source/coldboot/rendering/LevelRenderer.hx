@@ -1,5 +1,5 @@
 package coldboot.rendering;
-import coldboot.rendering.opengl.Cube;
+import coldboot.rendering.opengl.*;
 import glm.GLM;
 import glm.Mat3;
 import glm.Mat4;
@@ -45,10 +45,14 @@ class LevelRenderer {
 	var normalMatrixUniform:GLUniformLocation;
 	var modelViewMatrixUniform:GLUniformLocation;
 
-	public function new() {
-		if (shader==null)
-			shader = new LevelShader("assets/textures/c3.jpg");
+  	public var fow:FOW;
 
+	public function new() {
+		trace("Creating level renderer");
+		fow = new FOW();
+		if (shader==null)
+			shader = new LevelShader("assets/textures/c3.jpg", fow.getTexture());
+			
 		positionAttrib = shader.getAttribute("aPosition");
 		normalAttrib = shader.getAttribute("aNormal");
 		offsetAttrib = shader.getAttribute("aOffset");
@@ -77,12 +81,13 @@ class LevelRenderer {
 			var k = offsets.length;
 			var j = vertices.length;
 			var rnd = Math.random() * 0.5;
+			var m = 0.5;
 			while (i < Cube.verts.length){
 				//use half-cubes to fit grid unit
-				vertices[j] = Cube.verts[i] * 0.5;
-				vertices[j + 1] = Cube.verts[i + 1] * 0.5;
-				vertices[j + 2] = Cube.verts[i + 2] * 0.5;
-				vertices[j + 3] = Cube.verts[i + 3] * 0.5;
+				vertices[j] = Cube.verts[i] * m;
+				vertices[j + 1] = Cube.verts[i + 1] * m;
+				vertices[j + 2] = Cube.verts[i + 2] * m;
+				vertices[j + 3] = Cube.verts[i + 3] * m;
 				
 				vertices[j + 4] = Cube.vertexNormals[i];
 				vertices[j + 5] = Cube.vertexNormals[i + 1];
@@ -110,9 +115,9 @@ class LevelRenderer {
 		inline function addCubeAt(x:Float, y:Float, z:Float, type:TileType) {
 			emitCube(x, y, z, switch (type) {
 			case Air:
-				0.0;
+				1.25;
 			case Wall:
-				1.0;
+				0.7;
 			});
 		}
 
@@ -148,8 +153,10 @@ class LevelRenderer {
 
 	@gldebug
 	public function render(info:RenderInfo) {
-		var w = info.game.viewportSize.width-renderWidth;
-		var h = info.game.viewportSize.height;
+    	fow.render(info);
+
+		var w = info.viewport.width-renderWidth;
+		var h = info.viewport.height;
 		GL.viewport (0, 0, w, h);
 		GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
 		
@@ -179,7 +186,7 @@ class LevelRenderer {
 
 		var model = new Mat4();
 		Mat4.identity(model);
-		var t = info.time * 0.05;
+		var t = info.session.time * 0.05;
 		
 		var hh = level.height * 0.5;
 		var hw = level.width * 0.5;
@@ -207,7 +214,7 @@ class LevelRenderer {
 
 		GL.uniformMatrix3fv(normalMatrixUniform, 1, true, new Float32Array(normalMatrix.toFloatArray()));
 
-		GL.uniform1f(timeUniform, info.time);
+		GL.uniform1f(timeUniform, info.session.time);
 		GL.uniform4f(resolutionUniform,
 					 w, h,
 					 level.width, level.height
@@ -228,7 +235,7 @@ class LevelRenderer {
 
 		shader.release();
 
-		GL.viewport (0, 0, info.game.viewportSize.width, info.game.viewportSize.height);
+		GL.viewport (0, 0, info.viewport.width, info.viewport.height);
 	}
 
 }

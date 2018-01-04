@@ -83,6 +83,7 @@ class WaveState implements IState {
   }
 }
 
+@:build(coldboot.rendering.opengl.GLDebug.build())
 class GamePlayState extends DisplayObjectContainer implements IGameState {
   var terminal:Terminal;
   public var rootEntity: Entity;
@@ -143,17 +144,18 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
 	  terminal.updateUi(w,h,20);
   }
 
+  @gldebug
   public function render(info:RenderInfo):Void {
     rootEntity.render(info);
-    Symbology.draw(info.game.viewportSize.width, info.game.viewportSize.height);
+    Symbology.draw(info.viewport.width, info.viewport.height);
   }
 
   var timer = 0.0;
   public function update(info:UpdateInfo): IGameState {
     Symbology.beginFrame();
 
-    var hw = (info.game.viewportSize.width - 220) / 2;
-    var hh = info.game.viewportSize.height / 2;
+    var hw = (info.game.renderInfo.viewport.width - 220) / 2;
+    var hh = info.game.renderInfo.viewport.height / 2;
 
     Symbology.point(hw, hh, 4);
     Symbology.triangle(hw, hh, 100, 75, 0, true, 0.5);

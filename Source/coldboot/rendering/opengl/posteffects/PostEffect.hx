@@ -49,10 +49,6 @@ class PostEffect {
 		return "[Post effect: " + shader.name+"]";
 	}
 
-	public inline function drawQuad(){
-        GL.drawArrays(GL.TRIANGLE_FAN, 0, 4);
-	}
-
 	function buildTextures() {
 		var idx = 1;
 		for (i in textureInputs) {
@@ -102,7 +98,7 @@ class PostEffect {
 		GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.RENDERBUFFER, renderbuffer);
 	}
 
-	public function prepare(time:Float, config: {width:Int, height:Int}) {
+	public function prepare(info:RenderInfo, config: {width:Int, height:Int}) {
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTarget);
 		GL.clearColor(0,0,0,0);
 		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
@@ -127,11 +123,11 @@ class PostEffect {
 		}
 
 		GL.uniform2f(resolutionUniform, config.width, config.height);
-		GL.uniform1f(timeUniform, time);
+		GL.uniform1f(timeUniform, info.session.time);
 	}
 
 	public function render() {
-		GL.drawArrays(GL.TRIANGLE_FAN, 0, 4);
+		Quad.draw();
 		shader.release();
 
 		if (GL.getError() == GL.INVALID_FRAMEBUFFER_OPERATION) {
@@ -141,12 +137,15 @@ class PostEffect {
 	}
 
 	public function destroy() {
-		if (framebuffer != null) GL.deleteFramebuffer(framebuffer);
-		if (texture != null) GL.deleteTexture(texture);
-		if (renderbuffer != null) GL.deleteRenderbuffer(renderbuffer);
+		if (framebuffer != null) 
+			GL.deleteFramebuffer(framebuffer);
+		if (texture != null) 
+			GL.deleteTexture(texture);
+		if (renderbuffer != null) 
+			GL.deleteRenderbuffer(renderbuffer);
 	}
 
-	public function beginCapture(config: {width:Int, height:Int}) {
+	public function beginCapture(info:RenderInfo, config: {width:Int, height:Int}) {
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
 		GL.viewport(0, 0, config.width, config.height);
 		GL.clearColor(0,0,0,0);

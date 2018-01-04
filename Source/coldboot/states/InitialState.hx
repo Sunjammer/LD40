@@ -31,7 +31,7 @@ class InitialState extends Sprite implements IGameState
 			
 			Delta.tween(img)
 				.wait(cnt * 6)
-				.propMultiple({x: -(img.width - g.viewportSize.width), y: -(img.height - g.viewportSize.height)}, 6)
+				.propMultiple({x: -(img.width - g.renderInfo.viewport.width), y: -(img.height - g.renderInfo.viewport.height)}, 6)
 				.ease(Quad.easeInOut);
 			
 			Delta.tween(img)

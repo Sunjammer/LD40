@@ -61,7 +61,7 @@ class Terminal extends Sprite{
     
     addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
    
-    updateUi(game.viewportSize.width, game.viewportSize.height, 20);
+    updateUi(game.renderInfo.viewport.width, game.renderInfo.viewport.height, 20);
   }
   
   public function setOutputText(string:String) {

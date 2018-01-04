@@ -9,7 +9,6 @@ enum ShaderSource{
 	Other(sourcePath:String, type:Int);
 }
 
- @:build(coldboot.rendering.opengl.GLDebug.build())
 class Shader {
 	
 	public var name:String;
@@ -30,14 +29,11 @@ class Shader {
 	}
 
 	public static function reloadAll(){
-		trace("Reload all");
 		for(s in allShaders){
 			s.build();
 		}
 	}
 
-
-	@gldebug
 	public function build()
 	{
 		trace("Building "+name+"...");
@@ -79,9 +75,11 @@ class Shader {
 			destroy();
 			return;
 		}
+		#if debug
+		trace("Successfully linked");
+		#end
 
 		linked = true;
-		trace("Successfully linked program "+name);
 	}
 
 	private function compile(source:String, type:Int):GLShader
@@ -101,17 +99,17 @@ class Shader {
 
 	public inline function getAttribute(a:String):Int
 	{
-
 		var pos =  GL.getAttribLocation(program, a);
 		#if debug
-			throw "Couldn't find attribute";
+		if(pos==-1)	throw "Couldn't find attribute "+a;
 		#end
 		return pos;
 	}
 
 	public inline function getUniform(u:String):GLUniformLocation
 	{
-		return GL.getUniformLocation(program, u);
+		var pos = GL.getUniformLocation(program, u);
+		return pos;
 	}
 
 	public function bind()

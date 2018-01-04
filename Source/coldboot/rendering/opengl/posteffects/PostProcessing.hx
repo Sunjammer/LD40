@@ -4,12 +4,12 @@ import lime.graphics.opengl.*;
 import lime.utils.Float32Array;
 import openfl.display.OpenGLView;
 import coldboot.rendering.opengl.posteffects.PostEffect;
+import coldboot.rendering.opengl.Quad;
 
 class PostProcessing extends OpenGLView{
 	var effects:Array<coldboot.rendering.opengl.posteffects.PostEffect>;
 	var config:{width:Int, height:Int};
-	
-	var vbo:GLBuffer;
+	var info:RenderInfo; //Need to hold this to pass into onRender
 	var time:Float;
 	
 	public function new(){
@@ -25,29 +25,11 @@ class PostProcessing extends OpenGLView{
 	}
 
     function rebuild(config: {width:Int, height:Int}){
-		buildQuad();
-		  
         for(e in effects)
             e.rebuild(config);
 
 		chainEffects();
     }
-	
-	function buildQuad() {
-		if (vbo != null) GL.deleteBuffer(vbo);
-		  vbo = GL.createBuffer();
-		  
-		var vertices:Array<Float> = [
-		  -1, -1, 0, 0,
-		  1, -1, 1, 0,
-		  1, 1, 1, 1,
-		  -1, 1, 0, 1
-		];
-		
-		GL.bindBuffer(GL.ARRAY_BUFFER, vbo);
-		GL.bufferData(GL.ARRAY_BUFFER, 4 * Float32Array.BYTES_PER_ELEMENT * vertices.length, new Float32Array(vertices), GL.STATIC_DRAW);
-		GL.bindBuffer(GL.ARRAY_BUFFER, null);
-	}
 
 	public function setEffects(fx:Array<coldboot.rendering.opengl.posteffects.PostEffect>){
 		for(e in effects)
@@ -70,18 +52,18 @@ class PostProcessing extends OpenGLView{
 
 	function onRender(rect){
 		if (effects.length == 0) return;
-		GL.bindBuffer(GL.ARRAY_BUFFER, vbo);
+		Quad.bind();
 		for (p in effects)
 		{
-			p.prepare(time, config);
+			p.prepare(info, config);
 			p.render();
 		}
-		GL.bindBuffer(GL.ARRAY_BUFFER, null);
+		Quad.release();
 	}
 
-	public function beginFrame(inTime:Float){
+	public function beginFrame(info:RenderInfo){
 		if (effects.length == 0) return;
-		time = inTime;
-		effects[0].beginCapture(config);
+		this.info = info;
+		effects[0].beginCapture(info, config);
 	}
 }

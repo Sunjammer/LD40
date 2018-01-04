@@ -31,10 +31,10 @@ class Game extends Sprite
 
 	var sceneRenderer:PostProcessing;
 
-	public var viewportSize: {width:Int, height:Int, aspect:Float};
 	public var viewportChanged:Signal2<Int,Int>;
   	public var audio:Audio;
 	public var input:Input;
+	public var renderInfo:RenderInfo;
 	var globalTime:Float;
 
 	public function new(config: {width:Int, height:Int})
@@ -44,7 +44,9 @@ class Game extends Sprite
 		
 		trace("Initializing game");
 		viewportChanged = new Signal2<Int,Int>();
-		viewportSize = {width:800, height:600, aspect:1};
+		renderInfo = new RenderInfo();
+		renderInfo.game = this;
+		renderInfo.viewport = {width:800, height:600, aspect:1};
     
 		trace("Initializing audio");
 		audio = Audio.getInstance();
@@ -60,7 +62,7 @@ class Game extends Sprite
 		addChild(debugContainer);
 		
 		addChild(sceneRenderer = new PostProcessing());
-		sceneRenderer.setWindowSize(viewportSize);
+		sceneRenderer.setWindowSize(renderInfo.viewport);
 		sceneRenderer.setEffects(
 			[
 				new PostEffect("assets/shaders/dither.frag", "Dithering"),
@@ -87,11 +89,11 @@ class Game extends Sprite
 
 	public function resize(dims: {width:Int, height:Int})
 	{
-		viewportSize.width = dims.width;
-		viewportSize.height = dims.height;
-		viewportSize.aspect = dims.width / dims.height;
-		sceneRenderer.setWindowSize(viewportSize);
-		viewportChanged.dispatch(viewportSize.width, viewportSize.height);
+		renderInfo.viewport.width = dims.width;
+		renderInfo.viewport.height = dims.height;
+		renderInfo.viewport.aspect = dims.width / dims.height;
+		sceneRenderer.setWindowSize(renderInfo.viewport);
+		viewportChanged.dispatch(renderInfo.viewport.width, renderInfo.viewport.height);
 	}
 
 	public function getCurrentState():IGameState
@@ -110,22 +112,17 @@ class Game extends Sprite
 			currentState.update(info);
 	}
 
-	#if (!display && ogl)
+	#if !display
 	override function __renderGL(renderSession):Void
 	{
-		GL.viewport (0, 0, viewportSize.width, viewportSize.height);
+		GL.viewport (0, 0, renderInfo.viewport.width, renderInfo.viewport.height);
 		GL.clearColor(0,0,0,1);
 		GL.clear(GL.COLOR_BUFFER_BIT|GL.DEPTH_BUFFER_BIT);
-		sceneRenderer.beginFrame(globalTime);
-		currentState.render({game:this, time:globalTime});
+		renderInfo.session.reset();
+		renderInfo.session.time = globalTime;
+		sceneRenderer.beginFrame(renderInfo);
+		currentState.render(renderInfo);
 		super.__renderGL(renderSession);
-	}
-	#end
-
-	#if !ogl
-	public function render(dt:Float)
-	{
-		currentState.render({game:this, time:globalTime});
 	}
 	#end
 

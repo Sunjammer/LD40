@@ -68,7 +68,6 @@ void main() {
     float rsq = dot(uv,uv);
     uv += (uv * (BARREL_DISTORTION * rsq));
     uv *= rescale;
-	//End barrel nonsense
 
     if (abs(uv.x) > 0.5 || abs(uv.y) > 0.5)
         discard;
@@ -76,15 +75,14 @@ void main() {
     vec2 correctedUv = uv+0.5;
 
     vec4 color = chroma(uImage0, 0, 2.0, 1.0/uResolution.xy, correctedUv, vec2(20, 500.0));
-    //vec4 color = chroma(uImage0, 0.0, unipolarSin(uTime) * 0.5 * cos(uv.x*1.57), 1.0/uResolution.xy, uv+0.5, vec2(200.0, 200.0));
 
     float strength = 30.0;
     float foo = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (uTime * 10.0);
     vec4 grain = vec4(mod((mod(foo, 13.0) + 1.0) * (mod(foo, 123.0) + 1.0), 0.01)-0.005) * strength;
     grain = 1.0 - grain;
-
 	color = 1.4 * grain * texture2D(uImage1, correctedUv / 4.) * color; //noise * color
     color = color * vignette(correctedUv);
+    //color.rgb = color.r * vec3(1.0, 253.0/255.0, 84.0/255.0);
     color = color + texture2D(uImage2, correctedUv) * 0.01; //dirt
     
 	gl_FragColor = vec4(color.rgb, 1.0);

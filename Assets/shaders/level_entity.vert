@@ -38,13 +38,12 @@ void main(void){
 	vec3 transformedNormal = normalize(uNormal * vNormal);
 
 	vec3 tempPos = aPosition.xyz;
-	if(tempPos.z < 0.0) tempPos.z = -10;
+	if(tempPos.z < 0.0) tempPos.z = -100;
 
 	vec3 pos = tempPos + aOffset.xyz;
 	pos.z += aOffset.w;
 	vQuantizedUv = aOffset.xy / uResolution.zw;
 	vUv = pos.xy / uResolution.zw;
-
 
 	// pulse
 	vec2 pulsePos = vec2(0.5);
@@ -52,11 +51,7 @@ void main(void){
 	vZoffset = pow(cos(-1.0 * uTime * 0.2 + t) * 0.5 + 0.5, 200);
 	pos.z = pos.z - vZoffset;
 
-	// "reveal"
-	/*t = sin(length(vQuantizedUv - vec2(0.5)) * 6.28) * 5;
-	pos.z = pos.z + t;*/
-
-	vBrightness = 1.0 + aOffset.w; //max(dot(transformedNormal, normalize(vec3(0.5))), 0.1);
+	vBrightness = aOffset.w; 
 
 	vVertex = vec4(pos, 1.0);
 

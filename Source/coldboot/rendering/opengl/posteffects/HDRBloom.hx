@@ -1,8 +1,7 @@
 package coldboot.rendering.opengl.posteffects;
+import coldboot.rendering.opengl.*;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.*;
-
-typedef Target = {fbo:GLFramebuffer, tex:GLTexture}
 
 class HDRBloom extends PostEffect{
 
@@ -38,14 +37,14 @@ class HDRBloom extends PostEffect{
 
         deleteTarget(threshTarget);
         deleteTarget(compositeTarget);
-        threshTarget = makeTarget(config);
-        compositeTarget = makeTarget(config);
+        threshTarget = TextureUtils.makeTarget(config.width, config.height);
+        compositeTarget = TextureUtils.makeTarget(config.width, config.height);
 
         for(t in pingPongTargets)
             deleteTarget(t);
         
         for(i in 0...2){
-            pingPongTargets.push(makeTarget(config));
+            pingPongTargets.push(TextureUtils.makeTarget(config.width, config.height));
         }
     }
 
@@ -55,37 +54,6 @@ class HDRBloom extends PostEffect{
         GL.deleteTexture(t.tex);
     }
 
-    function makeTarget(config:{width:Int, height:Int}):Target
-    {
-        var fbo = GL.createFramebuffer();
-        var tex = GL.createTexture();
-        GL.bindFramebuffer(GL.FRAMEBUFFER, fbo);
-        GL.bindTexture(GL.TEXTURE_2D, tex);
-        GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB16F, config.width, config.height, 0, GL.RGB, GL.UNSIGNED_BYTE, 0);
-        GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
-        GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
-        GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
-        GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
-        GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, tex, 0);
-        
-		GL.clearColor(0,0,0,0);
-		GL.clear(GL.COLOR_BUFFER_BIT);
-        
-
-		var status = GL.checkFramebufferStatus(GL.FRAMEBUFFER);
-		switch (status) {
-			case GL.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-				trace("FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
-			case GL.FRAMEBUFFER_UNSUPPORTED:
-				trace("GL_FRAMEBUFFER_UNSUPPORTED");
-			case GL.FRAMEBUFFER_COMPLETE:
-			default:
-				trace("Check frame buffer: " + status);
-		}
-
-        return { tex:tex, fbo:fbo };
-    }
-
     override public function render(){
         // Thresh
         threshShader.bind();
@@ -93,7 +61,7 @@ class HDRBloom extends PostEffect{
 
         GL.activeTexture(GL.TEXTURE0);
         GL.bindTexture(GL.TEXTURE_2D, texture);
-        drawQuad();
+        Quad.draw();
 
         // Blur
         shader.bind();
@@ -106,7 +74,7 @@ class HDRBloom extends PostEffect{
             GL.uniform1i(uHorizontal, horizontal);
             GL.activeTexture(GL.TEXTURE0);
             GL.bindTexture(GL.TEXTURE_2D, firstIteration?threshTarget.tex:pingPongTargets[1-horizontal].tex);
-            drawQuad();
+            Quad.draw();
             horizontal = 1 - horizontal;
             firstIteration = false;
         }
@@ -120,7 +88,7 @@ class HDRBloom extends PostEffect{
 		GL.bindTexture(GL.TEXTURE_2D, pingPongTargets[horizontal].tex);
 		GL.uniform1i(uBloomTexture, 1);
 
-        drawQuad();
+        Quad.draw();
 		compositeShader.release();
 
 		if (GL.getError() == GL.INVALID_FRAMEBUFFER_OPERATION) {
