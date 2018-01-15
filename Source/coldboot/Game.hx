@@ -67,6 +67,10 @@ class Game extends Sprite
 			[
 				new PostEffect("assets/shaders/dither.frag", "Dithering"),
 				new HDRBloom(),
+				new PostEffect("assets/shaders/mpeg.frag", "Mpeg artifacts", [
+					"assets/textures/white_noise.png"
+				],
+				["uAmount"=>Float2(1.0, 0.6)]),
 				new PostEffect("assets/shaders/crt.frag", "CRT",
 					[
 						"assets/textures/screen_noise.jpg", 

@@ -8,6 +8,13 @@ import coldboot.rendering.opengl.TextureUtils;
 
 typedef TextureInput = {uniform:GLUniformLocation, texture:GLTexture, path:String}
 
+enum Uniform{
+	Float1(v:Float);
+	Float2(x:Float, y:Float);
+	Float3(x:Float, y:Float, z:Float);
+	Float4(x:Float, y:Float, z:Float, w:Float);
+}
+
 class PostEffect {
 	var framebuffer:GLFramebuffer;
 	var renderbuffer:GLRenderbuffer;
@@ -23,13 +30,16 @@ class PostEffect {
 
 	var textureInputs:Array<TextureInput>;
 	var imageUniform:lime.graphics.opengl.GLUniformLocation;
+	var uniforms:Map<String,Uniform>;
 
-	public function new(fragmentShaderSrc:String, name:String = "Effect", ?textures:Array<String>, ?defaultFramebuffer:GLFramebuffer) {
+	public function new(fragmentShaderSrc:String, name:String = "Effect", ?textures:Array<String>, ?uniforms:Map<String, Uniform>, ?defaultFramebuffer:GLFramebuffer) {
 		if (shader != null) shader.destroy();
 		shader = new Shader([
 				Vertex("assets/shaders/fullscreenquad.vert"),
 				Fragment(fragmentShaderSrc)
 			], name);
+
+		this.uniforms = uniforms;
 
 		vertexAttribute = shader.getAttribute("aVertex");
 		resolutionUniform = shader.getUniform("uResolution");
@@ -124,6 +134,27 @@ class PostEffect {
 
 		GL.uniform2f(resolutionUniform, config.width, config.height);
 		GL.uniform1f(timeUniform, info.session.time);
+		setUniforms();
+	}
+
+	function setUniforms(){
+		if(uniforms!=null){
+			for(k in uniforms.keys()){
+				var id = shader.getUniform(k);
+				if(id!=-1){
+					switch(uniforms[k]){
+						case Float1(v):
+							GL.uniform1f(id, v);
+						case Float2(x,y):
+							GL.uniform2f(id, x, y);
+						case Float3(x,y,z):
+							GL.uniform3f(id, x, y, z);
+						case Float4(x,y,z,w):
+							GL.uniform4f(id, x, y, z, w);
+					}
+				}
+			}
+		}
 	}
 
 	public function render() {
