@@ -1,13 +1,12 @@
-package coldboot.rendering.opengl.posteffects;
+package coldboot.rendering.posteffects;
 
 import lime.graphics.opengl.*;
 import lime.utils.Float32Array;
 import openfl.display.OpenGLView;
-import coldboot.rendering.opengl.posteffects.PostEffect;
-import coldboot.rendering.opengl.Quad;
+import smashgl.Quad;
 
 class PostProcessing extends OpenGLView{
-	var effects:Array<coldboot.rendering.opengl.posteffects.PostEffect>;
+	var effects:Array<PostEffect>;
 	var config:{width:Int, height:Int};
 	var info:RenderInfo; //Need to hold this to pass into onRender
 	var time:Float;
@@ -31,7 +30,7 @@ class PostProcessing extends OpenGLView{
 		chainEffects();
     }
 
-	public function setEffects(fx:Array<coldboot.rendering.opengl.posteffects.PostEffect>){
+	public function setEffects(fx:Array<PostEffect>){
 		for(e in effects)
 			e.destroy();
 		effects = fx;

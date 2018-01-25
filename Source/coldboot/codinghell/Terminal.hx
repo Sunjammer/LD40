@@ -8,7 +8,7 @@ import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.text.GridFitType;
 import openfl.text.TextField;
-import coldboot.rendering.opengl.Shader;
+import smashgl.Shader;
 /**
  * ...
  * @author Andreas Kennedy
@@ -40,7 +40,7 @@ class Terminal extends Sprite{
     
     state = Status;
     
-    var tf = new TextFormat("Perfect DOS VGA 437 Win", 16, COLOR);
+    var tf = new TextFormat("Perfect DOS VGA 437 Win", 22, COLOR);
     
     output = new TextField();
     input = new TextField();

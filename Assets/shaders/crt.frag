@@ -13,7 +13,7 @@ uniform sampler2D uImage3;
 uniform sampler2D uImage4;
 uniform float uTime;
 
-const float BARREL_DISTORTION = 0.15;
+const float BARREL_DISTORTION = 0.1;
 const float rescale = 1.0 - (0.25 * BARREL_DISTORTION);
 
 vec4 shape(vec4 v, vec4 drive){

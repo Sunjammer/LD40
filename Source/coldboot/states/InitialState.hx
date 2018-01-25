@@ -28,6 +28,8 @@ class InitialState extends Sprite implements IGameState
 		for (i in imgs){
 			var img = addChild(new Bitmap(Assets.getBitmapData(i)));
 			img.alpha = 0;
+			img.width = g.renderInfo.viewport.width+200;
+			img.scaleY = img.scaleX;
 			
 			Delta.tween(img)
 				.wait(cnt * 6)
@@ -52,7 +54,7 @@ class InitialState extends Sprite implements IGameState
 
 	public function update(info:UpdateInfo): IGameState
 	{
-		if (info.game.audio.pollStatus() == Ready || initialized) 
+		if (initialized) 
 		{
 			return info.game.setState(new GamePlayState());
 		}

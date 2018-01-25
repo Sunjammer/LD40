@@ -1,8 +1,7 @@
 package coldboot;
 import coldboot.IGameState;
 import coldboot.ai.PathFinding;
-import coldboot.rendering.opengl.Cube;
-import coldboot.rendering.opengl.posteffects.*;
+import coldboot.rendering.posteffects.*;
 import coldboot.states.*;
 import fsignal.Signal2;
 import glm.Vec2;
@@ -20,7 +19,7 @@ class Input{
 	}
 }
 
- @:build(coldboot.rendering.opengl.GLDebug.build())
+ @:build(smashgl.GLDebug.build())
 class Game extends Sprite
 {
 	var currentState: IGameState;
@@ -46,7 +45,7 @@ class Game extends Sprite
 		viewportChanged = new Signal2<Int,Int>();
 		renderInfo = new RenderInfo();
 		renderInfo.game = this;
-		renderInfo.viewport = {width:800, height:600, aspect:1};
+		renderInfo.viewport = {width:1280, height:720, aspect:1};
     
 		trace("Initializing audio");
 		audio = Audio.getInstance();
@@ -62,6 +61,7 @@ class Game extends Sprite
 		addChild(debugContainer);
 		
 		addChild(sceneRenderer = new PostProcessing());
+
 		sceneRenderer.setWindowSize(renderInfo.viewport);
 		sceneRenderer.setEffects(
 			[

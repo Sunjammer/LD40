@@ -4,7 +4,7 @@
 	<meta title="LD40" package="com.idiots.games" version="1.0.0" company="Fools" />
 	<app main="Main" path="Export" file="LD40" />
 	
-	<window require-shaders="true" />
+	<window require-shaders="true" width="1280" height="720" />
 	
 	<source path="Source" />
 	
@@ -15,6 +15,7 @@
 	<haxelib name="glm" />
 	<haxelib name="pathfinder" />
 	<haxelib name="differ" />
+	<haxelib name="smashgl"/>
 	<haxelib name="random" />
 	<haxelib name="fsignal"/>
 	

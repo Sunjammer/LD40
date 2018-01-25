@@ -1,5 +1,5 @@
-package coldboot.rendering.opengl.posteffects;
-import coldboot.rendering.opengl.*;
+package coldboot.rendering.posteffects;
+import smashgl.*;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.*;
 

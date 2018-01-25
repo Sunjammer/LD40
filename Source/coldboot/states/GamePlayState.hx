@@ -18,7 +18,7 @@ import openfl.display.Bitmap;
 import openfl.events.MouseEvent;
 import openfl.utils.Timer;
 import openfl.Assets;
-import coldboot.rendering.opengl.Symbology;
+import smashgl.Symbology;
 //import haxe.Timer;
 
 class WaveCompletedState implements IState {
@@ -83,7 +83,7 @@ class WaveState implements IState {
   }
 }
 
-@:build(coldboot.rendering.opengl.GLDebug.build())
+@:build(smashgl.GLDebug.build())
 class GamePlayState extends DisplayObjectContainer implements IGameState {
   var terminal:Terminal;
   public var rootEntity: Entity;

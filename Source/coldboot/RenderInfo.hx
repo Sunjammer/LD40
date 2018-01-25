@@ -9,7 +9,7 @@ typedef Viewport = {
     aspect:Float
 }
 
-@:build(coldboot.rendering.opengl.GLDebug.build())
+@:build(smashgl.GLDebug.build())
 class Session{
     public var time:Float;
     var fboStack:Array<GLFramebuffer>;

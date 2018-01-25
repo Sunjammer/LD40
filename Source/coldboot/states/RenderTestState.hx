@@ -6,15 +6,15 @@ import coldboot.Game;
 import coldboot.Entity;
 import coldboot.IGameState;
 import coldboot.RenderInfo;
-import coldboot.rendering.opengl.Shader;
-import coldboot.rendering.opengl.Cube;
+import smashgl.Shader;
+import smashgl.Cube;
 import glm.GLM;
 import glm.*;
 import lime.utils.Float32Array;
 import lime.graphics.opengl.GLUniformLocation;
 import lime.graphics.opengl.GL;
-import coldboot.rendering.opengl.Symbology;
-using coldboot.rendering.opengl.GLMExt;
+import smashgl.Symbology;
+using smashgl.GLMExt;
 
 /**
  * ...

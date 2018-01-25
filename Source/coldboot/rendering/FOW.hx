@@ -1,10 +1,10 @@
-package coldboot.rendering.opengl;
+package coldboot.rendering;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.*;
-import coldboot.rendering.opengl.TextureUtils;
+import smashgl.*;
 typedef PaintCommand = {x:Float, y:Float, radius:Float, value:Float}
 
- @:build(coldboot.rendering.opengl.GLDebug.build())
+ @:build(smashgl.GLDebug.build())
 class FOW{
     var target:Target;
     var cmds:Array<PaintCommand>;

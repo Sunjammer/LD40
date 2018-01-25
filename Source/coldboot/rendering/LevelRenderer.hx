@@ -1,5 +1,5 @@
 package coldboot.rendering;
-import coldboot.rendering.opengl.*;
+import smashgl.*;
 import glm.GLM;
 import glm.Mat3;
 import glm.Mat4;
@@ -10,7 +10,7 @@ import lime.graphics.opengl.GLBuffer;
 import lime.graphics.opengl.GLUniformLocation;
 import lime.utils.Float32Array;
 import lime.utils.UInt16Array;
-using coldboot.rendering.opengl.GLMExt;
+using smashgl.GLMExt;
 
 /**
  * ...
@@ -51,7 +51,7 @@ class LevelRenderer {
 		trace("Creating level renderer");
 		fow = new FOW();
 		if (shader==null)
-			shader = new LevelShader("assets/textures/c3.jpg", fow.getTexture());
+			shader = new LevelShader("assets/textures/c2.jpg", fow.getTexture());
 			
 		positionAttrib = shader.getAttribute("aPosition");
 		normalAttrib = shader.getAttribute("aNormal");

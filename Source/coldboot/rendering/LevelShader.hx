@@ -1,6 +1,6 @@
 package coldboot.rendering;
-import coldboot.rendering.opengl.Shader;
-import coldboot.rendering.opengl.TextureUtils;
+import smashgl.Shader;
+import smashgl.TextureUtils;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLTexture;
 import lime.graphics.opengl.GLUniformLocation;
@@ -10,7 +10,7 @@ import openfl.Assets;
  * ...
  * @author Andreas Kennedy
  */
- @:build(coldboot.rendering.opengl.GLDebug.build())
+ @:build(smashgl.GLDebug.build())
 class LevelShader extends Shader
 {
 	var textureUniform:GLUniformLocation;

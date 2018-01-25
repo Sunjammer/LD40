@@ -1,9 +1,8 @@
-package coldboot.rendering.opengl.posteffects;
+package coldboot.rendering.posteffects;
 
-import coldboot.rendering.opengl.Shader;
+import smashgl.*;
 import lime.graphics.opengl.*;
 import openfl.Assets;
-import coldboot.rendering.opengl.TextureUtils;
 
 
 typedef TextureInput = {uniform:GLUniformLocation, texture:GLTexture, path:String}
