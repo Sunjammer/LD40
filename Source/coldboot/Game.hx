@@ -45,7 +45,7 @@ class Game extends Sprite
 		viewportChanged = new Signal2<Int,Int>();
 		renderInfo = new RenderInfo();
 		renderInfo.game = this;
-		renderInfo.viewport = {width:1280, height:720, aspect:1};
+		renderInfo.viewport = {width:800, height:600, aspect:1};
     
 		trace("Initializing audio");
 		audio = Audio.getInstance();

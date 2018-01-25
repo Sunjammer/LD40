@@ -40,7 +40,7 @@ class Terminal extends Sprite{
     
     state = Status;
     
-    var tf = new TextFormat("Perfect DOS VGA 437 Win", 22, COLOR);
+    var tf = new TextFormat("Perfect DOS VGA 437 Win", 18, COLOR);
     
     output = new TextField();
     input = new TextField();
