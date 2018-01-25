@@ -18,6 +18,7 @@
 	<haxelib name="smashgl"/>
 	<haxelib name="random" />
 	<haxelib name="fsignal"/>
+	<haxelib name="smashgl"/>
 	
 	<haxelib name="AudioJank"/> 
 	<haxedef name="audio" if="cpp windows" />
