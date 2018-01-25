@@ -99,6 +99,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
     g.audio.exec(AudioCommand.PlaySound(SampleId.SAMPLE_ID_SONAR_ECHO, 0, 0));
     
     g.stateSpriteContainer.addChild(this);
+    //g.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
     g.viewportChanged.add(onViewportChanged);
 
     rootEntity = new Entity();
@@ -130,8 +131,6 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
     addChild(terminal);
 
     //waveState.enter(g);
-
-    stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
   }
 
   function onMouseDown(e:MouseEvent):Void {
@@ -181,6 +180,7 @@ class GamePlayState extends DisplayObjectContainer implements IGameState {
 
   public function exit(g:Game):Void {
     g.viewportChanged.remove(onViewportChanged);
+    //g.stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
     g.stateSpriteContainer.removeChild(this);
     waveState.exit(g);
   }

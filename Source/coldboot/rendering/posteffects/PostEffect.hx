@@ -34,8 +34,8 @@ class PostEffect {
 	public function new(fragmentShaderSrc:String, name:String = "Effect", ?textures:Array<String>, ?uniforms:Map<String, Uniform>, ?defaultFramebuffer:GLFramebuffer) {
 		if (shader != null) shader.destroy();
 		shader = new Shader([
-				Vertex("assets/shaders/fullscreenquad.vert"),
-				Fragment(fragmentShaderSrc)
+				Vertex(Assets.getText("assets/shaders/fullscreenquad.vert")),
+				Fragment(Assets.getText(fragmentShaderSrc))
 			], name);
 
 		this.uniforms = uniforms;

@@ -2,6 +2,7 @@ package coldboot.rendering.posteffects;
 import smashgl.*;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.*;
+import openfl.Assets;
 
 class HDRBloom extends PostEffect{
 
@@ -20,13 +21,13 @@ class HDRBloom extends PostEffect{
         pingPongTargets = []; 
 
         threshShader = new Shader([
-				Vertex("assets/shaders/fullscreenquad.vert"),
-				Fragment("assets/shaders/threshold.frag")
+				Vertex(Assets.getText("assets/shaders/fullscreenquad.vert")),
+				Fragment(Assets.getText("assets/shaders/threshold.frag"))
 			], "Threshold");
 
         compositeShader = new Shader([
-				Vertex("assets/shaders/fullscreenquad.vert"),
-				Fragment("assets/shaders/composite.frag")
+				Vertex(Assets.getText("assets/shaders/fullscreenquad.vert")),
+				Fragment(Assets.getText("assets/shaders/composite.frag"))
 			], "Composite");
 
         uBloomTexture = compositeShader.getUniform("uBloomTexture");

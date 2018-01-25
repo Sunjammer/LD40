@@ -1,5 +1,6 @@
 package;
-import coldboot.Audio;
+
+import smashgl.SmashGL;
 import coldboot.Game;
 import haxe.Timer;
 import openfl.display.Sprite;
@@ -34,6 +35,8 @@ class Main extends Sprite
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		stage.addEventListener(Event.RESIZE, onStageResize);
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+
+		SmashGL.init();
 
 		debugDraw = new Sprite();
 		game = new Game({width:stage.stageWidth, height:stage.stageHeight});

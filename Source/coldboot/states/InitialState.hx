@@ -30,7 +30,8 @@ class InitialState extends Sprite implements IGameState
 			img.alpha = 0;
 			img.width = g.renderInfo.viewport.width+200;
 			img.scaleY = img.scaleX;
-			
+
+			/*TweenAction;
 			Delta.tween(img)
 				.wait(cnt * 6)
 				.propMultiple({x: -(img.width - g.renderInfo.viewport.width), y: -(img.height - g.renderInfo.viewport.height)}, 6)
@@ -40,7 +41,7 @@ class InitialState extends Sprite implements IGameState
 				.wait(cnt*6)
 				.prop("alpha", 1, 2)
 				.wait(3)
-				.prop("alpha", 0, 2);
+				.prop("alpha", 0, 2);*/
 			cnt++;
 		}
 		Delta.delayCall(doneInitializing, cnt * 6 + 1);

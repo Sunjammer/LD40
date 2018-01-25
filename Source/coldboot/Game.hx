@@ -81,14 +81,15 @@ class Game extends Sprite
 			]
 		);
 		
-		setState(new InitialState(), [
+		setState(new GamePlayState());
+		/*setState(new InitialState(), [
 			"assets/textures/c1.jpg",
 			"assets/textures/c2.jpg",
 			"assets/textures/c3.jpg",
 			"assets/textures/c4.jpg",
 			"assets/textures/c5.jpg",
 			"assets/textures/c6.jpg"
-		]);
+		]);*/
 	}
 
 	public function resize(dims: {width:Int, height:Int})

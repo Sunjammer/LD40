@@ -2,6 +2,7 @@ package coldboot.rendering;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.*;
 import smashgl.*;
+import openfl.Assets;
 typedef PaintCommand = {x:Float, y:Float, radius:Float, value:Float}
 
  @:build(smashgl.GLDebug.build())
@@ -23,8 +24,8 @@ class FOW{
 
         shader = new Shader(
             [
-                Vertex("assets/shaders/fullscreenquad.vert"), 
-                Fragment("assets/shaders/fow.frag")
+                Vertex(Assets.getText("assets/shaders/fullscreenquad.vert")), 
+                Fragment(Assets.getText("assets/shaders/fow.frag"))
             ], "FOW");
         
         uResolution = shader.getUniform("uResolution");
